@@ -75,7 +75,7 @@ Component({
       title: '道地溯源',
       subtitle: '枸益补枸',
       backgroundImage: '/images/imgs/tcm_herbs_banner_3.jpg', // 使用高质量中药材展示背景
-      audioUrl: '/audio/intro.mp3',
+      audioUrl: '/audio/intro.wav',
     } as MainBanner,
 
     // 搜索配置
