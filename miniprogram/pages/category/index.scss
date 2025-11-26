@@ -1,19 +1,244 @@
 /* pages/category/index.scss */
-.container {
-  padding: 40rpx;
-  text-align: center;
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.category-page {
+  width: 100%;
+  height: 100vh;
+  background-color: $background-secondary;
+  @include flex-column;
 }
 
-.title {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #333;
-  display: block;
-  margin-bottom: 20rpx;
+.category-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200rpx 1fr;
+  grid-template-rows: 1fr;
+  height: calc(100vh - 88rpx); // 减去导航栏高度
+  overflow: hidden;
+  gap: 0; // 确保没有网格间隙
 }
 
-.subtitle {
-  font-size: 28rpx;
-  color: #666;
-  display: block;
+/* ==================== 左侧分类侧边栏 ==================== */
+.category-sidebar {
+  background-color: $background-primary;
+  border-right: 2rpx solid $border-light;
+  height: 100%;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+.sidebar-scroll {
+  height: 100%;
+  width: 100%;
+}
+
+.category-list {
+  padding: $padding-sm 0;
+}
+
+.category-item {
+  @include flex-center-vertical;
+  padding: $padding-md $padding-sm;
+  margin: 0;
+  cursor: pointer;
+  transition: all $transition-duration-base $transition-timing-function;
+  border-bottom: 1rpx solid $border-light;
+  position: relative;
+
+  &:hover {
+    background-color: $background-tertiary;
+  }
+
+  &:active {
+    background-color: #D2B48C; // 使用具体颜色值替代 lighten 函数
+  }
+
+  &.active {
+    background-color: $primary-color;
+
+    .category-name {
+      color: $text-white;
+      font-weight: $font-weight-medium;
+    }
+
+    // 添加右侧指示器
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6rpx;
+      height: 40rpx;
+      background-color: $text-white;
+      border-radius: 3rpx 0 0 3rpx;
+    }
+  }
+
+  // 最后一个项目不显示底部边框
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.category-name {
+  font-size: $font-size-base;
+  color: $text-primary;
+  @include text-ellipsis;
+  transition: color $transition-duration-base $transition-timing-function;
+}
+
+/* ==================== 右侧产品区域 ==================== */
+.product-area {
+  background-color: $background-primary;
+  height: 100%;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+.product-scroll {
+  height: 100%;
+  width: 100%;
+}
+
+.product-list {
+  padding: $padding-md;
+  min-height: 100%;
+}
+
+/* 产品占位符样式 - 临时使用 */
+.product-placeholder {
+  @include flex-center;
+  height: 400rpx;
+  background-color: $background-tertiary;
+  border-radius: $border-radius-lg;
+  margin-bottom: $margin-md;
+}
+
+.placeholder-text {
+  font-size: $font-size-base;
+  color: $text-tertiary;
+}
+
+/* ==================== 响应式设计 ==================== */
+
+/* 小屏幕适配 (640rpx 以下) */
+@include respond-to(sm) {
+  .category-content {
+    grid-template-columns: 160rpx 1fr;
+    height: calc(100vh - 80rpx); // 调整导航栏高度
+  }
+
+  .category-item {
+    padding: $padding-sm;
+  }
+
+  .category-name {
+    font-size: $font-size-sm;
+  }
+}
+
+/* 超小屏幕适配 (480rpx 以下) */
+@include respond-to(xs) {
+  .category-content {
+    grid-template-columns: 140rpx 1fr;
+    height: calc(100vh - 76rpx); // 进一步调整
+  }
+
+  .category-item {
+    padding: $padding-xs $padding-sm;
+  }
+
+  .category-name {
+    font-size: $font-size-xs;
+  }
+
+  .product-list {
+    padding: $padding-sm;
+  }
+}
+
+/* 大屏幕优化 (1024rpx 以上) */
+@media (min-width: 1024rpx) {
+  .category-content {
+    grid-template-columns: 240rpx 1fr;
+    height: calc(100vh - 96rpx); // 大屏幕导航栏高度
+  }
+
+  .category-item {
+    padding: $padding-lg $padding-md;
+  }
+
+  .category-name {
+    font-size: $font-size-lg;
+  }
+}
+
+/* 横屏适配 */
+@media (orientation: landscape) {
+  .category-content {
+    height: calc(100vh - 64rpx); // 横屏时导航栏通常更矮
+  }
+
+  .category-sidebar {
+    min-width: 180rpx; // 确保侧边栏在横屏时有足够宽度
+  }
+}
+
+/* ==================== 安全区域适配 ==================== */
+.category-page {
+  @include safe-area-padding(bottom);
+}
+
+/* ==================== 滚动条优化 ==================== */
+.sidebar-scroll,
+.product-scroll {
+  @include hide-scrollbar;
+}
+
+/* ==================== 动画效果 ==================== */
+.category-item {
+  &.active {
+    @include slide-in-right(0.2s);
+  }
+}
+
+.product-placeholder {
+  @include fade-in;
+}
+
+/* ==================== 兼容性和错误处理 ==================== */
+
+/* WeChat Mini Program 兼容性处理 */
+/* 注意：WeChat 支持 CSS Grid，但某些高级特性可能有限制 */
+
+/* 确保在极小屏幕上仍然可用 */
+@media (max-width: 320rpx) {
+  .category-content {
+    grid-template-columns: 100rpx 1fr;
+  }
+
+  .category-name {
+    font-size: 20rpx;
+  }
+
+  .category-item {
+    padding: $padding-xs;
+  }
+}
+
+/* 高度不足时的处理 */
+@media (max-height: 600rpx) {
+  .category-content {
+    height: calc(100vh - 60rpx);
+  }
+}
+
+/* 确保内容不会被遮挡 */
+.category-page {
+  position: relative;
+  z-index: 1;
 }

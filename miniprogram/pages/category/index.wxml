@@ -1,5 +1,65 @@
 <!--pages/category/index.wxml-->
-<view class="container">
-  <text class="title">商品分类</text>
-  <text class="subtitle">分类页面开发中...</text>
+<view class="category-page">
+  <!-- 自定义导航栏 -->
+  <navigation-bar 
+    title="商品分类" 
+    background="#8B4513" 
+    color="#FFFFFF"
+    back="{{false}}"
+  />
+  
+  <!-- 主要内容区域 -->
+  <view class="category-content">
+    <!-- 左侧分类侧边栏 -->
+    <view class="category-sidebar">
+      <scroll-view 
+        class="sidebar-scroll" 
+        scroll-y="{{true}}"
+        enhanced="{{true}}"
+        show-scrollbar="{{false}}"
+      >
+        <view class="category-list">
+          <!-- 分类项占位符 - 将在后续任务中实现 -->
+          <view 
+            class="category-item active" 
+            bindtap="onCategoryTap"
+            data-category-id="welfare"
+          >
+            <text class="category-name">惠民专区</text>
+          </view>
+          <view 
+            class="category-item" 
+            bindtap="onCategoryTap"
+            data-category-id="tea"
+          >
+            <text class="category-name">爆款茶饮</text>
+          </view>
+          <view 
+            class="category-item" 
+            bindtap="onCategoryTap"
+            data-category-id="activity"
+          >
+            <text class="category-name">活动专区</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    
+    <!-- 右侧产品列表区域 -->
+    <view class="product-area">
+      <scroll-view 
+        class="product-scroll" 
+        scroll-y="{{true}}"
+        enhanced="{{true}}"
+        show-scrollbar="{{false}}"
+      >
+        <view class="product-list">
+          <!-- 产品卡片占位符 - 将在后续任务中实现 -->
+          <view class="product-placeholder">
+            <text class="placeholder-text">产品列表将在后续任务中实现</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
 </view>
