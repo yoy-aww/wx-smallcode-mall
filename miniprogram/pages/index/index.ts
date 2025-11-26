@@ -224,25 +224,65 @@ Component({
     onMainBannerTap() {
       const { audioUrl } = this.data.mainBanner;
       
-      if (audioUrl) {
-        const audioContext = wx.createInnerAudioContext();
-        audioContext.src = audioUrl;
+      if (!audioUrl) {
+        wx.showToast({
+          title: '暂无语音介绍',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      // 创建音频上下文
+      const audioContext = wx.createInnerAudioContext();
+      audioContext.src = audioUrl;
+      
+      // 设置音频属性
+      audioContext.autoplay = false;
+      audioContext.loop = false;
+      audioContext.volume = 1.0;
+      
+      // 播放开始事件
+      audioContext.onPlay(() => {
+        console.log('音频开始播放');
+        wx.showToast({
+          title: '正在播放语音介绍',
+          icon: 'none',
+          duration: 2000
+        });
+      });
+      
+      // 播放结束事件
+      audioContext.onEnded(() => {
+        console.log('音频播放结束');
+        audioContext.destroy();
+      });
+      
+      // 播放错误事件
+      audioContext.onError((error) => {
+        console.error('音频播放失败:', error);
+        wx.showToast({
+          title: '语音播放失败，请稍后重试',
+          icon: 'none',
+          duration: 2000
+        });
+        audioContext.destroy();
+      });
+      
+      // 音频加载失败事件
+      audioContext.onCanplay(() => {
+        console.log('音频可以播放');
+      });
+      
+      // 开始播放
+      try {
         audioContext.play();
-        
-        audioContext.onPlay(() => {
-          wx.showToast({
-            title: '正在播放语音介绍',
-            icon: 'none'
-          });
+      } catch (error) {
+        console.error('音频播放异常:', error);
+        wx.showToast({
+          title: '语音播放异常',
+          icon: 'none'
         });
-        
-        audioContext.onError((error) => {
-          console.error('音频播放失败:', error);
-          wx.showToast({
-            title: '语音播放失败',
-            icon: 'none'
-          });
-        });
+        audioContext.destroy();
       }
     },
 

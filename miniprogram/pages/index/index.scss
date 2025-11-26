@@ -14,7 +14,7 @@ page {
   min-height: 100vh;
   background-color: #F5F5F5;
   overflow-y: auto;
-  
+
   /* 隐藏滚动条但保持滚动功能 */
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -34,7 +34,7 @@ page {
   background-color: $background-primary;
   overflow: hidden;
   @include fade-in;
-  
+
   /* 背景图片 */
   .brand-bg-image {
     position: absolute;
@@ -43,14 +43,12 @@ page {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background: linear-gradient(
-      135deg,
-      $primary-color 0%,
-      $secondary-color 50%,
-      $accent-color 100%
-    );
+    background: linear-gradient(135deg,
+        $primary-color 0%,
+        $secondary-color 50%,
+        $accent-color 100%);
   }
-  
+
   /* 遮罩层 */
   .brand-overlay {
     position: absolute;
@@ -58,15 +56,13 @@ page {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      135deg, 
-      rgba(139, 69, 19, 0.3) 0%, 
-      rgba(139, 69, 19, 0.1) 50%,
-      rgba(218, 165, 32, 0.2) 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(139, 69, 19, 0.3) 0%,
+        rgba(139, 69, 19, 0.1) 50%,
+        rgba(218, 165, 32, 0.2) 100%);
     z-index: 2;
   }
-  
+
   /* 品牌内容容器 */
   .brand-content {
     position: relative;
@@ -77,14 +73,14 @@ page {
     padding: $spacing-xl $spacing-lg;
     text-align: center;
   }
-  
+
   /* Logo 容器 */
   .brand-logo-container {
     margin-bottom: $spacing-md;
     @include scale-in(0.5s);
     animation-delay: 0.2s;
     animation-fill-mode: both;
-    
+
     .brand-logo {
       width: 120rpx;
       height: 120rpx;
@@ -93,11 +89,11 @@ page {
       padding: $spacing-xs;
       box-shadow: $shadow-md;
       transition: transform $transition-duration-base $transition-timing-function;
-      
+
       &:hover {
         transform: scale(1.05);
       }
-      
+
       /* Logo 加载失败时的占位样式 */
       &::after {
         content: '中医';
@@ -110,15 +106,16 @@ page {
         color: $primary-color;
         display: none;
       }
-      
-      &[src=""], &:not([src]) {
+
+      &[src=""],
+      &:not([src]) {
         &::after {
           display: block;
         }
       }
     }
   }
-  
+
   /* 品牌标语 */
   .brand-slogan {
     font-size: $font-size-lg;
@@ -138,20 +135,124 @@ page {
 .main-banner {
   position: relative;
   width: 100%;
-  margin-top: 16rpx;
-  
-  /* 预留空间，具体样式在任务4中实现 */
-  min-height: 300rpx;
+  height: 300rpx;
+  margin: 16rpx 24rpx 0;
   background-color: #FFFFFF;
   border-radius: 24rpx;
   overflow: hidden;
+  cursor: pointer;
+  @include card-hover;
+
+  /* 背景图片 */
+  .banner-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(135deg,
+        $primary-color 0%,
+        $secondary-color 100%);
+  }
+
+  /* 遮罩层确保文字清晰可见 */
+  .banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.2) 50%,
+        rgba(0, 0, 0, 0.3) 100%);
+    z-index: 2;
+  }
+
+  /* 横幅内容容器 */
+  .banner-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    @include flex-column;
+    @include flex-center;
+    padding: $spacing-xl $spacing-lg;
+    text-align: center;
+  }
+
+  /* 主标题 */
+  .banner-title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $text-white;
+    text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+    line-height: $line-height-tight;
+    letter-spacing: 3rpx;
+    margin-bottom: $spacing-sm;
+    @include slide-in-left(0.6s);
+    animation-delay: 0.3s;
+    animation-fill-mode: both;
+  }
+
+  /* 副标题 */
+  .banner-subtitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $text-white;
+    text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.4);
+    line-height: $line-height-base;
+    letter-spacing: 2rpx;
+    margin-bottom: $spacing-lg;
+    @include slide-in-right(0.6s);
+    animation-delay: 0.4s;
+    animation-fill-mode: both;
+  }
+
+  /* 语音播放按钮 */
+  .banner-audio-btn {
+    @include flex-row;
+    @include flex-center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: $border-radius-lg;
+    padding: $spacing-sm $spacing-md;
+    box-shadow: $shadow-md;
+    transition: all $transition-duration-base $transition-timing-function;
+    @include scale-in(0.5s);
+    animation-delay: 0.6s;
+    animation-fill-mode: both;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+      transform: scale(1.05);
+      box-shadow: $shadow-lg;
+    }
+
+    .audio-icon {
+      font-size: 32rpx;
+      margin-right: $spacing-xs;
+      line-height: 1;
+    }
+
+    .audio-text {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $primary-color;
+      line-height: 1;
+    }
+  }
+
+  /* 点击效果 */
+  &:active {
+    transform: scale(0.98);
+  }
 }
 
 /* 搜索区域 */
 .search-section {
   padding: 24rpx;
   background-color: transparent;
-  
+
   /* 预留空间，具体样式在任务5中实现 */
   min-height: 80rpx;
 }
@@ -160,7 +261,7 @@ page {
 .quick-actions {
   padding: 0 24rpx;
   margin-bottom: 24rpx;
-  
+
   /* 预留空间，具体样式在任务6中实现 */
   min-height: 120rpx;
 }
@@ -168,7 +269,7 @@ page {
 /* 分类网格区域 */
 .category-grid {
   padding: 0 24rpx 24rpx;
-  
+
   /* 预留空间，具体样式在任务7中实现 */
   min-height: 600rpx;
 }
@@ -245,66 +346,129 @@ page {
   .page-container {
     padding: 0 16rpx;
   }
-  
+
   .search-section,
   .quick-actions,
   .category-grid {
     padding-left: 16rpx;
     padding-right: 16rpx;
   }
-  
+
   /* 品牌头部小屏幕适配 */
   .brand-header {
     height: 280rpx;
-    
+
     .brand-content {
       padding: $spacing-lg $spacing-md;
     }
-    
+
     .brand-logo-container .brand-logo {
       width: 100rpx;
       height: 100rpx;
     }
-    
+
     .brand-slogan {
       font-size: $font-size-base;
+    }
+  }
+
+  /* 主横幅小屏幕适配 */
+  .main-banner {
+    height: 260rpx;
+    margin: 16rpx 16rpx 0;
+
+    .banner-content {
+      padding: $spacing-lg $spacing-md;
+    }
+
+    .banner-title {
+      font-size: $font-size-lg;
+      letter-spacing: 2rpx;
+    }
+
+    .banner-subtitle {
+      font-size: $font-size-base;
+      letter-spacing: 1rpx;
+    }
+
+    .banner-audio-btn {
+      padding: $spacing-xs $spacing-sm;
+
+      .audio-icon {
+        font-size: 28rpx;
+      }
+
+      .audio-text {
+        font-size: $font-size-xs;
+      }
     }
   }
 }
 
 /* 超小屏幕适配 */
 @media (max-width: 480rpx) {
-  .main-banner {
-    margin-top: 8rpx;
-  }
-  
+
   .search-section,
   .quick-actions,
   .category-grid {
     padding-left: 8rpx;
     padding-right: 8rpx;
   }
-  
+
   /* 品牌头部超小屏幕适配 */
   .brand-header {
     height: 240rpx;
-    
+
     .brand-content {
       padding: $spacing-md $spacing-sm;
     }
-    
+
     .brand-logo-container {
       margin-bottom: $spacing-sm;
-      
+
       .brand-logo {
         width: 80rpx;
         height: 80rpx;
       }
     }
-    
+
     .brand-slogan {
       font-size: $font-size-sm;
       letter-spacing: 1rpx;
+    }
+  }
+
+  /* 主横幅超小屏幕适配 */
+  .main-banner {
+    height: 220rpx;
+    margin: 8rpx 8rpx 0;
+
+    .banner-content {
+      padding: $spacing-md $spacing-sm;
+    }
+
+    .banner-title {
+      font-size: $font-size-base;
+      letter-spacing: 1rpx;
+      margin-bottom: $spacing-xs;
+    }
+
+    .banner-subtitle {
+      font-size: $font-size-sm;
+      letter-spacing: 0.5rpx;
+      margin-bottom: $spacing-md;
+    }
+
+    .banner-audio-btn {
+      padding: $spacing-xs;
+
+      .audio-icon {
+        font-size: 24rpx;
+      }
+
+      .audio-text {
+        font-size: $font-size-xs;
+      }
     }
   }
 }
@@ -317,8 +481,13 @@ page {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* 区域滑入动画 */
@@ -335,6 +504,7 @@ page {
     opacity: 0;
     transform: translateY(60rpx);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

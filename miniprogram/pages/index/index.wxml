@@ -27,8 +27,23 @@
   </view>
 
   <!-- 主横幅广告区域 -->
-  <view class="main-banner">
-    <!-- 主横幅内容将在任务4中实现 -->
+  <view class="main-banner" bindtap="onMainBannerTap">
+    <image 
+      class="banner-bg-image" 
+      src="{{mainBanner.backgroundImage}}" 
+      mode="aspectFill"
+      lazy-load="{{true}}"
+      binderror="onImageError"
+    ></image>
+    <view class="banner-overlay"></view>
+    <view class="banner-content">
+      <view class="banner-title">{{mainBanner.title}}</view>
+      <view class="banner-subtitle">{{mainBanner.subtitle}}</view>
+      <view class="banner-audio-btn" wx:if="{{mainBanner.audioUrl}}">
+        <view class="audio-icon">🔊</view>
+        <text class="audio-text">点击播放语音介绍</text>
+      </view>
+    </view>
   </view>
 
   <!-- 搜索栏区域 -->
