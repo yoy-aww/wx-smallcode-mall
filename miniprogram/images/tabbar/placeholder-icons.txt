@@ -1,0 +1,21 @@
+# Placeholder Icon Descriptions
+
+Since actual PNG files cannot be created in this environment, here are the icon descriptions:
+
+## Home Icons
+- home.png: Simple house outline in gray (#666666)
+- home-active.png: Filled house in brown (#8B4513)
+
+## Category Icons  
+- category.png: 2x2 grid outline in gray (#666666)
+- category-active.png: 2x2 filled grid in brown (#8B4513)
+
+## Cart Icons
+- cart.png: Shopping cart outline in gray (#666666)  
+- cart-active.png: Filled shopping cart in brown (#8B4513)
+
+## Profile Icons
+- profile.png: User circle outline in gray (#666666)
+- profile-active.png: Filled user circle in brown (#8B4513)
+
+Note: These need to be created as actual PNG files (32x32px) for the tabBar to work properly.

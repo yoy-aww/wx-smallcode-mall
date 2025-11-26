@@ -1,0 +1,5 @@
+<!--pages/cart/index.wxml-->
+<view class="container">
+  <text class="title">购物车</text>
+  <text class="subtitle">购物车页面开发中...</text>
+</view>

@@ -1,0 +1,5 @@
+<!--pages/profile/index.wxml-->
+<view class="container">
+  <text class="title">我的</text>
+  <text class="subtitle">个人中心页面开发中...</text>
+</view>
