@@ -1,0 +1,262 @@
+/**
+ * 临时图片模拟样式
+ * 在真实图片资源到位之前使用CSS渐变模拟背景效果
+ */
+
+/* ==================== 品牌相关模拟 ==================== */
+
+/* 品牌logo模拟 */
+.brand-logo-mock {
+  width: 200rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #8B4513 0%, #DAA520 100%);
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.brand-logo-mock::after {
+  content: "品牌LOGO";
+}
+
+/* 品牌背景模拟 */
+.brand-bg-mock {
+  background: linear-gradient(135deg, #8B4513 0%, #CD853F 50%, #DAA520 100%);
+  position: relative;
+}
+
+.brand-bg-mock::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(218, 165, 32, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 69, 19, 0.3) 0%, transparent 50%);
+}
+
+/* ==================== 主横幅模拟 ==================== */
+
+.main-banner-bg-mock {
+  background: linear-gradient(45deg, #CD853F 0%, #DEB887 30%, #F4A460 70%, #DAA520 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.main-banner-bg-mock::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  transform: rotate(-15deg);
+}
+
+.main-banner-bg-mock::after {
+  content: "枸杞产品展示区域";
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 20rpx;
+}
+
+/* ==================== 功能图标模拟 ==================== */
+
+.icon-member-mock {
+  width: 48rpx;
+  height: 48rpx;
+  background: linear-gradient(135deg, #DAA520 0%, #FFD700 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 20rpx;
+  font-weight: bold;
+}
+
+.icon-member-mock::after {
+  content: "VIP";
+}
+
+.icon-checkin-mock {
+  width: 48rpx;
+  height: 48rpx;
+  background: linear-gradient(135deg, #32CD32 0%, #90EE90 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.icon-checkin-mock::after {
+  content: "✓";
+}
+
+/* ==================== 分类背景模拟 ==================== */
+
+/* 惠民专区背景 */
+.category-welfare-bg-mock {
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFE66D 100%);
+  position: relative;
+}
+
+.category-welfare-bg-mock::before {
+  content: "💰";
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  font-size: 40rpx;
+  opacity: 0.7;
+}
+
+.category-welfare-bg-mock::after {
+  content: "优惠商品展示";
+  position: absolute;
+  bottom: 20rpx;
+  left: 20rpx;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 18rpx;
+}
+
+/* 品质自营背景 */
+.category-quality-bg-mock {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
+  position: relative;
+}
+
+.category-quality-bg-mock::before {
+  content: "⭐";
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  font-size: 40rpx;
+  opacity: 0.8;
+}
+
+.category-quality-bg-mock::after {
+  content: "精品中药材";
+  position: absolute;
+  bottom: 20rpx;
+  left: 20rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18rpx;
+}
+
+/* 茶饮背景 */
+.category-tea-bg-mock {
+  background: linear-gradient(135deg, #228B22 0%, #32CD32 50%, #90EE90 100%);
+  position: relative;
+}
+
+.category-tea-bg-mock::before {
+  content: "🍃";
+  position: absolute;
+  top: 15rpx;
+  right: 15rpx;
+  font-size: 30rpx;
+  opacity: 0.8;
+}
+
+.category-tea-bg-mock::after {
+  content: "茶饮";
+  position: absolute;
+  bottom: 15rpx;
+  left: 15rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16rpx;
+}
+
+/* 活动专区背景 */
+.category-activity-bg-mock {
+  background: linear-gradient(135deg, #FF4500 0%, #FF6347 50%, #FFA500 100%);
+  position: relative;
+}
+
+.category-activity-bg-mock::before {
+  content: "🎉";
+  position: absolute;
+  top: 15rpx;
+  right: 15rpx;
+  font-size: 30rpx;
+  opacity: 0.8;
+}
+
+.category-activity-bg-mock::after {
+  content: "活动";
+  position: absolute;
+  bottom: 15rpx;
+  left: 15rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16rpx;
+}
+
+/* ==================== 通用模拟样式 ==================== */
+
+/* 图片加载失败占位符 */
+.image-placeholder {
+  background: linear-gradient(135deg, #E0E0E0 0%, #F5F5F5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999999;
+  font-size: 24rpx;
+  border: 2rpx dashed #CCCCCC;
+}
+
+.image-placeholder::after {
+  content: "图片加载中...";
+}
+
+/* 响应式调整 */
+@media (max-width: 640rpx) {
+  .brand-logo-mock {
+    width: 160rpx;
+    height: 64rpx;
+    font-size: 20rpx;
+  }
+  
+  .icon-member-mock,
+  .icon-checkin-mock {
+    width: 40rpx;
+    height: 40rpx;
+    font-size: 18rpx;
+  }
+}
+
+/* 动画效果 */
+.mock-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 为模拟背景添加微光效果 */
+.brand-bg-mock,
+.main-banner-bg-mock,
+.category-welfare-bg-mock,
+.category-quality-bg-mock,
+.category-tea-bg-mock,
+.category-activity-bg-mock {
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
+}

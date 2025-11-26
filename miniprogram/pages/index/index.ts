@@ -59,16 +59,16 @@ Component({
   data: {
     // 品牌信息
     brandInfo: {
-      logo: '/images/brand-logo.png',
+      logo: '/images/imgs/seal_logo_7.jpg', // 使用传统印章风格Logo
       slogan: '道地选材 匠求品质 出品即精品',
-      backgroundImage: '/images/brand-bg.jpg'
+      backgroundImage: '/images/imgs/warm_background_5.jpg' // 使用暖色调背景
     } as BrandInfo,
 
     // 主横幅信息
     mainBanner: {
       title: '道地溯源',
       subtitle: '枸益补枸',
-      backgroundImage: '/images/main-banner-bg.jpg',
+      backgroundImage: '/images/imgs/tcm_herbs_banner_3.jpg', // 使用高质量中药材展示背景
       audioUrl: '/audio/intro.mp3'
     } as MainBanner,
 
@@ -83,13 +83,13 @@ Component({
       {
         id: 'member',
         title: '加入会员',
-        icon: '/images/icon-member.png',
+        icon: '/images/imgs/ecommerce_icons_9.png', // 使用电商图标
         path: '/pages/member/member'
       },
       {
         id: 'checkin',
         title: '去签到',
-        icon: '/images/icon-checkin.png',
+        icon: '/images/imgs/ecommerce_icons_2.jpg', // 使用电商图标
         path: '/pages/checkin/checkin'
       }
     ] as QuickActionItem[],
@@ -100,7 +100,7 @@ Component({
         id: 'welfare',
         title: '惠民专区',
         subtitle: '款款都划算',
-        backgroundImage: '/images/category-welfare-bg.jpg',
+        backgroundImage: '/images/imgs/gift_box_5.jpg', // 使用新年主题礼品盒，橙色元素突出
         products: [],
         actionText: 'GO',
         path: '/pages/category/category?type=welfare'
@@ -109,7 +109,7 @@ Component({
         id: 'quality',
         title: '品质自营',
         subtitle: '道地选材 精益求精',
-        backgroundImage: '/images/category-quality-bg.jpg',
+        backgroundImage: '/images/imgs/product_jars_7.jpg', // 使用精美罐装产品展示
         products: [],
         actionText: 'GO',
         path: '/pages/category/category?type=quality'
@@ -118,7 +118,7 @@ Component({
         id: 'tea',
         title: '爆款茶饮',
         subtitle: '精选茶品',
-        backgroundImage: '/images/category-tea-bg.jpg',
+        backgroundImage: '/images/imgs/tea_background_5.jpg', // 使用茶叶背景
         products: [],
         actionText: 'GO',
         path: '/pages/category/category?type=tea'
@@ -127,7 +127,7 @@ Component({
         id: 'activity',
         title: '活动专区',
         subtitle: '限时优惠',
-        backgroundImage: '/images/category-activity-bg.jpg',
+        backgroundImage: '/images/imgs/gift_box_0.jpg', // 使用中式新年礼品盒设计
         products: [],
         actionText: 'GO',
         path: '/pages/category/category?type=activity'
@@ -310,7 +310,7 @@ Component({
       return {
         title: '中医药材商城 - 道地选材 匠求品质',
         path: '/pages/index/index',
-        imageUrl: '/images/share-image.jpg'
+        imageUrl: '/images/imgs/tcm_herbs_banner_4.jpg' // 使用传统中药材配木质研钵作为分享图
       };
     }
   }

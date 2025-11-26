@@ -1,0 +1,677 @@
+[
+  {
+    "query": "天然茶叶背景纹理图片，有机自然风格",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/watercolor-illustration-densely-packed-green-tea-leaves-one-yellow-leaf-green-background-concept-tea-leaves-344199729.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 85072,
+      "width": 800,
+      "height": 449,
+      "total_pixels": 359200,
+      "basic_score": 0.8122714104960849,
+      "file_name": "tea_background_5.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "天然茶叶背景纹理图片，有机自然风格",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/bright-green-tea-leaves-fresh-young-scatter-over-clean-white-background-plant-foliage-forms-simple-natural-pattern-new-growth-410995754.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 43970,
+      "width": 800,
+      "height": 457,
+      "total_pixels": 365600,
+      "basic_score": 0.8088902779796174,
+      "file_name": "tea_background_9.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "天然茶叶背景纹理图片，有机自然风格",
+    "image_info": {
+      "url": "https://t3.ftcdn.net/jpg/03/21/79/00/360_F_321790080_JFFC2czBsHl2glOX29UPJm1FeDDmgydq.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 91645,
+      "width": 720,
+      "height": 360,
+      "total_pixels": 259200,
+      "basic_score": 0.7667575243044087,
+      "file_name": "tea_background_7.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "木质纹理和牛皮纸背景，适合中医药主题网站",
+    "image_info": {
+      "url": "https://previews.123rf.com/images/ange1011/ange10111802/ange1011180200476/96179296-wrinkled-kraft-paper-texture-natural-brown-vintage-paper-background.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 148972,
+      "width": 1300,
+      "height": 866,
+      "total_pixels": 1125800,
+      "basic_score": 0.9367934788248216,
+      "file_name": "wood_texture_6.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "木质纹理和牛皮纸背景，适合中医药主题网站",
+    "image_info": {
+      "url": "https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcHgzMzQ1NzMtaW1hZ2Utam9iNjU0XzEtbDB1YnR5dTAuanBn.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 98996,
+      "width": 800,
+      "height": 533,
+      "total_pixels": 426400,
+      "basic_score": 0.8357810773640576,
+      "file_name": "wood_texture_4.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "木质纹理和牛皮纸背景，适合中医药主题网站",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/light-brown-wood-background-messy-wooden-table-old-paper-texture-natural-pattern-copy-space-pine-grunge-dirty-backgrounds-top-view-158636438.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 80817,
+      "width": 800,
+      "height": 534,
+      "total_pixels": 427200,
+      "basic_score": 0.8338331814314337,
+      "file_name": "wood_texture_2.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "高质量的中药材、香料图片，背景为木质纹理，适合作为电商网站横幅背景",
+    "image_info": {
+      "url": "https://as2.ftcdn.net/jpg/04/70/03/09/1000_F_470030926_7Nh3TgY14PDgymrg9CfUvmx0zi533IKY.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 300951,
+      "width": 1000,
+      "height": 667,
+      "total_pixels": 667000,
+      "basic_score": 0.9161741681501584,
+      "file_name": "tcm_herbs_banner_3.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "高质量的中药材、香料图片，背景为木质纹理，适合作为电商网站横幅背景",
+    "image_info": {
+      "url": "https://www.shutterstock.com/shutterstock/photos/763617082/display_1500/stock-photo-chinese-herbal-medicine-with-herbs-in-terracotta-bowls-and-loose-with-wooden-mortar-and-pestle-on-763617082.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 961857,
+      "width": 1500,
+      "height": 1101,
+      "total_pixels": 1651500,
+      "basic_score": 0.8692228018671014,
+      "file_name": "tcm_herbs_banner_4.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "高质量的中药材、香料图片，背景为木质纹理，适合作为电商网站横幅背景",
+    "image_info": {
+      "url": "https://www.shutterstock.com/shutterstock/photos/389549572/display_1500/stock-photo-traditional-chinese-medicine-ingredients-in-wooden-bowls-and-loose-over-distressed-white-wood-389549572.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 1082076,
+      "width": 1500,
+      "height": 1101,
+      "total_pixels": 1651500,
+      "basic_score": 0.8648333185900724,
+      "file_name": "tcm_herbs_banner_1.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "罐装中药材产品展示图片，包装精美，适合电商展示",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/71X7C9TFFCL.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 152868,
+      "width": 1100,
+      "height": 1100,
+      "total_pixels": 1210000,
+      "basic_score": 0.9209052000109119,
+      "file_name": "product_jars_7.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "罐装中药材产品展示图片，包装精美，适合电商展示",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/7146bgk9fZL._AC_UF894,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 99398,
+      "width": 894,
+      "height": 882,
+      "total_pixels": 788508,
+      "basic_score": 0.913365404792438,
+      "file_name": "product_jars_3.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "罐装中药材产品展示图片，包装精美，适合电商展示",
+    "image_info": {
+      "url": "https://www.shutterstock.com/shutterstock/photos/72466159/display_1500/stock-photo-traditional-chinese-medicine-herbs-and-remedies-in-jars-72466159.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 658420,
+      "width": 1500,
+      "height": 1101,
+      "total_pixels": 1651500,
+      "basic_score": 0.8707329992359522,
+      "file_name": "product_jars_4.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式礼品盒图片，橙色主题，适合促销活动使用",
+    "image_info": {
+      "url": "https://basketeer.s3.ap-south-1.amazonaws.com/wp-content/uploads/2025/01/17145033/CNY25-004.1-1.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 547408,
+      "width": 960,
+      "height": 1100,
+      "total_pixels": 1056000,
+      "basic_score": 0.9478661470580423,
+      "file_name": "gift_box_5.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式礼品盒图片，橙色主题，适合促销活动使用",
+    "image_info": {
+      "url": "https://bloomthis.co/cdn/shop/files/bloomthis-chinese-new-year-gift-mandarin-orange-cny-gift-box-2024-1080x1080-01.jpg?v=1704406811&width=1024",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 301650,
+      "width": 1024,
+      "height": 1024,
+      "total_pixels": 1048576,
+      "basic_score": 0.9441556978261466,
+      "file_name": "gift_box_0.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式礼品盒图片，橙色主题，适合促销活动使用",
+    "image_info": {
+      "url": "https://basketeer.s3.ap-south-1.amazonaws.com/wp-content/uploads/2025/01/17094822/CNY2025-004.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 376019,
+      "width": 960,
+      "height": 1100,
+      "total_pixels": 1056000,
+      "basic_score": 0.9387282539784997,
+      "file_name": "gift_box_8.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中药材装饰元素，甘草、桂皮、八角等，透明背景",
+    "image_info": {
+      "url": "https://images.squarespace-cdn.com/content/v1/591f4a98414fb5698275ff3b/1505765558938-7SQI4FC9VRLOLRUVBRIJ/image-asset.jpeg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 117111,
+      "width": 1400,
+      "height": 787,
+      "total_pixels": 1101800,
+      "basic_score": 0.933735160575676,
+      "file_name": "herb_ingredients_5.jpeg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中药材装饰元素，甘草、桂皮、八角等，透明背景",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/61D6p2pnieL._AC_UF894,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 94268,
+      "width": 800,
+      "height": 1000,
+      "total_pixels": 800000,
+      "basic_score": 0.9019575455555887,
+      "file_name": "herb_ingredients_3.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中药材装饰元素，甘草、桂皮、八角等，透明背景",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/71jyVXa2v5L._AC_UF894,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 91056,
+      "width": 744,
+      "height": 1000,
+      "total_pixels": 744000,
+      "basic_score": 0.8953596555039525,
+      "file_name": "herb_ingredients_0.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统花纹边框装饰，适合网站装饰",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/set-chinese-style-borders-decorative-vector-illustration-67992206.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 161656,
+      "width": 800,
+      "height": 800,
+      "total_pixels": 640000,
+      "basic_score": 0.8954868182831511,
+      "file_name": "traditional_border_7.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统花纹边框装饰，适合网站装饰",
+    "image_info": {
+      "url": "https://media.istockphoto.com/id/1049280728/vector/set-of-chinese-style-borders.jpg?s=612x612&w=0&k=20&c=61ao47N-rtgndVtPkkuQW5NF5pPdciUuA20UkP3Y5qk=",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 156893,
+      "width": 612,
+      "height": 592,
+      "total_pixels": 362304,
+      "basic_score": 0.8232787201209992,
+      "file_name": "traditional_border_1.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统花纹边框装饰，适合网站装饰",
+    "image_info": {
+      "url": "https://i.fbcd.co/products/resized/resized-750-500/2110-m01-i008-n009-mainpreview-9bffa183302fd50e76705d86e5abe61f33485847cbfe0f07fd190149bad4dbb3.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 74738,
+      "width": 750,
+      "height": 500,
+      "total_pixels": 375000,
+      "basic_score": 0.8166871524796421,
+      "file_name": "traditional_border_0.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式购物车、搜索、会员等电商图标",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/shopping-cart-icon-vector-miscellaneous-collection-thin-line-shopping-cart-outline-icon-vector-illustration-linear-symbol-142672747.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 24071,
+      "width": 800,
+      "height": 800,
+      "total_pixels": 640000,
+      "basic_score": 0.880645477293129,
+      "file_name": "ecommerce_icons_2.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式购物车、搜索、会员等电商图标",
+    "image_info": {
+      "url": "https://images.vexels.com/media/users/3/74235/raw/ed3bf1d1371e45db4a83cb961621bbe3-shopping-cart-icon-squares-pack.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 227985,
+      "width": 1600,
+      "height": 1000,
+      "total_pixels": 1600000,
+      "basic_score": 0.8614993853071135,
+      "file_name": "ecommerce_icons_3.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式购物车、搜索、会员等电商图标",
+    "image_info": {
+      "url": "https://cdn-icons-png.freepik.com/512/4153/4153741.png",
+      "img_format": "PNG",
+      "mode": "RGBA",
+      "file_size": 17492,
+      "width": 512,
+      "height": 512,
+      "total_pixels": 262144,
+      "basic_score": 0.7609734287779124,
+      "file_name": "ecommerce_icons_9.png"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统印章logo设计，绿色主题，适合中医药品牌",
+    "image_info": {
+      "url": "https://media.istockphoto.com/id/462241395/vector/traditional-chinese-seals.jpg?s=1024x1024&w=is&k=20&c=Ze0oinjjG3v9TssD0SKQm2U8Q3_UVmvuX1wB0tZo_R8=",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 135586,
+      "width": 1024,
+      "height": 777,
+      "total_pixels": 795648,
+      "basic_score": 0.9217393073019359,
+      "file_name": "seal_logo_5.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统印章logo设计，绿色主题，适合中医药品牌",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/chinese-seals-7408702.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 175109,
+      "width": 756,
+      "height": 900,
+      "total_pixels": 680400,
+      "basic_score": 0.8938760606775786,
+      "file_name": "seal_logo_8.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统印章logo设计，绿色主题，适合中医药品牌",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/traditional-chinese-seals-13068576.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 72288,
+      "width": 651,
+      "height": 900,
+      "total_pixels": 585900,
+      "basic_score": 0.8674176214466299,
+      "file_name": "seal_logo_7.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式茶叶装饰元素，适合茶饮专区",
+    "image_info": {
+      "url": "https://cdn.shopify.com/s/files/1/0573/2037/4390/files/camille_67988_chinese_tea_ceremony_--v_6.1_b2811022-5008-4ae8-9bcd-7ae54bb912a2_1000x.png?v=1731638102",
+      "img_format": "PNG",
+      "mode": "RGB",
+      "file_size": 1359608,
+      "width": 1000,
+      "height": 1000,
+      "total_pixels": 1000000,
+      "basic_score": 0.9328936828738938,
+      "file_name": "tea_decoration_8.png"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式茶叶装饰元素，适合茶饮专区",
+    "image_info": {
+      "url": "https://cdn.shopify.com/s/files/1/0573/2037/4390/files/camille_67988_chinese_tea_ceremony_--ar_169_--v_6.1_be34e579-431d-465e-b18b-429df5673aaf.png?v=1731637934",
+      "img_format": "PNG",
+      "mode": "RGB",
+      "file_size": 1734520,
+      "width": 1456,
+      "height": 816,
+      "total_pixels": 1188096,
+      "basic_score": 0.8983548125632164,
+      "file_name": "tea_decoration_7.png"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式茶叶装饰元素，适合茶饮专区",
+    "image_info": {
+      "url": "https://bluedail.com/cdn/shop/files/03_a65b795c-87ae-4be4-8e86-e7d224b1d1a9.jpg?v=1682417517&width=1445",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 109367,
+      "width": 800,
+      "height": 800,
+      "total_pixels": 640000,
+      "basic_score": 0.8900588442883478,
+      "file_name": "tea_decoration_3.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "暖色调中性背景纹理，自然舒适",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/torn-kraft-paper-landscape-textured-background-natural-minimalistic-collage-made-layered-warm-neutral-tones-378457890.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 64835,
+      "width": 720,
+      "height": 900,
+      "total_pixels": 648000,
+      "basic_score": 0.877362651849826,
+      "file_name": "warm_background_5.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "暖色调中性背景纹理，自然舒适",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/background-texture-featuring-neutral-toned-paper-subtle-speckles-warm-appearance-showcases-suitable-various-design-404278531.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 29807,
+      "width": 600,
+      "height": 900,
+      "total_pixels": 540000,
+      "basic_score": 0.8516681481747103,
+      "file_name": "warm_background_7.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "暖色调中性背景纹理，自然舒适",
+    "image_info": {
+      "url": "https://images.thdstatic.com/productImages/4e3753ba-6cd3-4d3e-826d-4be93586b1b5/svn/zio-and-sons-wallpaper-rolls-ast4070-64_600.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 47043,
+      "width": 600,
+      "height": 600,
+      "total_pixels": 360000,
+      "basic_score": 0.8090522428302024,
+      "file_name": "warm_background_1.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "天然纸质纹理背景，米色或暖白色",
+    "image_info": {
+      "url": "https://as1.ftcdn.net/jpg/05/11/69/88/1000_F_511698876_Ff6EqJMerJCHLkJvCfpKbJOftkWWOdoF.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 247702,
+      "width": 1000,
+      "height": 417,
+      "total_pixels": 417000,
+      "basic_score": 0.8029045547601885,
+      "file_name": "paper_texture_7.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "天然纸质纹理背景，米色或暖白色",
+    "image_info": {
+      "url": "https://thumbs.dreamstime.com/b/beige-paper-color-texture-background-kraft-soft-natural-style-aesthetic-creative-design-227007503.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 13168,
+      "width": 800,
+      "height": 425,
+      "total_pixels": 340000,
+      "basic_score": 0.7931439517826774,
+      "file_name": "paper_texture_2.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "天然纸质纹理背景，米色或暖白色",
+    "image_info": {
+      "url": "https://media.istockphoto.com/id/1388032818/photo/paper-texture-cardboard-background-close-up-grunge-paper-texture.jpg?s=612x612&w=0&k=20&c=35jdirwQwxnX-X_lRFRzjerXINHMbfNlH8gH3NPLDZI=",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 16340,
+      "width": 612,
+      "height": 408,
+      "total_pixels": 249696,
+      "basic_score": 0.7645720848695232,
+      "file_name": "paper_texture_5.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中药粉末和颗粒装饰元素，天然有机",
+    "image_info": {
+      "url": "https://pub.mdpi-res.com/toxics/toxics-10-00719/article_deploy/html/images/toxics-10-00719-ag.png?1671693516",
+      "img_format": "PNG",
+      "mode": "RGB",
+      "file_size": 280965,
+      "width": 1280,
+      "height": 720,
+      "total_pixels": 921600,
+      "basic_score": 0.9362432921486197,
+      "file_name": "powder_elements_3.png"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中药粉末和颗粒装饰元素，天然有机",
+    "image_info": {
+      "url": "https://cdn11.bigcommerce.com/s-8466dwhhql/images/stencil/1280x1280/products/666/4253/Garlic_Granules_Bottle__90736.1719952349.jpg?c=1",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 94827,
+      "width": 1280,
+      "height": 853,
+      "total_pixels": 1091840,
+      "basic_score": 0.9331400222468216,
+      "file_name": "powder_elements_8.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中药粉末和颗粒装饰元素，天然有机",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/71eIvhEtHGL._AC_UF1000,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 98686,
+      "width": 1000,
+      "height": 932,
+      "total_pixels": 932000,
+      "basic_score": 0.925756608845505,
+      "file_name": "powder_elements_6.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统中药材拼贴装饰图，甘草、人参等",
+    "image_info": {
+      "url": "https://images-provider.frontiersin.org/api/ipx/w=1200&f=png/https://www.frontiersin.org/files/Articles/1038906/fphar-14-1038906-HTML/image_m/fphar-14-1038906-g001.jpg",
+      "img_format": "PNG",
+      "mode": "RGB",
+      "file_size": 989528,
+      "width": 1017,
+      "height": 659,
+      "total_pixels": 670203,
+      "basic_score": 0.9271515819066292,
+      "file_name": "medicine_collage_2.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统中药材拼贴装饰图，甘草、人参等",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/81B8SULn63L._AC_UF894,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 134739,
+      "width": 894,
+      "height": 869,
+      "total_pixels": 776886,
+      "basic_score": 0.9156063170698384,
+      "file_name": "medicine_collage_7.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式传统中药材拼贴装饰图，甘草、人参等",
+    "image_info": {
+      "url": "https://i.natgeofe.com/n/9b598bd5-90a3-4031-961b-05835931278a/00000167-9efb-d142-af67-dffbbbea0000.jpg?wp=1&w=1680&h=945",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 345540,
+      "width": 1680,
+      "height": 945,
+      "total_pixels": 1587600,
+      "basic_score": 0.8747526948414862,
+      "file_name": "medicine_collage_9.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式绿色植物叶子装饰，适合健康主题",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/811AClMYBNL._AC_UF894,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 86962,
+      "width": 894,
+      "height": 907,
+      "total_pixels": 810858,
+      "basic_score": 0.9140248907758984,
+      "file_name": "green_plants_3.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式绿色植物叶子装饰，适合健康主题",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/71VXNPGs5jL._AC_UF894,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 69251,
+      "width": 894,
+      "height": 891,
+      "total_pixels": 796554,
+      "basic_score": 0.9110272267128704,
+      "file_name": "green_plants_1.jpg"
+    },
+    "llm_score": null
+  },
+  {
+    "query": "中式绿色植物叶子装饰，适合健康主题",
+    "image_info": {
+      "url": "https://m.media-amazon.com/images/I/81SXvvr9+xL._AC_UF894,1000_QL80_.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 78090,
+      "width": 894,
+      "height": 807,
+      "total_pixels": 721458,
+      "basic_score": 0.8999567842996564,
+      "file_name": "green_plants_6.jpg"
+    },
+    "llm_score": null
+  }
+]
