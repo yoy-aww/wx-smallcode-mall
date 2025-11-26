@@ -1,0 +1,99 @@
+<!--components/product-card/index.wxml-->
+<view class="product-card" bindtap="onProductTap" data-product-id="{{product.id}}">
+  <!-- 产品图片区域 -->
+  <view class="product-image-container">
+    <image 
+      class="product-image {{imageLoading ? 'loading' : ''}}" 
+      src="{{product.image}}" 
+      mode="aspectFill"
+      lazy-load="{{true}}"
+      bindload="onImageLoad"
+      binderror="onImageError"
+      show-menu-by-longpress="{{false}}"
+    />
+    
+    <!-- 图片加载占位符 -->
+    <view wx:if="{{imageLoading}}" class="image-placeholder">
+      <view class="placeholder-icon">
+        <text class="icon-image">📷</text>
+      </view>
+      <text class="placeholder-text">加载中...</text>
+    </view>
+    
+    <!-- 图片加载失败占位符 -->
+    <view wx:if="{{imageError}}" class="image-error">
+      <view class="error-icon">
+        <text class="icon-error">🖼️</text>
+      </view>
+      <text class="error-text">图片加载失败</text>
+    </view>
+    
+    <!-- 产品标签 -->
+    <view wx:if="{{product.tags && product.tags.length > 0}}" class="product-tags">
+      <text 
+        wx:for="{{product.tags}}" 
+        wx:key="*this" 
+        class="product-tag"
+      >
+        {{item}}
+      </text>
+    </view>
+  </view>
+  
+  <!-- 产品信息区域 -->
+  <view class="product-info">
+    <!-- 产品名称 -->
+    <text class="product-name">{{product.name}}</text>
+    
+    <!-- 产品描述 -->
+    <text wx:if="{{product.description}}" class="product-description">{{product.description}}</text>
+    
+    <!-- 价格区域 -->
+    <view class="price-container">
+      <!-- 折扣价格 -->
+      <text wx:if="{{product.discountedPrice}}" class="discounted-price">
+        ¥{{product.discountedPrice}}
+      </text>
+      
+      <!-- 原价 -->
+      <text class="original-price {{product.discountedPrice ? 'crossed-out' : ''}}">
+        ¥{{product.originalPrice}}
+      </text>
+      
+      <!-- 折扣标签 -->
+      <view wx:if="{{discountPercentage > 0}}" class="discount-badge">
+        <text class="discount-text">{{discountPercentage}}折</text>
+      </view>
+    </view>
+    
+    <!-- 库存信息 -->
+    <view class="stock-info">
+      <text class="stock-text {{product.stock <= 5 ? 'low-stock' : ''}}">
+        {{product.stock > 0 ? '库存：' + product.stock : '暂无库存'}}
+      </text>
+    </view>
+  </view>
+  
+  <!-- 操作按钮区域 -->
+  <view class="product-actions">
+    <!-- 添加到购物车按钮 -->
+    <button 
+      class="add-to-cart-btn {{product.stock <= 0 ? 'disabled' : ''}} {{addingToCart ? 'loading' : ''}}"
+      disabled="{{product.stock <= 0 || addingToCart}}"
+      bindtap="onAddToCart"
+      data-product-id="{{product.id}}"
+      hover-class="btn-hover"
+      hover-stay-time="150"
+    >
+      <text wx:if="{{!addingToCart}}" class="btn-text">
+        {{product.stock > 0 ? '加购物车' : '暂无库存'}}
+      </text>
+      <text wx:else class="btn-text">添加中...</text>
+      
+      <!-- 加载动画 -->
+      <view wx:if="{{addingToCart}}" class="loading-spinner">
+        <view class="spinner"></view>
+      </view>
+    </button>
+  </view>
+</view>

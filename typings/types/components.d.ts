@@ -83,3 +83,75 @@ interface ErrorStates {
   /** Add to cart error */
   cartError?: string;
 }
+
+/**
+ * ProductCard component type definitions
+ */
+
+/**
+ * ProductCard component properties
+ */
+interface ProductCardProperties {
+  /** Product data to display */
+  product: Product | null;
+}
+
+/**
+ * ProductCard component data
+ */
+interface ProductCardData {
+  /** Image loading state */
+  imageLoading: boolean;
+  /** Image error state */
+  imageError: boolean;
+  /** Add to cart loading state */
+  addingToCart: boolean;
+  /** Calculated discount percentage */
+  discountPercentage: number;
+}
+
+/**
+ * ProductCard component methods
+ */
+interface ProductCardMethods {
+  /** Handle product data change */
+  onProductChange: (newProduct: Product, oldProduct: Product) => void;
+  /** Calculate discount percentage */
+  calculateDiscount: () => void;
+  /** Handle image load success */
+  onImageLoad: () => void;
+  /** Handle image load error */
+  onImageError: () => void;
+  /** Handle product card tap */
+  onProductTap: (event: WechatMiniprogram.TouchEvent) => void;
+  /** Handle add to cart button tap */
+  onAddToCart: (event: WechatMiniprogram.TouchEvent) => Promise<void>;
+  /** Get display price */
+  getDisplayPrice: () => string;
+  /** Get original price */
+  getOriginalPrice: () => string;
+  /** Check if product has discount */
+  hasDiscount: () => boolean;
+  /** Get stock status text */
+  getStockStatusText: () => string;
+  /** Retry image loading */
+  retryImageLoad: () => void;
+}
+
+/**
+ * ProductCard component events
+ */
+declare namespace ProductCardEvents {
+  /** Product tap event detail */
+  interface ProductTapDetail {
+    productId: string;
+    product: Product;
+  }
+  
+  /** Add to cart event detail */
+  interface AddToCartDetail {
+    productId: string;
+    product: Product;
+    quantity: number;
+  }
+}

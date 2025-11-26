@@ -344,3 +344,9 @@
     padding-right: env(safe-area-inset-right);
   }
 }
+
+// Flexbox 换行
+@mixin flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}

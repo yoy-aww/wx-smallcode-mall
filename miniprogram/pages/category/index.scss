@@ -271,18 +271,98 @@
   min-height: 100%;
 }
 
-/* 产品占位符样式 - 临时使用 */
-.product-placeholder {
-  @include flex-center;
-  height: 400rpx;
-  background-color: $background-tertiary;
-  border-radius: $border-radius-lg;
-  margin-bottom: $margin-md;
+/* ==================== 产品列表样式 ==================== */
+.products-container {
+  @include flex-column;
+  gap: $margin-md;
 }
 
-.placeholder-text {
+/* 产品加载状态 */
+.product-loading {
+  padding: $padding-md 0;
+}
+
+.skeleton-product-card {
+  background-color: $background-primary;
+  border-radius: $border-radius-lg;
+  margin-bottom: $margin-md;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 300rpx;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-content {
+  padding: $padding-md;
+  @include flex-column;
+  gap: $margin-sm;
+}
+
+.skeleton-title {
+  height: 32rpx;
+  width: 80%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4rpx;
+}
+
+.skeleton-price {
+  height: 24rpx;
+  width: 60%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4rpx;
+}
+
+.skeleton-button {
+  height: 72rpx;
+  width: 100%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: $border-radius-md;
+  margin-top: $margin-sm;
+}
+
+/* 产品空状态 */
+.product-empty {
+  @include flex-center;
+  @include flex-column;
+  padding: $padding-xl;
+  text-align: center;
+  min-height: 400rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: $margin-lg;
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  margin-bottom: $margin-sm;
+  font-weight: $font-weight-medium;
+}
+
+.empty-subtitle {
   font-size: $font-size-base;
   color: $text-tertiary;
+  margin-bottom: $margin-xs;
+}
+
+.empty-hint {
+  font-size: $font-size-sm;
+  color: $text-disabled;
 }
 
 /* ==================== 响应式设计 ==================== */

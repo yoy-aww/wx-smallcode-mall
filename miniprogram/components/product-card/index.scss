@@ -1,0 +1,439 @@
+/* components/product-card/index.scss */
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.product-card {
+  background-color: $background-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  margin-bottom: $margin-md;
+  overflow: hidden;
+  transition: all $transition-duration-base $transition-timing-function;
+  position: relative;
+  
+  // 悬停效果
+  &:hover {
+    box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+    transform: translateY(-2rpx);
+  }
+  
+  // 点击效果
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* ==================== 产品图片区域 ==================== */
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 300rpx;
+  overflow: hidden;
+  background-color: $background-secondary;
+  @include flex-center;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  transition: opacity $transition-duration-base $transition-timing-function;
+  
+  &.loading {
+    opacity: 0;
+  }
+}
+
+/* 图片占位符 */
+.image-placeholder,
+.image-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  @include flex-center;
+  @include flex-column;
+  background-color: $background-tertiary;
+  color: $text-tertiary;
+}
+
+.placeholder-icon,
+.error-icon {
+  font-size: 48rpx;
+  margin-bottom: $margin-xs;
+  opacity: 0.6;
+}
+
+.placeholder-text,
+.error-text {
+  font-size: $font-size-sm;
+  color: $text-tertiary;
+}
+
+.error-text {
+  color: $error-color;
+}
+
+/* 产品标签 */
+.product-tags {
+  position: absolute;
+  top: $padding-xs;
+  left: $padding-xs;
+  @include flex-wrap;
+  gap: $margin-xs;
+  max-width: calc(100% - #{$padding-xs * 2});
+}
+
+.product-tag {
+  background-color: rgba(139, 69, 19, 0.9);
+  color: $text-white;
+  font-size: $font-size-xs;
+  padding: 4rpx 8rpx;
+  border-radius: $border-radius-sm;
+  backdrop-filter: blur(4rpx);
+  @include text-ellipsis;
+  max-width: 120rpx;
+}
+
+/* ==================== 产品信息区域 ==================== */
+.product-info {
+  padding: $padding-md;
+  @include flex-column;
+  gap: $margin-xs;
+}
+
+.product-name {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  line-height: 1.4;
+  @include text-ellipsis-multiline(2);
+  margin-bottom: $margin-xs;
+}
+
+.product-description {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  line-height: 1.3;
+  @include text-ellipsis-multiline(2);
+  margin-bottom: $margin-sm;
+}
+
+/* ==================== 价格区域 ==================== */
+.price-container {
+  @include flex-center-vertical;
+  @include flex-wrap;
+  gap: $margin-xs;
+  margin-bottom: $margin-xs;
+  position: relative;
+}
+
+.discounted-price {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $primary-color;
+  line-height: 1;
+}
+
+.original-price {
+  font-size: $font-size-base;
+  color: $text-secondary;
+  line-height: 1;
+  
+  &.crossed-out {
+    text-decoration: line-through;
+    color: $text-tertiary;
+    font-size: $font-size-sm;
+  }
+}
+
+.discount-badge {
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  color: $text-white;
+  font-size: $font-size-xs;
+  padding: 2rpx 8rpx;
+  border-radius: $border-radius-sm;
+  font-weight: $font-weight-medium;
+  box-shadow: 0 2rpx 4rpx rgba(255, 107, 53, 0.3);
+}
+
+.discount-text {
+  line-height: 1;
+}
+
+/* ==================== 库存信息 ==================== */
+.stock-info {
+  margin-bottom: $margin-sm;
+}
+
+.stock-text {
+  font-size: $font-size-sm;
+  color: $text-tertiary;
+  
+  &.low-stock {
+    color: $warning-color;
+    font-weight: $font-weight-medium;
+  }
+}
+
+/* ==================== 操作按钮区域 ==================== */
+.product-actions {
+  padding: 0 $padding-md $padding-md;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  height: 72rpx;
+  background: linear-gradient(135deg, $primary-color, #a0522d);
+  color: $text-white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  @include flex-center;
+  gap: $margin-xs;
+  transition: all $transition-duration-base $transition-timing-function;
+  position: relative;
+  overflow: hidden;
+  
+  // 按钮悬停效果
+  &:hover:not(.disabled) {
+    background: linear-gradient(135deg, #a0522d, $primary-color);
+    box-shadow: 0 4rpx 12rpx rgba(139, 69, 19, 0.3);
+  }
+  
+  // 按钮点击效果
+  &.btn-hover:not(.disabled) {
+    background: linear-gradient(135deg, #654321, #8b4513);
+    transform: scale(0.98);
+  }
+  
+  // 禁用状态
+  &.disabled {
+    background: $background-tertiary;
+    color: $text-disabled;
+    cursor: not-allowed;
+  }
+  
+  // 加载状态
+  &.loading {
+    background: linear-gradient(135deg, #a0522d, $primary-color);
+    cursor: wait;
+  }
+  
+  // 按钮文字
+  .btn-text {
+    transition: opacity $transition-duration-base $transition-timing-function;
+    
+    .loading & {
+      opacity: 0.8;
+    }
+  }
+}
+
+/* 加载动画 */
+.loading-spinner {
+  position: absolute;
+  right: $padding-md;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.spinner {
+  width: 24rpx;
+  height: 24rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.3);
+  border-top: 3rpx solid $text-white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==================== 传统中医主题样式 ==================== */
+
+/* 中医风格的装饰元素 */
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    $primary-color 20%, 
+    #d4af37 50%, 
+    $primary-color 80%, 
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity $transition-duration-base $transition-timing-function;
+}
+
+.product-card:hover::before {
+  opacity: 1;
+}
+
+/* 中医风格的阴影效果 */
+.product-card {
+  box-shadow: 
+    0 4rpx 12rpx rgba(139, 69, 19, 0.08),
+    0 0 0 1rpx rgba(139, 69, 19, 0.04);
+    
+  &:hover {
+    box-shadow: 
+      0 8rpx 24rpx rgba(139, 69, 19, 0.12),
+      0 0 0 1rpx rgba(139, 69, 19, 0.08);
+  }
+}
+
+/* ==================== 响应式设计 ==================== */
+
+/* 小屏幕适配 */
+@include respond-to(sm) {
+  .product-image-container {
+    height: 250rpx;
+  }
+  
+  .product-info {
+    padding: $padding-sm;
+  }
+  
+  .product-name {
+    font-size: $font-size-base;
+  }
+  
+  .discounted-price {
+    font-size: $font-size-lg;
+  }
+  
+  .add-to-cart-btn {
+    height: 64rpx;
+    font-size: $font-size-sm;
+  }
+}
+
+/* 超小屏幕适配 */
+@include respond-to(xs) {
+  .product-image-container {
+    height: 200rpx;
+  }
+  
+  .product-info {
+    padding: $padding-xs;
+    gap: 4rpx;
+  }
+  
+  .product-name {
+    font-size: $font-size-sm;
+  }
+  
+  .product-description {
+    font-size: $font-size-xs;
+  }
+  
+  .add-to-cart-btn {
+    height: 56rpx;
+    font-size: $font-size-xs;
+  }
+}
+
+/* ==================== 动画效果 ==================== */
+
+/* 卡片进入动画 */
+.product-card {
+  animation: cardFadeIn 0.6s $transition-timing-function;
+}
+
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 图片加载动画 */
+.product-image {
+  animation: imageLoad 0.3s $transition-timing-function;
+}
+
+@keyframes imageLoad {
+  0% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 按钮点击波纹效果 */
+.add-to-cart-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+  pointer-events: none;
+}
+
+.add-to-cart-btn.btn-hover::after {
+  width: 200rpx;
+  height: 200rpx;
+}
+
+/* ==================== 无障碍支持 ==================== */
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .product-card {
+    border: 2rpx solid $text-primary;
+  }
+  
+  .add-to-cart-btn {
+    border: 2rpx solid $text-white;
+  }
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-image,
+  .add-to-cart-btn,
+  .spinner {
+    animation: none;
+    transition: none;
+  }
+  
+  .product-card:hover {
+    transform: none;
+  }
+}
+
+/* ==================== 打印样式 ==================== */
+@media print {
+  .product-card {
+    box-shadow: none;
+    border: 1rpx solid $border-color;
+    break-inside: avoid;
+  }
+  
+  .add-to-cart-btn {
+    display: none;
+  }
+}

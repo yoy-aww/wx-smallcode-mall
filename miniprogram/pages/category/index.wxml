@@ -62,11 +62,42 @@
         scroll-y="{{true}}"
         enhanced="{{true}}"
         show-scrollbar="{{false}}"
+        refresher-enabled="{{true}}"
+        refresher-triggered="{{productLoading}}"
+        bindrefresherrefresh="onProductRefresherRefresh"
       >
         <view class="product-list">
-          <!-- 产品卡片占位符 - 将在后续任务中实现 -->
-          <view class="product-placeholder">
-            <text class="placeholder-text">产品列表将在后续任务中实现</text>
+          <!-- 产品加载状态 -->
+          <view wx:if="{{productLoading && products.length === 0}}" class="product-loading">
+            <view class="loading-skeleton">
+              <view class="skeleton-product-card" wx:for="{{[1,2,3,4]}}" wx:key="*this">
+                <view class="skeleton-image"></view>
+                <view class="skeleton-content">
+                  <view class="skeleton-title"></view>
+                  <view class="skeleton-price"></view>
+                  <view class="skeleton-button"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+          
+          <!-- 产品列表 -->
+          <view wx:elif="{{products.length > 0}}" class="products-container">
+            <product-card 
+              wx:for="{{products}}" 
+              wx:key="id"
+              product="{{item}}"
+              bindproducttap="onProductTap"
+              bindaddtocart="onAddToCart"
+            />
+          </view>
+          
+          <!-- 空状态 -->
+          <view wx:else class="product-empty">
+            <view class="empty-icon">🛍️</view>
+            <text class="empty-title">暂无商品</text>
+            <text class="empty-subtitle">该分类下暂时没有商品</text>
+            <text class="empty-hint">试试其他分类吧</text>
           </view>
         </view>
       </scroll-view>
