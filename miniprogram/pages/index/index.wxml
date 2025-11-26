@@ -113,7 +113,169 @@
 
   <!-- 商品分类展示区域 -->
   <view class="category-grid">
-    <!-- 分类网格将在任务7中实现 -->
+    <view class="category-grid-container">
+      <!-- 左侧大卡片区域 -->
+      <view class="category-left">
+        <!-- 惠民专区卡片 -->
+        <view 
+          class="category-card category-welfare" 
+          data-id="{{categories[0].id}}"
+          data-path="{{categories[0].path}}"
+          bindtap="onCategoryTap"
+        >
+          <image 
+            class="category-bg-image" 
+            src="{{categories[0].backgroundImage}}" 
+            mode="aspectFill"
+            lazy-load="{{true}}"
+            binderror="onImageError"
+          ></image>
+          <view class="category-overlay"></view>
+          <view class="category-content">
+            <view class="category-header">
+              <view class="category-title">{{categories[0].title}}</view>
+              <view class="category-subtitle">{{categories[0].subtitle}}</view>
+            </view>
+            <view class="category-footer">
+              <view class="category-products" wx:if="{{categories[0].products.length > 0}}">
+                <image 
+                  class="product-preview" 
+                  wx:for="{{categories[0].products}}" 
+                  wx:key="id"
+                  wx:if="{{index < 3}}"
+                  src="{{item.image}}" 
+                  mode="aspectFill"
+                  lazy-load="{{true}}"
+                ></image>
+              </view>
+              <view class="category-action-btn">
+                <text class="action-text">{{categories[0].actionText}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 品质自营卡片 -->
+        <view 
+          class="category-card category-quality" 
+          data-id="{{categories[1].id}}"
+          data-path="{{categories[1].path}}"
+          bindtap="onCategoryTap"
+        >
+          <image 
+            class="category-bg-image" 
+            src="{{categories[1].backgroundImage}}" 
+            mode="aspectFill"
+            lazy-load="{{true}}"
+            binderror="onImageError"
+          ></image>
+          <view class="category-overlay"></view>
+          <view class="category-content">
+            <view class="category-header">
+              <view class="category-title">{{categories[1].title}}</view>
+              <view class="category-subtitle">{{categories[1].subtitle}}</view>
+            </view>
+            <view class="category-footer">
+              <view class="category-products" wx:if="{{categories[1].products.length > 0}}">
+                <image 
+                  class="product-preview" 
+                  wx:for="{{categories[1].products}}" 
+                  wx:key="id"
+                  wx:if="{{index < 3}}"
+                  src="{{item.image}}" 
+                  mode="aspectFill"
+                  lazy-load="{{true}}"
+                ></image>
+              </view>
+              <view class="category-action-btn">
+                <text class="action-text">{{categories[1].actionText}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 右侧小卡片区域 -->
+      <view class="category-right">
+        <!-- 爆款茶饮卡片 -->
+        <view 
+          class="category-card category-tea" 
+          data-id="{{categories[2].id}}"
+          data-path="{{categories[2].path}}"
+          bindtap="onCategoryTap"
+        >
+          <image 
+            class="category-bg-image" 
+            src="{{categories[2].backgroundImage}}" 
+            mode="aspectFill"
+            lazy-load="{{true}}"
+            binderror="onImageError"
+          ></image>
+          <view class="category-overlay"></view>
+          <view class="category-content">
+            <view class="category-header">
+              <view class="category-title">{{categories[2].title}}</view>
+              <view class="category-subtitle">{{categories[2].subtitle}}</view>
+            </view>
+            <view class="category-footer">
+              <view class="category-products" wx:if="{{categories[2].products.length > 0}}">
+                <image 
+                  class="product-preview" 
+                  wx:for="{{categories[2].products}}" 
+                  wx:key="id"
+                  wx:if="{{index < 2}}"
+                  src="{{item.image}}" 
+                  mode="aspectFill"
+                  lazy-load="{{true}}"
+                ></image>
+              </view>
+              <view class="category-action-btn">
+                <text class="action-text">{{categories[2].actionText}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 活动专区卡片 -->
+        <view 
+          class="category-card category-activity" 
+          data-id="{{categories[3].id}}"
+          data-path="{{categories[3].path}}"
+          bindtap="onCategoryTap"
+        >
+          <image 
+            class="category-bg-image" 
+            src="{{categories[3].backgroundImage}}" 
+            mode="aspectFill"
+            lazy-load="{{true}}"
+            binderror="onImageError"
+          ></image>
+          <view class="category-overlay"></view>
+          <view class="category-content">
+            <view class="category-header">
+              <view class="category-title">{{categories[3].title}}</view>
+              <view class="category-subtitle">{{categories[3].subtitle}}</view>
+            </view>
+            <view class="category-footer">
+              <view class="category-products" wx:if="{{categories[3].products.length > 0}}">
+                <image 
+                  class="product-preview" 
+                  wx:for="{{categories[3].products}}" 
+                  wx:key="id"
+                  wx:if="{{index < 2}}"
+                  src="{{item.image}}" 
+                  mode="aspectFill"
+                  lazy-load="{{true}}"
+                ></image>
+              </view>
+              <view class="category-action-btn">
+                <text class="action-text">{{categories[3].actionText}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 底部安全区域 -->
