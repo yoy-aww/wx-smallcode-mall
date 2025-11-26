@@ -115,7 +115,7 @@ interface ProductCardData {
  */
 interface ProductCardMethods {
   /** Handle product data change */
-  onProductChange: (newProduct: Product, oldProduct: Product) => void;
+  onProductChange: (newProduct: Product) => void;
   /** Calculate discount percentage */
   calculateDiscount: () => void;
   /** Handle image load success */
@@ -123,9 +123,9 @@ interface ProductCardMethods {
   /** Handle image load error */
   onImageError: () => void;
   /** Handle product card tap */
-  onProductTap: (event: WechatMiniprogram.TouchEvent) => void;
+  onProductTap: () => void;
   /** Handle add to cart button tap */
-  onAddToCart: (event: WechatMiniprogram.TouchEvent) => Promise<void>;
+  onAddToCart: () => Promise<void>;
   /** Get display price */
   getDisplayPrice: () => string;
   /** Get original price */
@@ -136,6 +136,14 @@ interface ProductCardMethods {
   getStockStatusText: () => string;
   /** Retry image loading */
   retryImageLoad: () => void;
+  /** Show add to cart animation */
+  showAddToCartAnimation: () => void;
+  /** Trigger success animation */
+  triggerSuccessAnimation: () => void;
+  /** Handle add to cart error */
+  handleAddToCartError: (errorMessage: string) => void;
+  /** Retry add to cart */
+  retryAddToCart: () => Promise<void>;
 }
 
 /**

@@ -1,0 +1,21 @@
+<!--components/cart-toast/index.wxml-->
+<view class="cart-toast {{visible ? 'show' : ''}}" wx:if="{{visible}}">
+  <view class="toast-content">
+    <view class="toast-icon">
+      <text class="icon-cart">🛒</text>
+    </view>
+    <view class="toast-message">
+      <text class="message-text">{{message}}</text>
+    </view>
+    <view class="toast-animation">
+      <view class="success-checkmark">
+        <view class="check-icon">
+          <span class="icon-line line-tip"></span>
+          <span class="icon-line line-long"></span>
+          <view class="icon-circle"></view>
+          <view class="icon-fix"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

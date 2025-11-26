@@ -1,13 +1,13 @@
 // components/product-card/index.ts
 
-Component<ProductCardData, ProductCardProperties, ProductCardMethods>({
+Component({
   /**
    * 组件属性定义
    */
   properties: {
     // 产品数据
     product: {
-      type: Object as () => Product,
+      type: null,
       value: null,
       observer: 'onProductChange'
     }
@@ -62,7 +62,7 @@ Component<ProductCardData, ProductCardProperties, ProductCardMethods>({
     /**
      * 产品数据变化时的观察者
      */
-    onProductChange(newProduct: Product, oldProduct: Product) {
+    onProductChange(newProduct: Product) {
       console.log('Product data changed:', newProduct);
       
       if (newProduct) {
@@ -126,7 +126,7 @@ Component<ProductCardData, ProductCardProperties, ProductCardMethods>({
     /**
      * 产品卡片点击处理
      */
-    onProductTap(event: WechatMiniprogram.TouchEvent) {
+    onProductTap() {
       const { product } = this.properties;
       
       if (!product) {
@@ -154,9 +154,9 @@ Component<ProductCardData, ProductCardProperties, ProductCardMethods>({
     /**
      * 添加到购物车处理
      */
-    async onAddToCart(event: WechatMiniprogram.TouchEvent) {
-      // 阻止事件冒泡，避免触发产品卡片点击
-      event.stopPropagation();
+    async onAddToCart() {
+      // Note: WeChat miniprogram events don't have stopPropagation
+      // We'll handle this at the component level instead
       
       const { product } = this.properties;
       
@@ -207,6 +207,9 @@ Component<ProductCardData, ProductCardProperties, ProductCardMethods>({
           composed: true
         });
 
+        // 显示成功动画
+        this.showAddToCartAnimation();
+        
         // 显示成功提示
         wx.showToast({
           title: '已添加到购物车',
@@ -219,12 +222,8 @@ Component<ProductCardData, ProductCardProperties, ProductCardMethods>({
       } catch (error) {
         console.error('Failed to add product to cart:', error);
         
-        // 显示错误提示
-        wx.showToast({
-          title: '添加失败，请重试',
-          icon: 'none',
-          duration: 2000
-        });
+        // 显示错误提示并提供重试选项
+        this.handleAddToCartError(error instanceof Error ? error.message : '添加失败');
       } finally {
         // 重置加载状态
         this.setData({
@@ -307,6 +306,157 @@ Component<ProductCardData, ProductCardProperties, ProductCardMethods>({
 
       // 触发图片重新加载
       // 注意：在实际应用中，可能需要添加时间戳或其他参数来强制重新加载
+    },
+
+    /**
+     * 显示添加到购物车动画
+     */
+    showAddToCartAnimation() {
+      console.log('Showing add to cart animation');
+      
+      // 添加按钮点击动画类
+      const query = this.createSelectorQuery();
+      query.select('.add-to-cart-btn').boundingClientRect();
+      query.exec((res) => {
+        if (res[0]) {
+          // 创建动画效果
+          const animation = wx.createAnimation({
+            duration: 300,
+            timingFunction: 'ease-out'
+          });
+          
+          // 按钮缩放动画
+          animation.scale(0.95).step();
+          animation.scale(1).step();
+          
+          // 应用动画（注意：在实际应用中可能需要通过setData应用动画）
+          console.log('Add to cart animation completed');
+        }
+      });
+      
+      // 添加成功反馈动画
+      this.triggerSuccessAnimation();
+    },
+
+    /**
+     * 触发成功动画
+     */
+    triggerSuccessAnimation() {
+      // 可以在这里添加更复杂的成功动画
+      // 比如从按钮位置飞向购物车图标的动画
+      console.log('Success animation triggered');
+      
+      // 添加轻微的震动反馈
+      wx.vibrateShort({
+        type: 'light'
+      });
+    },
+
+    /**
+     * 处理添加到购物车错误
+     */
+    handleAddToCartError(errorMessage: string) {
+      const { product } = this.properties;
+      
+      if (!product) {
+        return;
+      }
+
+      console.error('Add to cart error in product card:', errorMessage);
+      
+      // 显示错误提示并提供重试选项
+      wx.showModal({
+        title: '添加失败',
+        content: `${errorMessage}，是否重试？`,
+        confirmText: '重试',
+        cancelText: '取消',
+        success: (res) => {
+          if (res.confirm) {
+            // 重试添加到购物车
+            this.retryAddToCart();
+          }
+        }
+      });
+    },
+
+    /**
+     * 重试添加到购物车
+     */
+    async retryAddToCart() {
+      const { product } = this.properties;
+      
+      if (!product) {
+        console.error('No product data for retry');
+        return;
+      }
+
+      console.log('Retrying add to cart from product card:', product.id);
+      
+      // 检查库存
+      if (product.stock <= 0) {
+        wx.showToast({
+          title: '商品暂无库存',
+          icon: 'none',
+          duration: 2000
+        });
+        return;
+      }
+
+      try {
+        // 设置重试加载状态
+        this.setData({
+          addingToCart: true
+        });
+
+        // 显示重试提示
+        wx.showLoading({
+          title: '重试中...',
+          mask: true
+        });
+
+        // 模拟重试网络请求
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        wx.hideLoading();
+
+        // 触发重试成功事件
+        this.triggerEvent('addtocart', {
+          productId: product.id,
+          product: product,
+          quantity: 1,
+          isRetry: true
+        }, {
+          bubbles: true,
+          composed: true
+        });
+
+        // 显示重试成功提示
+        wx.showToast({
+          title: '重试成功，已添加到购物车',
+          icon: 'success',
+          duration: 2000
+        });
+
+        // 显示成功动画
+        this.showAddToCartAnimation();
+
+        console.log('Retry add to cart successful');
+
+      } catch (error) {
+        wx.hideLoading();
+        console.error('Retry add to cart failed:', error);
+        
+        wx.showToast({
+          title: '重试失败，请稍后再试',
+          icon: 'none',
+          duration: 3000
+        });
+      } finally {
+        // 重置加载状态
+        this.setData({
+          addingToCart: false
+        });
+      }
     }
   }
 });

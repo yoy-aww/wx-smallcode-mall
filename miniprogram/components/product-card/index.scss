@@ -10,13 +10,13 @@
   overflow: hidden;
   transition: all $transition-duration-base $transition-timing-function;
   position: relative;
-  
+
   // 悬停效果
   &:hover {
     box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
     transform: translateY(-2rpx);
   }
-  
+
   // 点击效果
   &:active {
     transform: translateY(0) scale(0.98);
@@ -38,7 +38,7 @@
   width: 100%;
   height: 100%;
   transition: opacity $transition-duration-base $transition-timing-function;
-  
+
   &.loading {
     opacity: 0;
   }
@@ -140,7 +140,7 @@
   font-size: $font-size-base;
   color: $text-secondary;
   line-height: 1;
-  
+
   &.crossed-out {
     text-decoration: line-through;
     color: $text-tertiary;
@@ -170,7 +170,7 @@
 .stock-text {
   font-size: $font-size-sm;
   color: $text-tertiary;
-  
+
   &.low-stock {
     color: $warning-color;
     font-weight: $font-weight-medium;
@@ -196,36 +196,36 @@
   transition: all $transition-duration-base $transition-timing-function;
   position: relative;
   overflow: hidden;
-  
+
   // 按钮悬停效果
   &:hover:not(.disabled) {
     background: linear-gradient(135deg, #a0522d, $primary-color);
     box-shadow: 0 4rpx 12rpx rgba(139, 69, 19, 0.3);
   }
-  
+
   // 按钮点击效果
   &.btn-hover:not(.disabled) {
     background: linear-gradient(135deg, #654321, #8b4513);
     transform: scale(0.98);
   }
-  
+
   // 禁用状态
   &.disabled {
     background: $background-tertiary;
     color: $text-disabled;
     cursor: not-allowed;
   }
-  
+
   // 加载状态
   &.loading {
     background: linear-gradient(135deg, #a0522d, $primary-color);
     cursor: wait;
   }
-  
+
   // 按钮文字
   .btn-text {
     transition: opacity $transition-duration-base $transition-timing-function;
-    
+
     .loading & {
       opacity: 0.8;
     }
@@ -250,8 +250,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* ==================== 传统中医主题样式 ==================== */
@@ -264,13 +269,12 @@
   left: 0;
   right: 0;
   height: 4rpx;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    $primary-color 20%, 
-    #d4af37 50%, 
-    $primary-color 80%, 
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      $primary-color 20%,
+      #d4af37 50%,
+      $primary-color 80%,
+      transparent 100%);
   opacity: 0;
   transition: opacity $transition-duration-base $transition-timing-function;
 }
@@ -281,12 +285,12 @@
 
 /* 中医风格的阴影效果 */
 .product-card {
-  box-shadow: 
+  box-shadow:
     0 4rpx 12rpx rgba(139, 69, 19, 0.08),
     0 0 0 1rpx rgba(139, 69, 19, 0.04);
-    
+
   &:hover {
-    box-shadow: 
+    box-shadow:
       0 8rpx 24rpx rgba(139, 69, 19, 0.12),
       0 0 0 1rpx rgba(139, 69, 19, 0.08);
   }
@@ -299,19 +303,19 @@
   .product-image-container {
     height: 250rpx;
   }
-  
+
   .product-info {
     padding: $padding-sm;
   }
-  
+
   .product-name {
     font-size: $font-size-base;
   }
-  
+
   .discounted-price {
     font-size: $font-size-lg;
   }
-  
+
   .add-to-cart-btn {
     height: 64rpx;
     font-size: $font-size-sm;
@@ -323,20 +327,20 @@
   .product-image-container {
     height: 200rpx;
   }
-  
+
   .product-info {
     padding: $padding-xs;
     gap: 4rpx;
   }
-  
+
   .product-name {
     font-size: $font-size-sm;
   }
-  
+
   .product-description {
     font-size: $font-size-xs;
   }
-  
+
   .add-to-cart-btn {
     height: 56rpx;
     font-size: $font-size-xs;
@@ -355,6 +359,7 @@
     opacity: 0;
     transform: translateY(20rpx);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -371,6 +376,7 @@
     opacity: 0;
     transform: scale(1.05);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
@@ -404,7 +410,7 @@
   .product-card {
     border: 2rpx solid $text-primary;
   }
-  
+
   .add-to-cart-btn {
     border: 2rpx solid $text-white;
   }
@@ -412,6 +418,7 @@
 
 /* 减少动画模式支持 */
 @media (prefers-reduced-motion: reduce) {
+
   .product-card,
   .product-image,
   .add-to-cart-btn,
@@ -419,7 +426,7 @@
     animation: none;
     transition: none;
   }
-  
+
   .product-card:hover {
     transform: none;
   }
@@ -432,7 +439,7 @@
     border: 1rpx solid $border-color;
     break-inside: avoid;
   }
-  
+
   .add-to-cart-btn {
     display: none;
   }

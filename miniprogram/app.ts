@@ -1,4 +1,6 @@
 // app.ts
+import { initializeCartManager } from './utils/cart-manager';
+
 App<IAppOption>({
   globalData: {},
   onLaunch() {
@@ -6,6 +8,9 @@ App<IAppOption>({
     const logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
+
+    // 初始化购物车管理器
+    initializeCartManager();
 
     // 登录
     wx.login({

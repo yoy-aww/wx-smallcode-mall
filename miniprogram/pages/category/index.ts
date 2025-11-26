@@ -2,23 +2,39 @@
 import { CategoryService } from '../../services/category';
 import { ProductService } from '../../services/product';
 
-Page<CategoryPageData>({
+Page({
   data: {
-    categories: [],
+    categories: [] as Category[],
     selectedCategoryId: '',
-    products: [],
+    products: [] as Product[],
     loading: false,
     productLoading: false
   },
 
+  // 添加到购物车状态
+  addingToCart: false,
+
+  // 购物车事件监听器
+  cartBadgeListener: null as any,
+  cartItemAddedListener: null as any,
+
   onLoad() {
     console.log('Category page loaded');
     this.initializePage();
+    this.setupCartListeners();
   },
 
   onShow() {
     // 页面显示时的逻辑
     console.log('Category page shown');
+    // 更新购物车状态
+    this.updateCartBadge();
+  },
+
+  onUnload() {
+    // 页面卸载时清理事件监听器
+    console.log('Category page unloaded');
+    this.cleanupCartListeners();
   },
 
   onReady() {
@@ -228,36 +244,209 @@ Page<CategoryPageData>({
     const { productId, product, quantity } = event.detail;
     console.log('Add to cart:', productId, product, quantity);
 
+    // 防止重复添加
+    if (this.addingToCart) {
+      console.log('Already adding to cart, ignoring duplicate request');
+      return;
+    }
+
     try {
-      // 这里将在后续任务中实现实际的购物车逻辑
-      // 目前只是模拟成功添加
+      // 设置添加状态
+      this.addingToCart = true;
+      
+      // 导入购物车服务
+      const { CartService } = await import('../../services/cart');
       
       // 添加触觉反馈
       wx.vibrateShort({
         type: 'medium'
       });
 
-      // 模拟网络请求延迟
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // 调用购物车服务添加产品
+      const response = await CartService.addToCart(productId, quantity);
+      
+      if (response.success) {
+        // 显示成功提示
+        wx.showToast({
+          title: `${product.name} 已添加到购物车`,
+          icon: 'success',
+          duration: 2000
+        });
 
-      // 显示成功提示
-      wx.showToast({
-        title: `${product.name} 已添加到购物车`,
-        icon: 'success',
-        duration: 2000
-      });
-
-      // 这里可以触发购物车数量更新等逻辑
-      console.log('Product added to cart successfully');
+        console.log('Product added to cart successfully');
+        
+        // 触发购物车更新事件
+        this.triggerCartUpdate();
+        
+      } else {
+        // 处理添加失败，提供重试选项
+        this.handleAddToCartError(response.error || '添加失败', productId, product, quantity);
+      }
 
     } catch (error) {
       console.error('Failed to add product to cart:', error);
       
-      wx.showToast({
-        title: '添加失败，请重试',
-        icon: 'none',
-        duration: 2000
+      // 处理网络错误，提供重试选项
+      this.handleAddToCartError('网络错误，请检查网络连接', productId, product, quantity);
+      
+    } finally {
+      // 重置添加状态
+      this.addingToCart = false;
+    }
+  },
+
+  /**
+   * 处理添加到购物车错误
+   */
+  handleAddToCartError(errorMessage: string, productId: string, product: Product, quantity: number) {
+    console.error('Add to cart error:', errorMessage);
+    
+    // 显示错误提示并提供重试选项
+    wx.showModal({
+      title: '添加失败',
+      content: `${errorMessage}，是否重试？`,
+      confirmText: '重试',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          // 重试添加到购物车
+          this.retryAddToCart(productId, product, quantity);
+        }
+      }
+    });
+  },
+
+  /**
+   * 重试添加到购物车
+   */
+  async retryAddToCart(productId: string, product: Product, quantity: number) {
+    console.log('Retrying add to cart:', productId);
+    
+    try {
+      const { CartService } = await import('../../services/cart');
+      
+      // 显示重试提示
+      wx.showLoading({
+        title: '重试中...',
+        mask: true
       });
+      
+      const response = await CartService.addToCart(productId, quantity);
+      
+      wx.hideLoading();
+      
+      if (response.success) {
+        wx.showToast({
+          title: `${product.name} 已添加到购物车`,
+          icon: 'success',
+          duration: 2000
+        });
+        
+        this.triggerCartUpdate();
+        
+      } else {
+        // 重试仍然失败
+        wx.showToast({
+          title: response.error || '重试失败，请稍后再试',
+          icon: 'none',
+          duration: 3000
+        });
+      }
+      
+    } catch (error) {
+      wx.hideLoading();
+      console.error('Retry add to cart failed:', error);
+      
+      wx.showToast({
+        title: '重试失败，请稍后再试',
+        icon: 'none',
+        duration: 3000
+      });
+    }
+  },
+
+  /**
+   * 触发购物车更新
+   */
+  triggerCartUpdate() {
+    console.log('Triggering cart update');
+    
+    // 触发全局购物车更新事件
+    // 其他页面可以监听这个事件来更新购物车状态
+    if ((wx as any).$emit) {
+      (wx as any).$emit('cartUpdated');
+    }
+    
+    // 更新当前页面的购物车状态（如果需要显示购物车数量等）
+    this.updateCartBadge();
+  },
+
+  /**
+   * 更新购物车徽章
+   */
+  async updateCartBadge() {
+    try {
+      const { CartService } = await import('../../services/cart');
+      const itemCount = await CartService.getCartItemCount();
+      
+      console.log('Cart item count updated:', itemCount);
+      
+      // 可以在这里更新页面上的购物车数量显示
+      // 比如更新导航栏的购物车图标数量
+      
+    } catch (error) {
+      console.error('Failed to update cart badge:', error);
+    }
+  },
+
+  /**
+   * 设置购物车事件监听器
+   */
+  async setupCartListeners() {
+    try {
+      const { CartManager, CartEventType } = await import('../../utils/cart-manager');
+      
+      // 监听购物车徽章更新事件
+      this.cartBadgeListener = (eventData: any) => {
+        console.log('Cart badge updated in category page:', eventData.totalItems);
+        // 可以在这里更新页面UI显示购物车数量
+      };
+      
+      // 监听商品添加事件
+      this.cartItemAddedListener = (eventData: any) => {
+        console.log('Item added to cart in category page:', eventData);
+        // 可以在这里显示添加成功的反馈
+      };
+      
+      CartManager.addEventListener(CartEventType.BADGE_UPDATED, this.cartBadgeListener);
+      CartManager.addEventListener(CartEventType.ITEM_ADDED, this.cartItemAddedListener);
+      
+      console.log('Cart listeners set up successfully');
+      
+    } catch (error) {
+      console.error('Failed to setup cart listeners:', error);
+    }
+  },
+
+  /**
+   * 清理购物车事件监听器
+   */
+  async cleanupCartListeners() {
+    try {
+      const { CartManager, CartEventType } = await import('../../utils/cart-manager');
+      
+      if (this.cartBadgeListener) {
+        CartManager.removeEventListener(CartEventType.BADGE_UPDATED, this.cartBadgeListener);
+      }
+      
+      if (this.cartItemAddedListener) {
+        CartManager.removeEventListener(CartEventType.ITEM_ADDED, this.cartItemAddedListener);
+      }
+      
+      console.log('Cart listeners cleaned up successfully');
+      
+    } catch (error) {
+      console.error('Failed to cleanup cart listeners:', error);
     }
   },
 
