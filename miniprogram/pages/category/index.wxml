@@ -17,29 +17,39 @@
         scroll-y="{{true}}"
         enhanced="{{true}}"
         show-scrollbar="{{false}}"
+        refresher-enabled="{{true}}"
+        refresher-triggered="{{loading}}"
+        bindrefresherrefresh="onRefresherRefresh"
       >
-        <view class="category-list">
-          <!-- 分类项占位符 - 将在后续任务中实现 -->
-          <view 
-            class="category-item active" 
-            bindtap="onCategoryTap"
-            data-category-id="welfare"
-          >
-            <text class="category-name">惠民专区</text>
+        <!-- 加载状态 -->
+        <view wx:if="{{loading && categories.length === 0}}" class="category-loading">
+          <view class="loading-skeleton">
+            <view class="skeleton-item" wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
+              <view class="skeleton-text"></view>
+            </view>
           </view>
+        </view>
+        
+        <!-- 分类列表 -->
+        <view wx:else class="category-list">
           <view 
-            class="category-item" 
+            wx:for="{{categories}}" 
+            wx:key="id"
+            class="category-item {{selectedCategoryId === item.id ? 'active' : ''}}" 
             bindtap="onCategoryTap"
-            data-category-id="tea"
+            data-category-id="{{item.id}}"
+            aria-label="分类：{{item.name}}，共{{item.productCount}}个商品"
+            role="button"
+            tabindex="0"
           >
-            <text class="category-name">爆款茶饮</text>
+            <text class="category-name">{{item.name}}</text>
+            <text wx:if="{{item.productCount > 0}}" class="product-count">({{item.productCount}})</text>
           </view>
-          <view 
-            class="category-item" 
-            bindtap="onCategoryTap"
-            data-category-id="activity"
-          >
-            <text class="category-name">活动专区</text>
+          
+          <!-- 空状态 -->
+          <view wx:if="{{categories.length === 0 && !loading}}" class="category-empty">
+            <text class="empty-text">暂无分类</text>
+            <text class="empty-hint">下拉刷新重试</text>
           </view>
         </view>
       </scroll-view>
