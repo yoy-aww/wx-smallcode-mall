@@ -18,17 +18,26 @@ Page({
   cartBadgeListener: null as any,
   cartItemAddedListener: null as any,
 
-  onLoad() {
-    console.log('Category page loaded');
+  onLoad(options: { categoryId?: string } = {}) {
+    console.log('Category page loaded with options:', options);
     this.initializePage();
     this.setupCartListeners();
+    
+    // 处理页面参数（如从分享链接进入）
+    if (options.categoryId) {
+      this.handlePageOptions(options);
+    }
   },
 
   onShow() {
     // 页面显示时的逻辑
     console.log('Category page shown');
+    
     // 更新购物车状态
     this.updateCartBadge();
+    
+    // 检查是否需要刷新数据（从其他页面返回时）
+    this.checkAndRefreshData();
   },
 
   onUnload() {
@@ -170,19 +179,35 @@ Page({
   async onCategorySelect(categoryId: string) {
     console.log('Category selected:', categoryId);
     
+    // 验证分类ID
+    if (!categoryId) {
+      console.error('Invalid category ID provided');
+      return;
+    }
+    
     // 查找选中的分类信息
     const selectedCategory = this.data.categories.find(cat => cat.id === categoryId);
     
-    if (selectedCategory) {
-      console.log('Selected category:', selectedCategory.name);
-      
-      // 触发分类切换动画
-      this.triggerCategorySwitchAnimation();
-      
+    if (!selectedCategory) {
+      console.error('Category not found:', categoryId);
+      wx.showToast({
+        title: '分类不存在',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
+
+    console.log('Selected category:', selectedCategory.name);
+    
+    // 触发分类切换动画
+    this.triggerCategorySwitchAnimation();
+    
+    try {
       // 加载对应分类的产品
       await this.loadProducts(categoryId);
       
-      // 可选：显示切换提示
+      // 显示切换提示（仅在实际切换时）
       if (this.data.selectedCategoryId !== categoryId) {
         wx.showToast({
           title: `切换到${selectedCategory.name}`,
@@ -190,6 +215,13 @@ Page({
           duration: 1000
         });
       }
+    } catch (error) {
+      console.error('Failed to load products for category:', categoryId, error);
+      wx.showToast({
+        title: '加载商品失败',
+        icon: 'none',
+        duration: 2000
+      });
     }
   },
 
@@ -215,23 +247,58 @@ Page({
     const { productId, product } = event.detail;
     console.log('Product tapped:', productId, product);
 
+    // 验证产品数据
+    if (!productId || !product) {
+      console.error('Invalid product data for navigation');
+      wx.showToast({
+        title: '产品信息错误',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
+
     // 添加触觉反馈
     wx.vibrateShort({
       type: 'light'
     });
 
-    // 导航到产品详情页
+    // 记录用户行为（用于分析）
+    this.trackUserInteraction('product_tap', {
+      productId: productId,
+      productName: product.name,
+      categoryId: this.data.selectedCategoryId,
+      categoryName: this.getCurrentCategory()?.name || 'unknown'
+    });
+
+    // 构建导航URL，包含必要的参数
+    const navigationUrl = this.buildProductDetailUrl(productId, {
+      from: 'category',
+      categoryId: this.data.selectedCategoryId,
+      categoryName: this.getCurrentCategory()?.name || ''
+    });
+
+    // 导航到产品详情页，传递必要的数据
     wx.navigateTo({
-      url: `/pages/product-detail/index?productId=${productId}`,
+      url: navigationUrl,
       success: () => {
-        console.log('Navigated to product detail page');
+        console.log('Successfully navigated to product detail page:', productId);
       },
       fail: (error) => {
         console.error('Failed to navigate to product detail:', error);
-        wx.showToast({
-          title: '页面跳转失败',
-          icon: 'none',
-          duration: 2000
+        
+        // 提供用户友好的错误处理
+        wx.showModal({
+          title: '跳转失败',
+          content: '无法打开商品详情页，是否重试？',
+          confirmText: '重试',
+          cancelText: '取消',
+          success: (res) => {
+            if (res.confirm) {
+              // 重试导航
+              this.retryProductNavigation(productId);
+            }
+          }
         });
       }
     });
@@ -457,6 +524,12 @@ Page({
     const categoryId = event.currentTarget.dataset.categoryId;
     console.log('Category tapped:', categoryId);
     
+    // 验证事件数据
+    if (!categoryId) {
+      console.error('No category ID in tap event');
+      return;
+    }
+    
     // 防止重复选择同一分类
     if (categoryId === this.data.selectedCategoryId) {
       console.log('Same category selected, ignoring');
@@ -475,9 +548,22 @@ Page({
       return;
     }
 
+    // 防止在加载过程中切换分类
+    if (this.data.productLoading) {
+      console.log('Products are loading, ignoring category tap');
+      return;
+    }
+
     // 添加触觉反馈
     wx.vibrateShort({
       type: 'light'
+    });
+
+    // 记录用户行为
+    this.trackUserInteraction('category_select', {
+      fromCategoryId: this.data.selectedCategoryId,
+      toCategoryId: categoryId,
+      categoryName: category.name
     });
     
     // 更新选中状态
@@ -722,5 +808,376 @@ Page({
    */
   getCurrentProducts(): Product[] {
     return this.data.products;
+  },
+
+  /**
+   * 构建产品详情页URL
+   */
+  buildProductDetailUrl(productId: string, params: Record<string, string> = {}): string {
+    const baseUrl = '/pages/product-detail/index';
+    const urlParams: string[] = [];
+    
+    // 添加产品ID
+    urlParams.push(`productId=${encodeURIComponent(productId)}`);
+    
+    // 添加其他参数
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        urlParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+      }
+    });
+    
+    return `${baseUrl}?${urlParams.join('&')}`;
+  },
+
+  /**
+   * 重试产品导航
+   */
+  retryProductNavigation(productId: string) {
+    console.log('Retrying product navigation:', productId);
+    
+    const navigationUrl = this.buildProductDetailUrl(productId, {
+      from: 'category',
+      categoryId: this.data.selectedCategoryId,
+      categoryName: this.getCurrentCategory()?.name || '',
+      retry: 'true'
+    });
+    
+    wx.navigateTo({
+      url: navigationUrl,
+      success: () => {
+        console.log('Retry navigation successful');
+        wx.showToast({
+          title: '跳转成功',
+          icon: 'success',
+          duration: 1500
+        });
+      },
+      fail: (error) => {
+        console.error('Retry navigation failed:', error);
+        wx.showToast({
+          title: '跳转失败，请稍后重试',
+          icon: 'none',
+          duration: 3000
+        });
+      }
+    });
+  },
+
+  /**
+   * 跟踪用户交互行为
+   */
+  trackUserInteraction(action: string, data: any) {
+    try {
+      console.log('User interaction tracked:', action, data);
+      
+      // 在实际应用中，这里可以发送到分析服务
+      // 例如：Analytics.track(action, data);
+      
+      // 记录到本地存储用于调试
+      const interactions = wx.getStorageSync('user_interactions') || [];
+      interactions.push({
+        action,
+        data,
+        timestamp: new Date().toISOString(),
+        page: 'category'
+      });
+      
+      // 只保留最近100条记录
+      if (interactions.length > 100) {
+        interactions.splice(0, interactions.length - 100);
+      }
+      
+      wx.setStorageSync('user_interactions', interactions);
+      
+    } catch (error) {
+      console.error('Failed to track user interaction:', error);
+    }
+  },
+
+  /**
+   * 处理键盘导航（可访问性支持）
+   */
+  onKeyboardNavigation(event: WechatMiniprogram.BaseEvent) {
+    // 为键盘用户提供导航支持
+    const detail = (event as any).detail || {};
+    const { key } = detail;
+    
+    switch (key) {
+      case 'ArrowUp':
+        this.selectPreviousCategory();
+        break;
+      case 'ArrowDown':
+        this.selectNextCategory();
+        break;
+      case 'Enter':
+      case ' ':
+        // 当前选中的分类已经处理，这里可以添加其他逻辑
+        break;
+    }
+  },
+
+  /**
+   * 处理长按事件（显示更多选项）
+   */
+  onCategoryLongPress(event: WechatMiniprogram.TouchEvent) {
+    const categoryId = event.currentTarget.dataset.categoryId;
+    const category = this.data.categories.find(cat => cat.id === categoryId);
+    
+    if (!category) {
+      return;
+    }
+
+    // 添加触觉反馈
+    wx.vibrateShort({
+      type: 'heavy'
+    });
+
+    // 显示分类操作菜单
+    wx.showActionSheet({
+      itemList: [
+        `查看 ${category.name} 分类`,
+        `分享 ${category.name} 分类`,
+        '刷新分类数据'
+      ],
+      success: (res) => {
+        switch (res.tapIndex) {
+          case 0:
+            // 选择分类
+            if (categoryId !== this.data.selectedCategoryId) {
+              this.setData({ selectedCategoryId: categoryId });
+              this.onCategorySelect(categoryId);
+            }
+            break;
+          case 1:
+            // 分享分类
+            this.shareCategory(category);
+            break;
+          case 2:
+            // 刷新数据
+            this.refreshCategories();
+            break;
+        }
+      }
+    });
+  },
+
+  /**
+   * 分享分类
+   */
+  shareCategory(category: Category) {
+    wx.showShareMenu({
+      withShareTicket: true,
+      success: () => {
+        console.log('Share menu shown for category:', category.name);
+      }
+    });
+  },
+
+  /**
+   * 处理产品长按事件
+   */
+  onProductLongPress(event: WechatMiniprogram.CustomEvent) {
+    const { productId, product } = event.detail;
+    
+    if (!product) {
+      return;
+    }
+
+    // 添加触觉反馈
+    wx.vibrateShort({
+      type: 'heavy'
+    });
+
+    // 显示产品操作菜单
+    wx.showActionSheet({
+      itemList: [
+        `查看 ${product.name}`,
+        `分享 ${product.name}`,
+        '添加到收藏',
+        '举报商品'
+      ],
+      success: (res) => {
+        switch (res.tapIndex) {
+          case 0:
+            // 查看产品详情
+            this.onProductTap({ detail: { productId, product } } as any);
+            break;
+          case 1:
+            // 分享产品
+            this.shareProduct(product);
+            break;
+          case 2:
+            // 添加到收藏
+            this.addToFavorites(product);
+            break;
+          case 3:
+            // 举报商品
+            this.reportProduct(product);
+            break;
+        }
+      }
+    });
+  },
+
+  /**
+   * 分享产品
+   */
+  shareProduct(product: Product) {
+    wx.showShareMenu({
+      withShareTicket: true,
+      success: () => {
+        console.log('Share menu shown for product:', product.name);
+        this.trackUserInteraction('product_share', {
+          productId: product.id,
+          productName: product.name
+        });
+      }
+    });
+  },
+
+  /**
+   * 添加到收藏
+   */
+  async addToFavorites(product: Product) {
+    try {
+      // 这里可以调用收藏服务
+      console.log('Adding product to favorites:', product.id);
+      
+      wx.showToast({
+        title: '已添加到收藏',
+        icon: 'success',
+        duration: 1500
+      });
+
+      this.trackUserInteraction('product_favorite', {
+        productId: product.id,
+        productName: product.name
+      });
+      
+    } catch (error) {
+      console.error('Failed to add to favorites:', error);
+      wx.showToast({
+        title: '收藏失败',
+        icon: 'none',
+        duration: 2000
+      });
+    }
+  },
+
+  /**
+   * 举报产品
+   */
+  reportProduct(product: Product) {
+    wx.showModal({
+      title: '举报商品',
+      content: `确定要举报商品"${product.name}"吗？`,
+      confirmText: '举报',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          console.log('Product reported:', product.id);
+          wx.showToast({
+            title: '举报已提交',
+            icon: 'success',
+            duration: 2000
+          });
+
+          this.trackUserInteraction('product_report', {
+            productId: product.id,
+            productName: product.name
+          });
+        }
+      }
+    });
+  },
+
+  /**
+   * 检查并刷新数据
+   */
+  checkAndRefreshData() {
+    try {
+      // 检查数据是否需要刷新（例如，从产品详情页返回）
+      const lastRefresh = wx.getStorageSync('category_last_refresh') || 0;
+      const now = Date.now();
+      const refreshInterval = 5 * 60 * 1000; // 5分钟
+      
+      if (now - lastRefresh > refreshInterval) {
+        console.log('Data is stale, refreshing...');
+        this.refreshCategories();
+        wx.setStorageSync('category_last_refresh', now);
+      }
+      
+    } catch (error) {
+      console.error('Failed to check refresh data:', error);
+    }
+  },
+
+  /**
+   * 处理页面分享
+   */
+  onShareAppMessage() {
+    const currentCategory = this.getCurrentCategory();
+    
+    return {
+      title: currentCategory ? `${currentCategory.name} - 传统中药商城` : '传统中药商城 - 商品分类',
+      path: `/pages/category/index?categoryId=${this.data.selectedCategoryId}`,
+      imageUrl: '/images/share-category.jpg' // 需要添加分享图片
+    };
+  },
+
+  /**
+   * 处理页面分享到朋友圈
+   */
+  onShareTimeline() {
+    const currentCategory = this.getCurrentCategory();
+    
+    return {
+      title: currentCategory ? `${currentCategory.name} - 传统中药商城` : '传统中药商城',
+      query: `categoryId=${this.data.selectedCategoryId}`,
+      imageUrl: '/images/share-category.jpg'
+    };
+  },
+
+  /**
+   * 处理页面收藏
+   */
+  onAddToFavorites() {
+    const currentCategory = this.getCurrentCategory();
+    
+    return {
+      title: currentCategory ? `${currentCategory.name} - 传统中药商城` : '传统中药商城',
+      imageUrl: '/images/share-category.jpg',
+      query: `categoryId=${this.data.selectedCategoryId}`
+    };
+  },
+
+  /**
+   * 处理页面参数（支持从分享链接进入）
+   */
+  handlePageOptions(options: { categoryId?: string }) {
+    if (options.categoryId) {
+      console.log('Page opened with category ID:', options.categoryId);
+      
+      // 等待分类数据加载完成后选择指定分类
+      const checkAndSelect = () => {
+        if (this.data.categories.length > 0) {
+          const targetCategory = this.data.categories.find(cat => cat.id === options.categoryId);
+          if (targetCategory) {
+            this.setData({
+              selectedCategoryId: options.categoryId
+            });
+            this.onCategorySelect(options.categoryId!);
+          } else {
+            console.warn('Target category not found:', options.categoryId);
+          }
+        } else {
+          // 如果分类还没加载完，等待一段时间后重试
+          setTimeout(checkAndSelect, 500);
+        }
+      };
+      
+      checkAndSelect();
+    }
   }
 });

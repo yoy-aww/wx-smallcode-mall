@@ -9,7 +9,7 @@
   />
   
   <!-- 主要内容区域 -->
-  <view class="category-content">
+  <view class="category-content" bindkeydown="onKeyboardNavigation">
     <!-- 左侧分类侧边栏 -->
     <view class="category-sidebar">
       <scroll-view 
@@ -37,6 +37,7 @@
             wx:key="id"
             class="category-item {{selectedCategoryId === item.id ? 'active' : ''}}" 
             bindtap="onCategoryTap"
+            bindlongpress="onCategoryLongPress"
             data-category-id="{{item.id}}"
             aria-label="分类：{{item.name}}，共{{item.productCount}}个商品"
             role="button"
@@ -50,6 +51,9 @@
           <view wx:if="{{categories.length === 0 && !loading}}" class="category-empty">
             <text class="empty-text">暂无分类</text>
             <text class="empty-hint">下拉刷新重试</text>
+            <button class="retry-btn" bindtap="refreshCategories" size="mini">
+              重新加载
+            </button>
           </view>
         </view>
       </scroll-view>
@@ -89,6 +93,7 @@
               product="{{item}}"
               bindproducttap="onProductTap"
               bindaddtocart="onAddToCart"
+              bindlongpress="onProductLongPress"
             />
           </view>
           
@@ -98,6 +103,9 @@
             <text class="empty-title">暂无商品</text>
             <text class="empty-subtitle">该分类下暂时没有商品</text>
             <text class="empty-hint">试试其他分类吧</text>
+            <button class="retry-btn" bindtap="refreshProducts" size="mini">
+              刷新商品
+            </button>
           </view>
         </view>
       </scroll-view>

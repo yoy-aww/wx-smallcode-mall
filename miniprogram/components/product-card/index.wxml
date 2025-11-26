@@ -1,5 +1,5 @@
 <!--components/product-card/index.wxml-->
-<view class="product-card" bindtap="onProductTap" data-product-id="{{product.id}}">
+<view class="product-card" bindtap="onProductTap" bindlongpress="onProductLongPress" data-product-id="{{product.id}}">
   <!-- 产品图片区域 -->
   <view class="product-image-container">
     <image 

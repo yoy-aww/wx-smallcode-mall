@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/category/index",
     "pages/cart/index",
-    "pages/profile/index"
+    "pages/profile/index",
+    "pages/product-detail/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

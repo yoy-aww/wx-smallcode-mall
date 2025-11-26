@@ -503,3 +503,66 @@
   position: relative;
   z-index: 1;
 }
+/*
+ ==================== 重试按钮样式 ==================== */
+.retry-btn {
+  margin-top: 32rpx;
+  background-color: #8B4513;
+  color: #ffffff;
+  border: none;
+  border-radius: 8rpx;
+  padding: 16rpx 32rpx;
+  font-size: 28rpx;
+  
+  &:active {
+    background-color: #6d3410;
+  }
+}
+
+/* ==================== 可访问性改进 ==================== */
+.category-item:focus,
+.product-card:focus {
+  outline: 4rpx solid #8B4513;
+  outline-offset: 2rpx;
+}
+
+/* ==================== 响应式设计改进 ==================== */
+@media (max-width: 750rpx) {
+  .category-content {
+    grid-template-columns: 160rpx 1fr;
+  }
+  
+  .category-sidebar {
+    min-width: 160rpx;
+  }
+  
+  .category-item {
+    padding: $padding-sm;
+  }
+  
+  .category-name {
+    font-size: 26rpx;
+  }
+}
+
+@media (max-width: 600rpx) {
+  .category-content {
+    grid-template-columns: 140rpx 1fr;
+  }
+  
+  .category-sidebar {
+    min-width: 140rpx;
+  }
+  
+  .category-item {
+    padding: $padding-xs;
+  }
+  
+  .category-name {
+    font-size: 24rpx;
+  }
+  
+  .product-count {
+    display: none; // 隐藏产品数量在小屏幕上
+  }
+}

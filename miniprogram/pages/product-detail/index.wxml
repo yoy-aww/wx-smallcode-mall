@@ -1,0 +1,136 @@
+<!--pages/product-detail/index.wxml-->
+<view class="product-detail-page">
+  <!-- 自定义导航栏 -->
+  <navigation-bar 
+    title="{{product ? product.name : '商品详情'}}" 
+    background="#8B4513" 
+    color="#FFFFFF"
+    back="{{true}}"
+    bindback="onBack"
+  />
+  
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-skeleton">
+      <view class="skeleton-image"></view>
+      <view class="skeleton-content">
+        <view class="skeleton-title"></view>
+        <view class="skeleton-price"></view>
+        <view class="skeleton-description"></view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 产品详情内容 -->
+  <view wx:elif="{{product}}" class="product-detail-content">
+    <!-- 产品图片 -->
+    <view class="product-image-section">
+      <image 
+        class="product-image" 
+        src="{{product.image}}" 
+        mode="aspectFill"
+        show-menu-by-longpress="{{false}}"
+      />
+    </view>
+    
+    <!-- 产品信息 -->
+    <view class="product-info-section">
+      <view class="product-header">
+        <text class="product-name">{{product.name}}</text>
+        
+        <!-- 价格信息 -->
+        <view class="price-container">
+          <text wx:if="{{product.discountedPrice}}" class="discounted-price">
+            ¥{{product.discountedPrice}}
+          </text>
+          <text class="original-price {{product.discountedPrice ? 'crossed-out' : ''}}">
+            ¥{{product.originalPrice}}
+          </text>
+        </view>
+        
+        <!-- 库存信息 -->
+        <view class="stock-info">
+          <text class="stock-text {{product.stock <= 5 ? 'low-stock' : ''}}">
+            {{product.stock > 0 ? '库存：' + product.stock + ' 件' : '暂无库存'}}
+          </text>
+        </view>
+      </view>
+      
+      <!-- 产品描述 -->
+      <view wx:if="{{product.description}}" class="product-description">
+        <text class="description-title">商品描述</text>
+        <text class="description-text">{{product.description}}</text>
+      </view>
+      
+      <!-- 产品标签 -->
+      <view wx:if="{{product.tags && product.tags.length > 0}}" class="product-tags">
+        <text class="tags-title">商品标签</text>
+        <view class="tags-container">
+          <text 
+            wx:for="{{product.tags}}" 
+            wx:key="*this" 
+            class="product-tag"
+          >
+            {{item}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view wx:else class="error-container">
+    <view class="error-icon">❌</view>
+    <text class="error-title">加载失败</text>
+    <text class="error-subtitle">无法加载商品详情</text>
+  </view>
+  
+  <!-- 底部操作栏 -->
+  <view wx:if="{{product}}" class="bottom-actions">
+    <!-- 数量选择 -->
+    <view class="quantity-selector">
+      <text class="quantity-label">数量</text>
+      <view class="quantity-controls">
+        <button 
+          class="quantity-btn decrease {{quantity <= 1 ? 'disabled' : ''}}"
+          disabled="{{quantity <= 1}}"
+          bindtap="onQuantityDecrease"
+        >
+          -
+        </button>
+        <text class="quantity-value">{{quantity}}</text>
+        <button 
+          class="quantity-btn increase {{quantity >= product.stock ? 'disabled' : ''}}"
+          disabled="{{quantity >= product.stock}}"
+          bindtap="onQuantityIncrease"
+        >
+          +
+        </button>
+      </view>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button 
+        class="action-btn add-to-cart {{product.stock <= 0 ? 'disabled' : ''}} {{addingToCart ? 'loading' : ''}}"
+        disabled="{{product.stock <= 0 || addingToCart}}"
+        bindtap="onAddToCart"
+        hover-class="btn-hover"
+      >
+        <text wx:if="{{!addingToCart}}">
+          {{product.stock > 0 ? '加入购物车' : '暂无库存'}}
+        </text>
+        <text wx:else>添加中...</text>
+      </button>
+      
+      <button 
+        class="action-btn buy-now {{product.stock <= 0 ? 'disabled' : ''}}"
+        disabled="{{product.stock <= 0}}"
+        bindtap="onBuyNow"
+        hover-class="btn-hover"
+      >
+        {{product.stock > 0 ? '立即购买' : '暂无库存'}}
+      </button>
+    </view>
+  </view>
+</view>

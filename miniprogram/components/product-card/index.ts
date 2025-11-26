@@ -380,6 +380,34 @@ Component({
     },
 
     /**
+     * 产品长按处理
+     */
+    onProductLongPress() {
+      const { product } = this.properties;
+      
+      if (!product) {
+        console.error('No product data available for long press');
+        return;
+      }
+
+      console.log('Product card long pressed:', product.id);
+
+      // 添加触觉反馈
+      wx.vibrateShort({
+        type: 'heavy'
+      });
+
+      // 触发自定义长按事件，传递产品信息给父组件
+      this.triggerEvent('longpress', {
+        productId: product.id,
+        product: product
+      }, {
+        bubbles: true,
+        composed: true
+      });
+    },
+
+    /**
      * 重试添加到购物车
      */
     async retryAddToCart() {
