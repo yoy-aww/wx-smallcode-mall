@@ -1,0 +1,51 @@
+<!--index.wxml - 首页模板-->
+<navigation-bar title="中医药材商城" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+
+<scroll-view class="page-container" scroll-y type="list">
+  <!-- 品牌头部区域 -->
+  <view class="brand-header">
+    <image 
+      class="brand-bg-image" 
+      src="{{brandInfo.backgroundImage}}" 
+      mode="aspectFill"
+      lazy-load="{{true}}"
+      binderror="onImageError"
+    ></image>
+    <view class="brand-content">
+      <view class="brand-logo-container">
+        <image 
+          class="brand-logo" 
+          src="{{brandInfo.logo}}" 
+          mode="aspectFit"
+          lazy-load="{{true}}"
+          binderror="onImageError"
+        ></image>
+      </view>
+      <view class="brand-slogan">{{brandInfo.slogan}}</view>
+    </view>
+    <view class="brand-overlay"></view>
+  </view>
+
+  <!-- 主横幅广告区域 -->
+  <view class="main-banner">
+    <!-- 主横幅内容将在任务4中实现 -->
+  </view>
+
+  <!-- 搜索栏区域 -->
+  <view class="search-section">
+    <!-- 搜索功能将在任务5中实现 -->
+  </view>
+
+  <!-- 快捷功能区域 -->
+  <view class="quick-actions">
+    <!-- 快捷功能将在任务6中实现 -->
+  </view>
+
+  <!-- 商品分类展示区域 -->
+  <view class="category-grid">
+    <!-- 分类网格将在任务7中实现 -->
+  </view>
+
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom"></view>
+</scroll-view>

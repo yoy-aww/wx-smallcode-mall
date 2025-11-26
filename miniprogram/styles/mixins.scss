@@ -1,0 +1,308 @@
+// 通用样式混入文件
+// 提供可复用的样式模式和工具函数
+
+@import './variables.scss';
+
+// ==================== 布局混入 ====================
+
+// Flexbox 居中
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Flexbox 垂直居中
+@mixin flex-center-vertical {
+  display: flex;
+  align-items: center;
+}
+
+// Flexbox 水平居中
+@mixin flex-center-horizontal {
+  display: flex;
+  justify-content: center;
+}
+
+// Flexbox 两端对齐
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Flexbox 列布局
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// 绝对定位居中
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// ==================== 文字混入 ====================
+
+// 文字省略号（单行）
+@mixin text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// 文字省略号（多行）
+@mixin text-ellipsis-multiline($lines: 2) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 文字渐变色
+@mixin text-gradient($start-color, $end-color, $direction: to right) {
+  background: linear-gradient($direction, $start-color, $end-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ==================== 按钮混入 ====================
+
+// 基础按钮样式
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  text-align: center;
+  cursor: pointer;
+  transition: all $transition-duration-base $transition-timing-function;
+  user-select: none;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// 主要按钮
+@mixin button-primary {
+  @include button-base;
+  background-color: $primary-color;
+  color: $text-white;
+  
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+  
+  &:active {
+    background-color: darken($primary-color, 15%);
+  }
+}
+
+// 次要按钮
+@mixin button-secondary {
+  @include button-base;
+  background-color: transparent;
+  color: $primary-color;
+  border: 2rpx solid $primary-color;
+  
+  &:hover {
+    background-color: $primary-color;
+    color: $text-white;
+  }
+}
+
+// 幽灵按钮
+@mixin button-ghost {
+  @include button-base;
+  background-color: transparent;
+  color: $text-primary;
+  border: 2rpx solid $border-color;
+  
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+}
+
+// ==================== 卡片混入 ====================
+
+// 基础卡片
+@mixin card-base {
+  background-color: $background-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+}
+
+// 悬浮卡片
+@mixin card-hover {
+  @include card-base;
+  transition: all $transition-duration-base $transition-timing-function;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-4rpx);
+  }
+}
+
+// ==================== 输入框混入 ====================
+
+// 基础输入框
+@mixin input-base {
+  width: 100%;
+  padding: $padding-md;
+  border: 2rpx solid $border-color;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  color: $text-primary;
+  background-color: $background-primary;
+  transition: border-color $transition-duration-base $transition-timing-function;
+  
+  &::placeholder {
+    color: $text-tertiary;
+  }
+  
+  &:focus {
+    border-color: $primary-color;
+    outline: none;
+  }
+  
+  &:disabled {
+    background-color: $background-secondary;
+    color: $text-disabled;
+    cursor: not-allowed;
+  }
+}
+
+// ==================== 响应式混入 ====================
+
+// 媒体查询混入
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (max-width: $breakpoint-xs) { @content; }
+  }
+  @if $breakpoint == sm {
+    @media (max-width: $breakpoint-sm) { @content; }
+  }
+  @if $breakpoint == md {
+    @media (max-width: $breakpoint-md) { @content; }
+  }
+  @if $breakpoint == lg {
+    @media (max-width: $breakpoint-lg) { @content; }
+  }
+  @if $breakpoint == xl {
+    @media (max-width: $breakpoint-xl) { @content; }
+  }
+}
+
+// ==================== 动画混入 ====================
+
+// 淡入动画
+@mixin fade-in($duration: $transition-duration-base) {
+  animation: fadeIn $duration $transition-timing-function;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// 滑入动画
+@mixin slide-in-up($duration: $transition-duration-base) {
+  animation: slideInUp $duration $transition-timing-function;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 缩放动画
+@mixin scale-in($duration: $transition-duration-base) {
+  animation: scaleIn $duration $transition-timing-function;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// ==================== 工具混入 ====================
+
+// 清除浮动
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// 隐藏滚动条
+@mixin hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// 1px 边框解决方案
+@mixin border-1px($color: $border-color, $position: bottom) {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    #{$position}: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: $color;
+    transform: scaleY(0.5);
+    transform-origin: 0 #{$position};
+  }
+}
+
+// 安全区域适配
+@mixin safe-area-padding($position: bottom) {
+  @if $position == top {
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
+  }
+  @if $position == bottom {
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  @if $position == left {
+    padding-left: constant(safe-area-inset-left);
+    padding-left: env(safe-area-inset-left);
+  }
+  @if $position == right {
+    padding-right: constant(safe-area-inset-right);
+    padding-right: env(safe-area-inset-right);
+  }
+}

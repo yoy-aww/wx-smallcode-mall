@@ -1,0 +1,281 @@
+/**app.scss - 全局样式文件**/
+
+/* ==================== 全局样式重置 ==================== */
+
+/* 页面基础样式 */
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 28rpx;
+  line-height: 1.4;
+  color: #333333;
+  background-color: #F5F5F5;
+}
+
+/* 通用盒模型 */
+view, text, image, button, input, textarea, scroll-view {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/* 图片默认样式 */
+image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 按钮默认样式重置 */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+button::after {
+  border: none;
+}
+
+/* 输入框默认样式 */
+input, textarea {
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+/* ==================== 全局通用类 ==================== */
+
+/* 布局类 */
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* 文字类 */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.text-primary {
+  color: #333333;
+}
+
+.text-secondary {
+  color: #666666;
+}
+
+.text-white {
+  color: #FFFFFF;
+}
+
+/* 字体大小类 */
+.font-xs {
+  font-size: 20rpx;
+}
+
+.font-sm {
+  font-size: 24rpx;
+}
+
+.font-base {
+  font-size: 28rpx;
+}
+
+.font-lg {
+  font-size: 32rpx;
+}
+
+.font-xl {
+  font-size: 36rpx;
+}
+
+/* 字重类 */
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+
+/* 间距类 */
+.m-0 { margin: 0; }
+.mt-0 { margin-top: 0; }
+.mr-0 { margin-right: 0; }
+.mb-0 { margin-bottom: 0; }
+.ml-0 { margin-left: 0; }
+
+.m-xs { margin: 8rpx; }
+.mt-xs { margin-top: 8rpx; }
+.mr-xs { margin-right: 8rpx; }
+.mb-xs { margin-bottom: 8rpx; }
+.ml-xs { margin-left: 8rpx; }
+
+.m-sm { margin: 16rpx; }
+.mt-sm { margin-top: 16rpx; }
+.mr-sm { margin-right: 16rpx; }
+.mb-sm { margin-bottom: 16rpx; }
+.ml-sm { margin-left: 16rpx; }
+
+.m-md { margin: 24rpx; }
+.mt-md { margin-top: 24rpx; }
+.mr-md { margin-right: 24rpx; }
+.mb-md { margin-bottom: 24rpx; }
+.ml-md { margin-left: 24rpx; }
+
+.m-lg { margin: 32rpx; }
+.mt-lg { margin-top: 32rpx; }
+.mr-lg { margin-right: 32rpx; }
+.mb-lg { margin-bottom: 32rpx; }
+.ml-lg { margin-left: 32rpx; }
+
+.p-0 { padding: 0; }
+.pt-0 { padding-top: 0; }
+.pr-0 { padding-right: 0; }
+.pb-0 { padding-bottom: 0; }
+.pl-0 { padding-left: 0; }
+
+.p-xs { padding: 8rpx; }
+.pt-xs { padding-top: 8rpx; }
+.pr-xs { padding-right: 8rpx; }
+.pb-xs { padding-bottom: 8rpx; }
+.pl-xs { padding-left: 8rpx; }
+
+.p-sm { padding: 16rpx; }
+.pt-sm { padding-top: 16rpx; }
+.pr-sm { padding-right: 16rpx; }
+.pb-sm { padding-bottom: 16rpx; }
+.pl-sm { padding-left: 16rpx; }
+
+.p-md { padding: 24rpx; }
+.pt-md { padding-top: 24rpx; }
+.pr-md { padding-right: 24rpx; }
+.pb-md { padding-bottom: 24rpx; }
+.pl-md { padding-left: 24rpx; }
+
+.p-lg { padding: 32rpx; }
+.pt-lg { padding-top: 32rpx; }
+.pr-lg { padding-right: 32rpx; }
+.pb-lg { padding-bottom: 32rpx; }
+.pl-lg { padding-left: 32rpx; }
+
+/* 显示隐藏类 */
+.hidden {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+/* 圆角类 */
+.rounded-sm {
+  border-radius: 8rpx;
+}
+
+.rounded-md {
+  border-radius: 16rpx;
+}
+
+.rounded-lg {
+  border-radius: 24rpx;
+}
+
+.rounded-full {
+  border-radius: 50%;
+}
+
+/* 阴影类 */
+.shadow-sm {
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.shadow-md {
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
+}
+
+.shadow-lg {
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+}
+
+/* ==================== 容器类 ==================== */
+
+/* 主容器 */
+.container {
+  width: 100%;
+  max-width: 750rpx;
+  margin: 0 auto;
+  padding: 0 24rpx;
+}
+
+/* 页面容器 */
+.page-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+}
+
+/* 内容容器 */
+.content-container {
+  padding: 24rpx;
+  background-color: #FFFFFF;
+}
+
+/* ==================== 安全区域适配 ==================== */
+
+.safe-area-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}

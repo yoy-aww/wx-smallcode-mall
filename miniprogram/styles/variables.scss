@@ -1,0 +1,126 @@
+// 全局样式变量文件
+// 基于中医药材电商平台的设计系统
+
+// ==================== 颜色系统 ====================
+// 主色调 - 中医药文化色彩
+$primary-color: #8B4513;      // 中药棕色
+$secondary-color: #DAA520;    // 金黄色
+$accent-color: #CD853F;       // 沙棕色
+
+// 功能色彩
+$success-color: #52C41A;      // 成功绿色
+$warning-color: #FAAD14;      // 警告橙色
+$error-color: #FF4D4F;        // 错误红色
+$info-color: #1890FF;         // 信息蓝色
+
+// 文字颜色
+$text-primary: #333333;       // 主要文字
+$text-secondary: #666666;     // 次要文字
+$text-tertiary: #999999;      // 辅助文字
+$text-white: #FFFFFF;         // 白色文字
+$text-disabled: #CCCCCC;      // 禁用文字
+
+// 背景颜色
+$background-primary: #FFFFFF;  // 主背景
+$background-secondary: #F5F5F5; // 次背景
+$background-tertiary: #FAFAFA; // 三级背景
+$background-overlay: rgba(0, 0, 0, 0.5); // 遮罩背景
+
+// 边框颜色
+$border-color: #E8E8E8;       // 默认边框
+$border-light: #F0F0F0;       // 浅色边框
+$border-dark: #D9D9D9;        // 深色边框
+
+// ==================== 字体系统 ====================
+$font-size-xs: 20rpx;         // 极小字体
+$font-size-sm: 24rpx;         // 小字体
+$font-size-base: 28rpx;       // 基础字体
+$font-size-lg: 32rpx;         // 大字体
+$font-size-xl: 36rpx;         // 超大字体
+$font-size-xxl: 40rpx;        // 特大字体
+
+// 字重
+$font-weight-light: 300;      // 细体
+$font-weight-normal: 400;     // 正常
+$font-weight-medium: 500;     // 中等
+$font-weight-bold: 600;       // 粗体
+$font-weight-bolder: 700;     // 更粗
+
+// 行高
+$line-height-sm: 1.2;         // 紧凑行高
+$line-height-base: 1.4;       // 基础行高
+$line-height-lg: 1.6;         // 宽松行高
+
+// ==================== 间距系统 ====================
+$spacing-xs: 8rpx;            // 极小间距
+$spacing-sm: 16rpx;           // 小间距
+$spacing-md: 24rpx;           // 中等间距
+$spacing-lg: 32rpx;           // 大间距
+$spacing-xl: 48rpx;           // 超大间距
+$spacing-xxl: 64rpx;          // 特大间距
+
+// 内边距
+$padding-xs: $spacing-xs;
+$padding-sm: $spacing-sm;
+$padding-md: $spacing-md;
+$padding-lg: $spacing-lg;
+$padding-xl: $spacing-xl;
+
+// 外边距
+$margin-xs: $spacing-xs;
+$margin-sm: $spacing-sm;
+$margin-md: $spacing-md;
+$margin-lg: $spacing-lg;
+$margin-xl: $spacing-xl;
+
+// ==================== 圆角系统 ====================
+$border-radius-xs: 4rpx;      // 极小圆角
+$border-radius-sm: 8rpx;      // 小圆角
+$border-radius-md: 16rpx;     // 中等圆角
+$border-radius-lg: 24rpx;     // 大圆角
+$border-radius-xl: 32rpx;     // 超大圆角
+$border-radius-round: 50%;    // 圆形
+
+// ==================== 阴影系统 ====================
+$shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);     // 小阴影
+$shadow-md: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);   // 中等阴影
+$shadow-lg: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);   // 大阴影
+$shadow-xl: 0 12rpx 32rpx rgba(0, 0, 0, 0.18);  // 超大阴影
+
+// ==================== 布局系统 ====================
+// 容器宽度
+$container-width: 750rpx;     // 标准容器宽度
+$content-padding: 24rpx;      // 内容区域内边距
+
+// 网格系统
+$grid-columns: 12;            // 网格列数
+$grid-gutter: 16rpx;          // 网格间距
+
+// 组件尺寸
+$component-height-sm: 64rpx;  // 小组件高度
+$component-height-md: 80rpx;  // 中等组件高度
+$component-height-lg: 96rpx;  // 大组件高度
+
+// ==================== Z-index 层级 ====================
+$z-index-dropdown: 1000;     // 下拉菜单
+$z-index-sticky: 1020;       // 粘性定位
+$z-index-fixed: 1030;        // 固定定位
+$z-index-modal-backdrop: 1040; // 模态框背景
+$z-index-modal: 1050;        // 模态框
+$z-index-popover: 1060;      // 弹出框
+$z-index-tooltip: 1070;      // 工具提示
+$z-index-toast: 1080;        // 消息提示
+
+// ==================== 动画系统 ====================
+$transition-duration-fast: 0.15s;    // 快速动画
+$transition-duration-base: 0.3s;     // 基础动画
+$transition-duration-slow: 0.5s;     // 慢速动画
+
+$transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); // 缓动函数
+
+// ==================== 断点系统 ====================
+$breakpoint-xs: 480rpx;       // 超小屏幕
+$breakpoint-sm: 640rpx;       // 小屏幕
+$breakpoint-md: 750rpx;       // 中等屏幕
+$breakpoint-lg: 1024rpx;      // 大屏幕
+$breakpoint-xl: 1280rpx;      // 超大屏幕
