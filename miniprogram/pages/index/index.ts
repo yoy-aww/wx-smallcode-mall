@@ -57,6 +57,12 @@ interface HomePageData {
 
 Component({
   data: {
+    // 搜索相关状态
+    searchKeyword: '',
+    searchDisabled: false,
+    showHotKeywords: false,
+    searchFocused: false,
+
     // 品牌信息
     brandInfo: {
       logo: '/images/imgs/seal_logo_7.jpg', // 使用传统印章风格Logo
@@ -153,21 +159,146 @@ Component({
       // 暂时使用静态数据
     },
 
-    // 搜索功能
-    onSearch(e: any) {
-      const keyword = e.detail.value || e.currentTarget.dataset.keyword;
-      if (keyword) {
+    // ==================== 搜索功能相关方法 ====================
+
+    // 搜索输入处理
+    onSearchInput(e: any) {
+      const value = e.detail.value.trim();
+      this.setData({
+        searchKeyword: value,
+        showHotKeywords: value.length === 0 && this.data.searchFocused
+      });
+    },
+
+    // 搜索确认（点击搜索按钮或回车）
+    onSearchConfirm(e: any) {
+      const keyword = e.detail.value.trim() || this.data.searchKeyword.trim();
+      this.performSearch(keyword);
+    },
+
+    // 搜索框聚焦事件
+    onSearchInputFocus() {
+      this.setData({
+        searchFocused: true,
+        showHotKeywords: this.data.searchKeyword.length === 0
+      });
+
+      // 添加聚焦样式
+      const query = this.createSelectorQuery();
+      query.select('.search-bar').addClass('focused');
+      query.exec();
+    },
+
+    // 搜索框失焦事件
+    onSearchInputBlur() {
+      // 延迟隐藏热门关键词，避免点击热门关键词时立即隐藏
+      setTimeout(() => {
+        this.setData({
+          searchFocused: false,
+          showHotKeywords: false
+        });
+
+        // 移除聚焦样式
+        const query = this.createSelectorQuery();
+        query.select('.search-bar').removeClass('focused');
+        query.exec();
+      }, 200);
+    },
+
+    // 点击搜索栏聚焦（用于禁用输入时的处理）
+    onSearchFocus() {
+      if (this.data.searchDisabled) {
+        // 如果搜索被禁用，直接跳转到搜索页面
         wx.navigateTo({
-          url: `/pages/search/search?keyword=${encodeURIComponent(keyword)}`
+          url: '/pages/search/search'
         });
       }
     },
 
-    // 搜索框聚焦
-    onSearchFocus() {
-      wx.navigateTo({
-        url: '/pages/search/search'
+    // 清除搜索内容
+    onSearchClear() {
+      this.setData({
+        searchKeyword: '',
+        showHotKeywords: this.data.searchFocused
       });
+    },
+
+    // 热门关键词点击
+    onHotKeywordTap(e: any) {
+      const keyword = e.currentTarget.dataset.keyword;
+      if (keyword) {
+        this.setData({
+          searchKeyword: keyword
+        });
+        this.performSearch(keyword);
+      }
+    },
+
+    // 执行搜索
+    performSearch(keyword: string) {
+      if (!keyword) {
+        wx.showToast({
+          title: '请输入搜索关键词',
+          icon: 'none',
+          duration: 2000
+        });
+        return;
+      }
+
+      // 记录搜索历史（可选）
+      this.recordSearchHistory(keyword);
+
+      // 跳转到搜索结果页面
+      wx.navigateTo({
+        url: `/pages/search/search?keyword=${encodeURIComponent(keyword)}`,
+        fail: (error) => {
+          console.error('搜索页面跳转失败:', error);
+          wx.showToast({
+            title: '搜索功能暂时不可用',
+            icon: 'none',
+            duration: 2000
+          });
+        }
+      });
+
+      // 清空搜索框并隐藏热门关键词
+      this.setData({
+        searchKeyword: '',
+        showHotKeywords: false,
+        searchFocused: false
+      });
+    },
+
+    // 记录搜索历史
+    recordSearchHistory(keyword: string) {
+      try {
+        // 获取现有搜索历史
+        let searchHistory = wx.getStorageSync('searchHistory') || [];
+        
+        // 移除重复项
+        searchHistory = searchHistory.filter((item: string) => item !== keyword);
+        
+        // 添加到开头
+        searchHistory.unshift(keyword);
+        
+        // 限制历史记录数量
+        if (searchHistory.length > 10) {
+          searchHistory = searchHistory.slice(0, 10);
+        }
+        
+        // 保存到本地存储
+        wx.setStorageSync('searchHistory', searchHistory);
+      } catch (error) {
+        console.error('保存搜索历史失败:', error);
+      }
+    },
+
+    // 搜索功能
+    onSearch(e: any) {
+      const keyword = e.detail.value || e.currentTarget.dataset.keyword;
+      if (keyword) {
+        this.performSearch(keyword);
+      }
     },
 
     // 快捷功能点击

@@ -48,7 +48,42 @@
 
   <!-- 搜索栏区域 -->
   <view class="search-section">
-    <!-- 搜索功能将在任务5中实现 -->
+    <view class="search-container">
+      <view class="search-bar" bindtap="onSearchFocus">
+        <view class="search-icon">
+          <text class="search-icon-text">🔍</text>
+        </view>
+        <input 
+          class="search-input" 
+          placeholder="{{searchConfig.placeholder}}" 
+          placeholder-class="search-placeholder"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+          bindfocus="onSearchInputFocus"
+          bindblur="onSearchInputBlur"
+          confirm-type="search"
+          disabled="{{searchDisabled}}"
+        />
+        <view class="search-clear" wx:if="{{searchKeyword}}" bindtap="onSearchClear">
+          <text class="clear-icon">×</text>
+        </view>
+      </view>
+      
+      <!-- 热门搜索关键词 -->
+      <view class="hot-keywords" wx:if="{{showHotKeywords && searchConfig.hotKeywords.length > 0}}">
+        <view class="hot-keywords-title">热门搜索</view>
+        <view class="keywords-list">
+          <text 
+            class="keyword-item" 
+            wx:for="{{searchConfig.hotKeywords}}" 
+            wx:key="index"
+            data-keyword="{{item}}"
+            bindtap="onHotKeywordTap"
+          >{{item}}</text>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 快捷功能区域 -->
