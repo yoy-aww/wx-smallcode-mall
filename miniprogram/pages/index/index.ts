@@ -89,13 +89,13 @@ Component({
       {
         id: 'member',
         title: '加入会员',
-        icon: '/images/imgs/ecommerce_icons_9.png', // 使用电商图标
+        icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTI0IDEyQzI3LjMxMzcgMTIgMzAgMTQuNjg2MyAzMCAxOEMzMCAyMS4zMTM3IDI3LjMxMzcgMjQgMjQgMjRDMjAuNjg2MyAyNCAzOCAyMS4zMTM3IDE4IDE4QzE4IDE0LjY4NjMgMjAuNjg2MyAxMiAyNCAxMloiIGZpbGw9IiM4QjQ1MTMiLz4KPHBhdGggZD0iTTEyIDM2QzEyIDMwLjQ3NzIgMTYuNDc3MiAyNiAyMiAyNkgyNkMzMS41MjI4IDI2IDM2IDMwLjQ3NzIgMzYgMzZWNDBIMTJWMzZaIiBmaWxsPSIjOEI0NTEzIi8+Cjwvc3ZnPgo=', // 会员图标 SVG base64
         path: '/pages/member/member'
       },
       {
         id: 'checkin',
         title: '去签到',
-        icon: '/images/imgs/ecommerce_icons_2.jpg', // 使用电商图标
+        icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDhDOC44OTU0MyA4IDggOC44OTU0MyA4IDEwVjM4QzggMzkuMTA0NiA4Ljg5NTQzIDQwIDEwIDQwSDM4QzM5LjEwNDYgNDAgNDAgMzkuMTA0NiA0MCAzOFYxMEM0MCA4Ljg5NTQzIDM5LjEwNDYgOCAzOCA4SDEwWiIgZmlsbD0iIzhCNDUxMyIvPgo8cGF0aCBkPSJNMzQgMThMMjIgMzBMMTQgMjIiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==', // 签到图标 SVG base64
         path: '/pages/checkin/checkin'
       }
     ] as QuickActionItem[],
@@ -301,9 +301,18 @@ Component({
       }
     },
 
-    // 快捷功能点击
+    // ==================== 快捷功能相关方法 ====================
+
+    // 快捷功能点击处理
     onQuickActionTap(e: any) {
       const { id, path } = e.currentTarget.dataset;
+      
+      console.log('快捷功能点击:', { id, path });
+      
+      // 添加点击反馈
+      wx.vibrateShort({
+        type: 'light'
+      });
       
       if (id === 'member') {
         // 会员功能
@@ -312,26 +321,127 @@ Component({
         // 签到功能
         this.handleCheckinAction();
       } else if (path) {
-        wx.navigateTo({
-          url: path
-        });
+        // 通用页面跳转
+        this.navigateToPage(path, id);
       }
     },
 
-    // 处理会员功能
+    // 处理会员功能 - 需求 4.2
     handleMemberAction() {
+      console.log('处理会员功能');
+      
       // 检查用户登录状态
-      wx.showToast({
-        title: '会员功能开发中',
-        icon: 'none'
-      });
+      const userInfo = wx.getStorageSync('userInfo');
+      
+      if (!userInfo) {
+        // 用户未登录，先跳转到登录页面
+        wx.showModal({
+          title: '提示',
+          content: '请先登录后再加入会员',
+          confirmText: '去登录',
+          cancelText: '取消',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({
+                url: '/pages/login/login?redirect=/pages/member/member',
+                fail: (error) => {
+                  console.error('登录页面跳转失败:', error);
+                  wx.showToast({
+                    title: '页面跳转失败',
+                    icon: 'none'
+                  });
+                }
+              });
+            }
+          }
+        });
+      } else {
+        // 用户已登录，直接跳转到会员页面
+        this.navigateToPage('/pages/member/member', 'member');
+      }
     },
 
-    // 处理签到功能
+    // 处理签到功能 - 需求 4.3
     handleCheckinAction() {
-      wx.showToast({
-        title: '签到功能开发中',
-        icon: 'none'
+      console.log('处理签到功能');
+      
+      // 检查用户登录状态
+      const userInfo = wx.getStorageSync('userInfo');
+      
+      if (!userInfo) {
+        // 用户未登录，提示登录
+        wx.showModal({
+          title: '提示',
+          content: '请先登录后再进行签到',
+          confirmText: '去登录',
+          cancelText: '取消',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({
+                url: '/pages/login/login?redirect=/pages/checkin/checkin',
+                fail: (error) => {
+                  console.error('登录页面跳转失败:', error);
+                  wx.showToast({
+                    title: '页面跳转失败',
+                    icon: 'none'
+                  });
+                }
+              });
+            }
+          }
+        });
+      } else {
+        // 用户已登录，检查今日是否已签到
+        const today = new Date().toDateString();
+        const lastCheckinDate = wx.getStorageSync('lastCheckinDate');
+        
+        if (lastCheckinDate === today) {
+          // 今日已签到
+          wx.showModal({
+            title: '签到提示',
+            content: '您今日已完成签到，明天再来吧！',
+            confirmText: '查看签到记录',
+            cancelText: '确定',
+            success: (res) => {
+              if (res.confirm) {
+                this.navigateToPage('/pages/checkin/checkin', 'checkin');
+              }
+            }
+          });
+        } else {
+          // 可以签到，跳转到签到页面
+          this.navigateToPage('/pages/checkin/checkin', 'checkin');
+        }
+      }
+    },
+
+    // 通用页面跳转方法
+    navigateToPage(path: string, actionId: string) {
+      console.log('页面跳转:', { path, actionId });
+      
+      wx.navigateTo({
+        url: path,
+        success: () => {
+          console.log(`${actionId} 页面跳转成功`);
+        },
+        fail: (error) => {
+          console.error(`${actionId} 页面跳转失败:`, error);
+          
+          // 根据不同的错误类型给出不同的提示
+          let errorMessage = '页面跳转失败';
+          
+          if (error.errMsg && error.errMsg.includes('page not found')) {
+            errorMessage = '页面不存在，功能开发中';
+          } else if (error.errMsg && error.errMsg.includes('navigate')) {
+            errorMessage = '页面跳转异常，请稍后重试';
+          }
+          
+          wx.showToast({
+            title: errorMessage,
+            icon: 'none',
+            duration: 2000
+          });
+        }
       });
     },
 

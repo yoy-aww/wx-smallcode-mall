@@ -88,7 +88,27 @@
 
   <!-- 快捷功能区域 -->
   <view class="quick-actions">
-    <!-- 快捷功能将在任务6中实现 -->
+    <view class="quick-actions-container">
+      <view 
+        class="quick-action-item" 
+        wx:for="{{quickActions}}" 
+        wx:key="id"
+        data-id="{{item.id}}"
+        data-path="{{item.path}}"
+        bindtap="onQuickActionTap"
+      >
+        <view class="action-icon-container">
+          <image 
+            class="action-icon" 
+            src="{{item.icon}}" 
+            mode="aspectFit"
+            lazy-load="{{true}}"
+            binderror="onImageError"
+          ></image>
+        </view>
+        <view class="action-title">{{item.title}}</view>
+      </view>
+    </view>
   </view>
 
   <!-- 商品分类展示区域 -->
