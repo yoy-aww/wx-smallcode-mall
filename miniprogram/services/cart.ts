@@ -42,33 +42,62 @@ export class CartService {
   /**
    * Add product to cart
    */
-  static async addToCart(productId: string, quantity: number = 1): Promise<CartServiceResponse<CartItem>> {
+  static async addToCart(
+    productId: string,
+    quantity: number = 1
+  ): Promise<CartServiceResponse<CartItem>> {
     try {
       console.log('Adding product to cart:', productId, quantity);
 
+      // Validate product and stock
+      const { ProductService } = await import('./product');
+      const productResponse = await ProductService.getProductById(productId);
+
+      if (!productResponse.success || !productResponse.data) {
+        return {
+          success: false,
+          error: CART_ERROR_MESSAGES.VALIDATION_ERROR,
+        };
+      }
+
+      const product = productResponse.data;
+
       // Get current cart items
       const cartItems = await this.getCartItems();
-      
+
       // Check if product already exists in cart
       const existingItemIndex = cartItems.findIndex(item => item.productId === productId);
-      
+      let finalQuantity = quantity;
+
+      if (existingItemIndex >= 0) {
+        finalQuantity = cartItems[existingItemIndex].quantity + quantity;
+      }
+
+      // Check stock availability
+      if (finalQuantity > product.stock) {
+        return {
+          success: false,
+          error: CART_ERROR_MESSAGES.STOCK_ERROR,
+        };
+      }
+
       if (existingItemIndex >= 0) {
         // Update quantity if product already exists
-        cartItems[existingItemIndex].quantity += quantity;
+        cartItems[existingItemIndex].quantity = finalQuantity;
         cartItems[existingItemIndex].selectedAt = new Date();
       } else {
         // Add new item to cart
         const newItem: CartItem = {
           productId,
           quantity,
-          selectedAt: new Date()
+          selectedAt: new Date(),
         };
         cartItems.push(newItem);
       }
 
       // Save updated cart
       await this.saveCartItems(cartItems);
-      
+
       // Update cart badge
       await this.updateCartBadge();
 
@@ -77,17 +106,16 @@ export class CartService {
       CartManager.notifyItemAdded(productId, quantity);
 
       console.log('Product added to cart successfully');
-      
+
       return {
         success: true,
-        data: cartItems.find(item => item.productId === productId)
+        data: cartItems.find(item => item.productId === productId),
       };
-
     } catch (error) {
       console.error('Error adding product to cart:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '添加到购物车失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -101,7 +129,7 @@ export class CartService {
 
       const cartItems = await this.getCartItems();
       const filteredItems = cartItems.filter(item => item.productId !== productId);
-      
+
       await this.saveCartItems(filteredItems);
       await this.updateCartBadge();
 
@@ -110,17 +138,16 @@ export class CartService {
       CartManager.notifyItemRemoved(productId);
 
       console.log('Product removed from cart successfully');
-      
+
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Error removing product from cart:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '从购物车移除失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -128,7 +155,10 @@ export class CartService {
   /**
    * Update product quantity in cart
    */
-  static async updateCartItemQuantity(productId: string, quantity: number): Promise<CartServiceResponse<CartItem>> {
+  static async updateCartItemQuantity(
+    productId: string,
+    quantity: number
+  ): Promise<CartServiceResponse<CartItem>> {
     try {
       console.log('Updating cart item quantity:', productId, quantity);
 
@@ -137,17 +167,31 @@ export class CartService {
         await this.removeFromCart(productId);
         return {
           success: true,
-          data: undefined
+          data: undefined,
         };
+      }
+
+      // Validate quantity against stock
+      const { ProductService } = await import('./product');
+      const productResponse = await ProductService.getProductById(productId);
+
+      if (productResponse.success && productResponse.data) {
+        const product = productResponse.data;
+        if (quantity > product.stock) {
+          return {
+            success: false,
+            error: CART_ERROR_MESSAGES.STOCK_ERROR,
+          };
+        }
       }
 
       const cartItems = await this.getCartItems();
       const itemIndex = cartItems.findIndex(item => item.productId === productId);
-      
+
       if (itemIndex >= 0) {
         cartItems[itemIndex].quantity = quantity;
         cartItems[itemIndex].selectedAt = new Date();
-        
+
         await this.saveCartItems(cartItems);
         await this.updateCartBadge();
 
@@ -157,20 +201,19 @@ export class CartService {
 
         return {
           success: true,
-          data: cartItems[itemIndex]
+          data: cartItems[itemIndex],
         };
       } else {
         return {
           success: false,
-          error: '购物车中未找到该商品'
+          error: CART_ERROR_MESSAGES.VALIDATION_ERROR,
         };
       }
-
     } catch (error) {
       console.error('Error updating cart item quantity:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '更新数量失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -181,20 +224,19 @@ export class CartService {
   static async getCartItems(): Promise<CartItem[]> {
     try {
       const cartData = wx.getStorageSync(this.CART_STORAGE_KEY);
-      
+
       if (!cartData) {
         return [];
       }
 
       // Parse and validate cart data
       const cartItems: CartItem[] = JSON.parse(cartData);
-      
+
       // Convert selectedAt strings back to Date objects
       return cartItems.map(item => ({
         ...item,
-        selectedAt: new Date(item.selectedAt)
+        selectedAt: new Date(item.selectedAt),
       }));
-
     } catch (error) {
       console.error('Error getting cart items:', error);
       return [];
@@ -207,40 +249,39 @@ export class CartService {
   static async getCartItemsWithProducts(): Promise<CartServiceResponse<CartItemWithProduct[]>> {
     try {
       const cartItems = await this.getCartItems();
-      
+
       if (cartItems.length === 0) {
         return {
           success: true,
-          data: []
+          data: [],
         };
       }
 
       // Import ProductService dynamically to avoid circular dependency
       const { ProductService } = await import('./product');
-      
+
       const cartItemsWithProducts: CartItemWithProduct[] = [];
-      
+
       for (const cartItem of cartItems) {
         const productResponse = await ProductService.getProductById(cartItem.productId);
-        
+
         if (productResponse.success && productResponse.data) {
           cartItemsWithProducts.push({
             ...cartItem,
-            product: productResponse.data
+            product: productResponse.data,
           });
         }
       }
 
       return {
         success: true,
-        data: cartItemsWithProducts
+        data: cartItemsWithProducts,
       };
-
     } catch (error) {
       console.error('Error getting cart items with products:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '获取购物车商品详情失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -251,28 +292,29 @@ export class CartService {
   static async getCartSummary(): Promise<CartServiceResponse<CartSummary>> {
     try {
       const cartItemsResponse = await this.getCartItemsWithProducts();
-      
+
       if (!cartItemsResponse.success || !cartItemsResponse.data) {
         return {
           success: false,
-          error: cartItemsResponse.error || '获取购物车信息失败'
+          error: cartItemsResponse.error || '获取购物车信息失败',
         };
       }
 
       const cartItems = cartItemsResponse.data;
-      
+
       let totalItems = 0;
       let totalPrice = 0;
       let discountAmount = 0;
 
       for (const item of cartItems) {
         totalItems += item.quantity;
-        
+
         const itemPrice = item.product.discountedPrice || item.product.originalPrice;
         totalPrice += itemPrice * item.quantity;
-        
+
         if (item.product.discountedPrice) {
-          discountAmount += (item.product.originalPrice - item.product.discountedPrice) * item.quantity;
+          discountAmount +=
+            (item.product.originalPrice - item.product.discountedPrice) * item.quantity;
         }
       }
 
@@ -284,15 +326,14 @@ export class CartService {
           totalItems,
           totalPrice: totalPrice + discountAmount, // Original total
           discountAmount,
-          finalPrice
-        }
+          finalPrice,
+        },
       };
-
     } catch (error) {
       console.error('Error getting cart summary:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '计算购物车总计失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -312,17 +353,16 @@ export class CartService {
       CartManager.notifyCartCleared();
 
       console.log('Cart cleared successfully');
-      
+
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Error clearing cart:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '清空购物车失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -376,7 +416,7 @@ export class CartService {
       wx.setStorageSync(this.CART_STORAGE_KEY, cartData);
     } catch (error) {
       console.error('Error saving cart items:', error);
-      throw new Error('保存购物车数据失败');
+      throw new Error(CART_ERROR_MESSAGES.STORAGE_ERROR);
     }
   }
 
@@ -386,16 +426,16 @@ export class CartService {
   private static async updateCartBadge(): Promise<void> {
     try {
       const itemCount = await this.getCartItemCount();
-      
+
       // Update tab bar badge
       if (itemCount > 0) {
         wx.setTabBarBadge({
           index: 2, // Assuming cart is the 3rd tab (index 2)
-          text: itemCount > 99 ? '99+' : itemCount.toString()
+          text: itemCount > 99 ? '99+' : itemCount.toString(),
         });
       } else {
         wx.removeTabBarBadge({
-          index: 2
+          index: 2,
         });
       }
 
@@ -403,7 +443,6 @@ export class CartService {
       wx.setStorageSync(this.CART_BADGE_KEY, itemCount);
 
       console.log('Cart badge updated:', itemCount);
-
     } catch (error) {
       console.error('Error updating cart badge:', error);
       // Don't throw error as this is not critical
@@ -431,12 +470,12 @@ export class CartService {
 
       const cartItems = await this.getCartItems();
       const { ProductService } = await import('./product');
-      
+
       const validCartItems: CartItem[] = [];
-      
+
       for (const cartItem of cartItems) {
         const productResponse = await ProductService.getProductById(cartItem.productId);
-        
+
         if (productResponse.success && productResponse.data) {
           // Check if product is still available and has stock
           const product = productResponse.data;
@@ -445,7 +484,7 @@ export class CartService {
             const adjustedQuantity = Math.min(cartItem.quantity, product.stock);
             validCartItems.push({
               ...cartItem,
-              quantity: adjustedQuantity
+              quantity: adjustedQuantity,
             });
           }
         }
@@ -456,17 +495,16 @@ export class CartService {
       await this.updateCartBadge();
 
       console.log('Cart validation completed');
-      
+
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Error validating cart:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '购物车验证失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.VALIDATION_ERROR,
       };
     }
   }
@@ -481,7 +519,7 @@ export class CartService {
       console.log('Selecting cart items:', productIds);
 
       const selections = await this.getSelections();
-      
+
       // Update selections
       productIds.forEach(productId => {
         selections.set(productId, true);
@@ -497,14 +535,13 @@ export class CartService {
 
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Error selecting cart items:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '选择商品失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -515,29 +552,28 @@ export class CartService {
   static async getSelectedItems(): Promise<CartServiceResponse<CartItemWithProduct[]>> {
     try {
       const cartItemsResponse = await this.getCartItemsWithProducts();
-      
+
       if (!cartItemsResponse.success || !cartItemsResponse.data) {
         return {
           success: false,
-          error: cartItemsResponse.error || '获取购物车商品失败'
+          error: cartItemsResponse.error || '获取购物车商品失败',
         };
       }
 
       const selections = await this.getSelections();
-      const selectedItems = cartItemsResponse.data.filter(item => 
-        selections.get(item.productId) === true
+      const selectedItems = cartItemsResponse.data.filter(
+        item => selections.get(item.productId) === true
       );
 
       return {
         success: true,
-        data: selectedItems
+        data: selectedItems,
       };
-
     } catch (error) {
       console.error('Error getting selected items:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '获取选中商品失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -551,7 +587,7 @@ export class CartService {
 
       const cartItems = await this.getCartItems();
       const filteredItems = cartItems.filter(item => !productIds.includes(item.productId));
-      
+
       await this.saveCartItems(filteredItems);
       await this.updateCartBadge();
 
@@ -568,14 +604,13 @@ export class CartService {
 
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Error batch removing items:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '批量删除失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -589,34 +624,34 @@ export class CartService {
 
       const cartItems = await this.getCartItems();
       const { ProductService } = await import('./product');
-      
+
       const validItems: CartItemWithProduct[] = [];
       const invalidItems: CartItem[] = [];
       const stockAdjustedItems: CartItem[] = [];
-      
+
       for (const cartItem of cartItems) {
         const productResponse = await ProductService.getProductById(cartItem.productId);
-        
+
         if (productResponse.success && productResponse.data) {
           const product = productResponse.data;
-          
+
           if (product.stock > 0) {
             if (cartItem.quantity > product.stock) {
               // Stock adjusted item
               const adjustedItem = {
                 ...cartItem,
-                quantity: product.stock
+                quantity: product.stock,
               };
               stockAdjustedItems.push(adjustedItem);
               validItems.push({
                 ...adjustedItem,
-                product
+                product,
               });
             } else {
               // Valid item
               validItems.push({
                 ...cartItem,
-                product
+                product,
               });
             }
           } else {
@@ -633,28 +668,27 @@ export class CartService {
       const validCartItems = validItems.map(item => ({
         productId: item.productId,
         quantity: item.quantity,
-        selectedAt: item.selectedAt
+        selectedAt: item.selectedAt,
       }));
-      
+
       await this.saveCartItems(validCartItems);
       await this.updateCartBadge();
 
       const result: CartValidationResult = {
         validItems,
         invalidItems,
-        stockAdjustedItems
+        stockAdjustedItems,
       };
 
       return {
         success: true,
-        data: result
+        data: result,
       };
-
     } catch (error) {
       console.error('Error validating cart items:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '购物车验证失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.VALIDATION_ERROR,
       };
     }
   }
@@ -662,33 +696,36 @@ export class CartService {
   /**
    * Calculate total for selected items
    */
-  static async calculateSelectedTotal(selectedIds: string[]): Promise<CartServiceResponse<CartSummary>> {
+  static async calculateSelectedTotal(
+    selectedIds: string[]
+  ): Promise<CartServiceResponse<CartSummary>> {
     try {
       const cartItemsResponse = await this.getCartItemsWithProducts();
-      
+
       if (!cartItemsResponse.success || !cartItemsResponse.data) {
         return {
           success: false,
-          error: cartItemsResponse.error || '获取购物车信息失败'
+          error: cartItemsResponse.error || '获取购物车信息失败',
         };
       }
 
-      const selectedItems = cartItemsResponse.data.filter(item => 
+      const selectedItems = cartItemsResponse.data.filter(item =>
         selectedIds.includes(item.productId)
       );
-      
+
       let totalItems = 0;
       let totalPrice = 0;
       let discountAmount = 0;
 
       for (const item of selectedItems) {
         totalItems += item.quantity;
-        
+
         const itemPrice = item.product.discountedPrice || item.product.originalPrice;
         totalPrice += itemPrice * item.quantity;
-        
+
         if (item.product.discountedPrice) {
-          discountAmount += (item.product.originalPrice - item.product.discountedPrice) * item.quantity;
+          discountAmount +=
+            (item.product.originalPrice - item.product.discountedPrice) * item.quantity;
         }
       }
 
@@ -700,15 +737,14 @@ export class CartService {
           totalItems,
           totalPrice: totalPrice + discountAmount, // Original total
           discountAmount,
-          finalPrice
-        }
+          finalPrice,
+        },
       };
-
     } catch (error) {
       console.error('Error calculating selected total:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '计算选中商品总计失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -721,14 +757,13 @@ export class CartService {
   static async getSelections(): Promise<Map<string, boolean>> {
     try {
       const selectionsData = wx.getStorageSync(CART_STORAGE_KEYS.CART_SELECTIONS);
-      
+
       if (!selectionsData) {
         return new Map();
       }
 
       const selections: CartSelectionsStorage = JSON.parse(selectionsData);
       return new Map(Object.entries(selections));
-
     } catch (error) {
       console.error('Error getting selections:', error);
       return new Map();
@@ -747,10 +782,9 @@ export class CartService {
 
       const selectionsData = JSON.stringify(selectionsObj);
       wx.setStorageSync(CART_STORAGE_KEYS.CART_SELECTIONS, selectionsData);
-
     } catch (error) {
       console.error('Error saving selections:', error);
-      throw new Error('保存选择状态失败');
+      throw new Error(CART_ERROR_MESSAGES.STORAGE_ERROR);
     }
   }
 
@@ -762,7 +796,7 @@ export class CartService {
       const selections = await this.getSelections();
       const currentSelection = selections.get(productId) || false;
       const newSelection = !currentSelection;
-      
+
       selections.set(productId, newSelection);
       await this.saveSelections(selections);
 
@@ -772,14 +806,13 @@ export class CartService {
 
       return {
         success: true,
-        data: newSelection
+        data: newSelection,
       };
-
     } catch (error) {
       console.error('Error toggling item selection:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '切换选择状态失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -791,7 +824,7 @@ export class CartService {
     try {
       const cartItems = await this.getCartItems();
       const selections = new Map<string, boolean>();
-      
+
       cartItems.forEach(item => {
         selections.set(item.productId, true);
       });
@@ -800,18 +833,20 @@ export class CartService {
 
       // Notify cart manager
       const { CartManager } = await import('../utils/cart-manager');
-      CartManager.notifyBatchOperationCompleted('selectAll', cartItems.map(item => item.productId));
+      CartManager.notifyBatchOperationCompleted(
+        'selectAll',
+        cartItems.map(item => item.productId)
+      );
 
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Error selecting all items:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '全选失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
@@ -829,14 +864,110 @@ export class CartService {
 
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Error clearing selections:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '清除选择失败'
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Batch update item selections
+   */
+  static async batchUpdateSelections(
+    updates: { productId: string; selected: boolean }[]
+  ): Promise<CartServiceResponse<boolean>> {
+    try {
+      console.log('Batch updating selections:', updates);
+
+      const selections = await this.getSelections();
+
+      updates.forEach(update => {
+        if (update.selected) {
+          selections.set(update.productId, true);
+        } else {
+          selections.delete(update.productId);
+        }
+      });
+
+      await this.saveSelections(selections);
+
+      // Notify cart manager for each update
+      const { CartManager } = await import('../utils/cart-manager');
+      updates.forEach(update => {
+        CartManager.notifySelectionChanged(update.productId, update.selected);
+      });
+
+      return {
+        success: true,
+        data: true,
+      };
+    } catch (error) {
+      console.error('Error batch updating selections:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Get selection status for multiple items
+   */
+  static async getItemSelections(
+    productIds: string[]
+  ): Promise<CartServiceResponse<{ [productId: string]: boolean }>> {
+    try {
+      const selections = await this.getSelections();
+      const result: { [productId: string]: boolean } = {};
+
+      productIds.forEach(productId => {
+        result[productId] = selections.get(productId) || false;
+      });
+
+      return {
+        success: true,
+        data: result,
+      };
+    } catch (error) {
+      console.error('Error getting item selections:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Check if all items are selected
+   */
+  static async areAllItemsSelected(): Promise<CartServiceResponse<boolean>> {
+    try {
+      const cartItems = await this.getCartItems();
+      const selections = await this.getSelections();
+
+      if (cartItems.length === 0) {
+        return {
+          success: true,
+          data: false,
+        };
+      }
+
+      const allSelected = cartItems.every(item => selections.get(item.productId) === true);
+
+      return {
+        success: true,
+        data: allSelected,
+      };
+    } catch (error) {
+      console.error('Error checking if all items are selected:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
       };
     }
   }
