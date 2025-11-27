@@ -40,6 +40,32 @@ interface CartItem {
 }
 
 /**
+ * Cart service response interface
+ */
+interface CartServiceResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
+/**
+ * Extended cart item with product details
+ */
+interface CartItemWithProduct extends CartItem {
+  product: Product;
+}
+
+/**
+ * Cart summary information
+ */
+interface CartSummary {
+  totalItems: number;
+  totalPrice: number;
+  discountAmount: number;
+  finalPrice: number;
+}
+
+/**
  * Cart item selection state
  */
 interface CartItemSelection {
@@ -123,7 +149,7 @@ interface CartPageData extends WechatMiniprogram.Page.DataOption {
 /**
  * Cart error types
  */
-enum CartErrorType {
+declare enum CartErrorType {
   NETWORK_ERROR = 'network_error',
   STORAGE_ERROR = 'storage_error',
   VALIDATION_ERROR = 'validation_error',

@@ -250,7 +250,7 @@ Component({
      * 显示操作反馈
      */
     showOperationFeedback(message: string, type: 'success' | 'error' | 'info' = 'success') {
-      const iconMap = {
+      const iconMap: { [key: string]: 'success' | 'error' | 'none' } = {
         success: 'success',
         error: 'error',
         info: 'none'

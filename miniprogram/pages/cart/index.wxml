@@ -1,5 +1,66 @@
 <!--pages/cart/index.wxml-->
-<view class="container">
-  <text class="title">购物车</text>
-  <text class="subtitle">购物车页面开发中...</text>
+<view class="cart-page">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view wx:elif="{{error}}" class="error-container">
+    <view class="error-icon">⚠️</view>
+    <text class="error-message">{{error}}</text>
+    <button class="retry-button" bindtap="onRetry">重试</button>
+  </view>
+
+  <!-- 空购物车状态 -->
+  <view wx:elif="{{cartItems.length === 0}}" class="empty-container">
+    <view class="empty-icon">🛒</view>
+    <text class="empty-title">购物车是空的</text>
+    <text class="empty-subtitle">快去添加一些商品吧</text>
+    <button class="go-shopping-button" bindtap="goShopping">去逛逛</button>
+  </view>
+
+  <!-- 购物车内容 -->
+  <view wx:else class="cart-content">
+    <!-- 编辑模式切换 -->
+    <view class="edit-mode-bar">
+      <button class="edit-button" bindtap="toggleEditMode">
+        {{editMode ? '完成' : '编辑'}}
+      </button>
+    </view>
+
+    <!-- 商品列表 -->
+    <scroll-view class="cart-list" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="cart-items">
+        <cart-item
+          wx:for="{{cartItems}}"
+          wx:key="productId"
+          item="{{item}}"
+          selected="{{selectedItems.indexOf(item.productId) !== -1}}"
+          edit-mode="{{editMode}}"
+          bind:select="onItemSelect"
+          bind:quantitychange="onQuantityChange"
+          bind:delete="onItemDelete"
+          bind:producttap="onProductTap"
+          bind:longpress="onProductLongPress"
+        />
+      </view>
+    </scroll-view>
+
+    <!-- 底部操作栏 -->
+    <cart-bottom-bar
+      class="bottom-bar"
+      select-all="{{selectAll}}"
+      selected-count="{{selectedItems.length}}"
+      total-price="{{summary.totalPrice}}"
+      discount-amount="{{summary.discountAmount}}"
+      final-price="{{summary.finalPrice}}"
+      edit-mode="{{editMode}}"
+      bind:selectall="onSelectAll"
+      bind:checkout="onCheckout"
+      bind:batchdelete="onBatchDelete"
+      bind:discountdetail="onDiscountDetailTap"
+    />
+  </view>
 </view>

@@ -1,19 +1,254 @@
 /* pages/cart/index.scss */
-.container {
-  padding: 40rpx;
-  text-align: center;
+
+.cart-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
 }
 
-.title {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #333;
-  display: block;
+/* 加载状态 */
+.loading-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #e5e5e5;
+  border-top: 4rpx solid #07c160;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
   margin-bottom: 20rpx;
 }
 
-.subtitle {
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 错误状态 */
+.error-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+}
+
+.error-icon {
+  font-size: 120rpx;
+  margin-bottom: 20rpx;
+}
+
+.error-message {
   font-size: 28rpx;
   color: #666;
-  display: block;
+  text-align: center;
+  margin-bottom: 40rpx;
+  line-height: 1.5;
+}
+
+.retry-button {
+  background-color: #07c160;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+}
+
+.retry-button:active {
+  background-color: #06ad56;
+}
+
+/* 空购物车状态 */
+.empty-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+
+.empty-subtitle {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+}
+
+.go-shopping-button {
+  background-color: #07c160;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+}
+
+.go-shopping-button:active {
+  background-color: #06ad56;
+}
+
+/* 购物车内容 */
+.cart-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 编辑模式栏 */
+.edit-mode-bar {
+  background-color: white;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #e5e5e5;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  color: #07c160;
+  font-size: 28rpx;
+  padding: 0;
+  line-height: 1;
+}
+
+.edit-button:active {
+  opacity: 0.7;
+}
+
+/* 商品列表 */
+.cart-list {
+  flex: 1;
+  background-color: white;
+}
+
+.cart-items {
+  padding-bottom: 20rpx;
+}
+
+/* 底部操作栏 */
+.bottom-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background-color: white;
+  border-top: 1rpx solid #e5e5e5;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 375px) {
+  .loading-container,
+  .error-container,
+  .empty-container {
+    padding: 60rpx 30rpx;
+  }
+  
+  .empty-icon,
+  .error-icon {
+    font-size: 100rpx;
+  }
+  
+  .empty-title {
+    font-size: 30rpx;
+  }
+  
+  .empty-subtitle,
+  .error-message {
+    font-size: 24rpx;
+  }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .cart-page {
+    background-color: #1a1a1a;
+  }
+  
+  .edit-mode-bar,
+  .cart-list,
+  .bottom-bar {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+  
+  .empty-title {
+    color: #e5e5e5;
+  }
+  
+  .empty-subtitle,
+  .error-message,
+  .loading-text {
+    color: #999;
+  }
+}
+
+/* 安全区域适配 */
+.cart-page {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 动画效果 */
+.cart-items {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 滚动条样式 */
+.cart-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* 触摸反馈 */
+.retry-button,
+.go-shopping-button,
+.edit-button {
+  transition: all 0.2s ease;
+}
+
+.retry-button:active,
+.go-shopping-button:active {
+  transform: scale(0.98);
+}
+
+.edit-button:active {
+  transform: scale(0.95);
 }
