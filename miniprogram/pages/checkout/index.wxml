@@ -1,0 +1,160 @@
+<!--pages/checkout/index.wxml-->
+<view class="checkout-container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">正在加载订单信息...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view wx:elif="{{error}}" class="error-container">
+    <view class="error-icon">⚠️</view>
+    <text class="error-message">{{error}}</text>
+    <button class="retry-button" bindtap="onRetry">重试</button>
+  </view>
+
+  <!-- 正常内容 -->
+  <view wx:else class="checkout-content">
+    <!-- 收货地址 -->
+    <view class="address-section">
+      <view class="section-header">
+        <text class="section-title">收货地址</text>
+      </view>
+      <view class="address-card" bindtap="onAddressSelect">
+        <view wx:if="{{selectedAddress}}" class="address-content">
+          <view class="address-info">
+            <text class="recipient-name">{{selectedAddress.name}}</text>
+            <text class="recipient-phone">{{selectedAddress.phone}}</text>
+          </view>
+          <text class="address-detail">{{selectedAddress.address}}</text>
+        </view>
+        <view wx:else class="no-address">
+          <text class="no-address-text">请选择收货地址</text>
+        </view>
+        <text class="address-arrow">></text>
+      </view>
+    </view>
+
+    <!-- 商品列表 -->
+    <view class="products-section">
+      <view class="section-header">
+        <text class="section-title">商品清单</text>
+        <text class="product-count">共{{checkoutItems.length}}件</text>
+      </view>
+      <view class="product-list">
+        <view wx:for="{{checkoutItems}}" wx:key="productId" class="product-item">
+          <image class="product-image" src="{{item.product.image}}" mode="aspectFill"></image>
+          <view class="product-info">
+            <text class="product-name">{{item.product.name}}</text>
+            <text class="product-spec">规格：默认</text>
+            <view class="product-price-quantity">
+              <text class="product-price">¥{{item.product.discountedPrice || item.product.originalPrice}}</text>
+              <text class="product-quantity">×{{item.quantity}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 配送方式 -->
+    <view class="delivery-section">
+      <view class="section-header">
+        <text class="section-title">配送方式</text>
+      </view>
+      <view class="delivery-options">
+        <view class="delivery-option selected">
+          <text class="delivery-name">标准配送</text>
+          <text class="delivery-desc">预计3-5天送达</text>
+          <text class="delivery-fee">免运费</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 支付方式 -->
+    <view class="payment-section">
+      <view class="section-header">
+        <text class="section-title">支付方式</text>
+      </view>
+      <view class="payment-options">
+        <view class="payment-option selected">
+          <text class="payment-name">微信支付</text>
+          <text class="payment-icon">💳</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单备注 -->
+    <view class="note-section">
+      <view class="section-header">
+        <text class="section-title">订单备注</text>
+      </view>
+      <textarea 
+        class="note-input" 
+        placeholder="选填，请输入订单备注" 
+        value="{{orderNote}}"
+        bindinput="onNoteInput"
+        maxlength="200">
+      </textarea>
+    </view>
+
+    <!-- 优惠券 -->
+    <view class="coupon-section" bindtap="onCouponSelect">
+      <view class="coupon-content">
+        <text class="coupon-title">优惠券</text>
+        <view class="coupon-info">
+          <text wx:if="{{selectedCoupon}}" class="coupon-selected">
+            已选择：{{selectedCoupon.name}}
+          </text>
+          <text wx:else class="coupon-none">暂无可用优惠券</text>
+          <text class="coupon-arrow">></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部结算栏 -->
+  <view class="checkout-bottom">
+    <view class="price-summary">
+      <view class="price-row">
+        <text class="price-label">商品总价</text>
+        <text class="price-value">¥{{summary.totalPrice.toFixed(2)}}</text>
+      </view>
+      <view wx:if="{{summary.discountAmount > 0}}" class="price-row discount">
+        <text class="price-label">优惠</text>
+        <text class="price-value">-¥{{summary.discountAmount.toFixed(2)}}</text>
+      </view>
+      <view class="price-row total">
+        <text class="price-label">实付款</text>
+        <text class="price-value final">¥{{summary.finalPrice.toFixed(2)}}</text>
+      </view>
+    </view>
+    <button 
+      class="submit-order-button {{!canSubmit ? 'disabled' : ''}}" 
+      bindtap="onSubmitOrder"
+      disabled="{{!canSubmit}}">
+      {{submitButtonText}}
+    </button>
+  </view>
+</view>
+
+<!-- 库存不足提示弹窗 -->
+<view wx:if="{{showStockAlert}}" class="stock-alert-overlay" bindtap="onCloseStockAlert">
+  <view class="stock-alert-modal" catchtap="">
+    <view class="alert-header">
+      <text class="alert-title">库存不足</text>
+    </view>
+    <view class="alert-content">
+      <text class="alert-message">以下商品库存不足，请返回购物车调整数量：</text>
+      <view class="stock-error-list">
+        <view wx:for="{{stockErrors}}" wx:key="productId" class="stock-error-item">
+          <text class="error-product-name">{{item.productName}}</text>
+          <text class="error-stock-info">库存：{{item.availableStock}}，需要：{{item.requestedQuantity}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="alert-actions">
+      <button class="alert-button cancel" bindtap="onCloseStockAlert">取消</button>
+      <button class="alert-button confirm" bindtap="onBackToCart">返回购物车</button>
+    </view>
+  </view>
+</view>

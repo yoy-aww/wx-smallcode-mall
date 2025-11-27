@@ -75,3 +75,36 @@ export const CART_DATA_VALIDATION = {
   MAX_CART_ITEMS: 100,
   PRICE_CACHE_EXPIRY: 60 * 60 * 1000 // 1 hour
 } as const;
+
+/**
+ * Checkout constants
+ */
+export const CHECKOUT_CONSTANTS = {
+  SESSION_EXPIRY_MINUTES: 30,
+  MAX_ORDER_NOTE_LENGTH: 200,
+  STOCK_CHECK_RETRY_COUNT: 3,
+  VALIDATION_DEBOUNCE_MS: 500
+} as const;
+
+/**
+ * Checkout storage keys
+ */
+export const CHECKOUT_STORAGE_KEYS = {
+  CHECKOUT_STATE: 'checkout_state',
+  CHECKOUT_SESSION_PREFIX: 'checkout_session_',
+  SELECTED_ADDRESS: 'selected_address',
+  ORDER_DRAFT: 'order_draft'
+} as const;
+
+/**
+ * Checkout error messages
+ */
+export const CHECKOUT_ERROR_MESSAGES = {
+  STOCK_INSUFFICIENT: '库存不足，请调整数量',
+  PRODUCT_UNAVAILABLE: '商品已下架或不存在',
+  ADDRESS_REQUIRED: '请选择收货地址',
+  PAYMENT_FAILED: '支付失败，请重试',
+  SESSION_EXPIRED: '结算会话已过期，请重新选择商品',
+  VALIDATION_FAILED: '数据验证失败，请重试',
+  ORDER_SUBMIT_FAILED: '订单提交失败，请重试'
+} as const;

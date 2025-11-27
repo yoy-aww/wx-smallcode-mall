@@ -381,46 +381,102 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
    */
   async onCheckout() {
     try {
-      const { selectedItems, summary } = this.data;
+      const { selectedItems } = this.data;
       
       if (selectedItems.length === 0) {
         this.showToast('请选择要结算的商品');
         return;
       }
 
-      console.log('Checkout requested:', { selectedItems, summary });
+      console.log('Checkout requested:', { selectedItems });
 
-      // 获取选中商品详情
-      const selectedItemsResponse = await CartService.getSelectedItems();
+      // 显示加载状态
+      this.setData({
+        loading: true
+      });
+
+      // 准备结算数据（包含验证）
+      const checkoutDataResponse = await CartService.prepareCheckoutData(selectedItems);
       
-      if (!selectedItemsResponse.success || !selectedItemsResponse.data) {
-        throw new Error('获取结算商品失败');
+      if (!checkoutDataResponse.success || !checkoutDataResponse.data) {
+        throw new Error(checkoutDataResponse.error || '准备结算数据失败');
       }
 
-      const selectedProducts = selectedItemsResponse.data;
+      const { items, summary, validationResult } = checkoutDataResponse.data;
 
-      // 检查库存
-      const stockCheckFailed = selectedProducts.some(item => 
-        item.quantity > item.product.stock
-      );
-
-      if (stockCheckFailed) {
-        this.showToast('部分商品库存不足，请调整数量');
+      // 检查验证结果
+      if (validationResult.invalidItems.length > 0) {
+        this.showToast(`${validationResult.invalidItems.length}件商品已失效，已自动移除`);
         await this.refreshCartData();
         return;
       }
 
+      if (validationResult.stockAdjustedItems.length > 0) {
+        this.showToast(`${validationResult.stockAdjustedItems.length}件商品库存不足，已调整数量`);
+        await this.refreshCartData();
+        return;
+      }
+
+      // 进行库存验证
+      const stockValidationResponse = await CartService.validateCheckoutItems(items);
+      
+      if (!stockValidationResponse.success || !stockValidationResponse.data) {
+        throw new Error('库存验证失败');
+      }
+
+      const { isValid, stockErrors } = stockValidationResponse.data;
+
+      if (!isValid) {
+        console.log('Stock validation failed:', stockErrors);
+        
+        // 显示库存不足的详细信息
+        const errorMessage = stockErrors.map(error => 
+          `${error.productName}：库存${error.availableStock}，需要${error.requestedQuantity}`
+        ).join('\n');
+        
+        wx.showModal({
+          title: '库存不足',
+          content: `以下商品库存不足，请调整数量：\n${errorMessage}`,
+          showCancel: true,
+          cancelText: '取消',
+          confirmText: '去调整',
+          success: (res) => {
+            if (res.confirm) {
+              // 刷新购物车数据以显示最新库存
+              this.refreshCartData();
+            }
+          }
+        });
+        
+        return;
+      }
+
+      // 创建结算会话
+      const sessionResponse = await CartService.createCheckoutSession(items, summary);
+      
+      if (!sessionResponse.success || !sessionResponse.data) {
+        throw new Error('创建结算会话失败');
+      }
+
+      const { sessionId } = sessionResponse.data;
+
+      console.log('Checkout session created:', sessionId);
+
       // 跳转到结算页面
       wx.navigateTo({
-        url: `/pages/checkout/index?data=${encodeURIComponent(JSON.stringify({
-          items: selectedProducts,
+        url: `/pages/checkout/index?sessionId=${sessionId}&data=${encodeURIComponent(JSON.stringify({
+          items,
           summary
         }))}`
       });
 
     } catch (error) {
       console.error('Failed to checkout:', error);
-      this.handleError('结算失败，请重试');
+      this.handleError(error instanceof Error ? error.message : '结算失败，请重试');
+    } finally {
+      this.setData({
+        loading: false
+      });
     }
   },
 

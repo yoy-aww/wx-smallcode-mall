@@ -1035,6 +1035,361 @@ export class CartService {
   }
 
   /**
+   * Prepare checkout data with validation
+   */
+  static async prepareCheckoutData(selectedIds?: string[]): Promise<CartServiceResponse<{
+    items: CartItemWithProduct[];
+    summary: CartSummary;
+    validationResult: CartValidationResult;
+  }>> {
+    try {
+      console.log('Preparing checkout data');
+
+      let checkoutItems: CartItemWithProduct[];
+
+      if (selectedIds && selectedIds.length > 0) {
+        // Use provided selected IDs
+        const cartItemsResponse = await this.getCartItemsWithProducts();
+        
+        if (!cartItemsResponse.success || !cartItemsResponse.data) {
+          return {
+            success: false,
+            error: '获取购物车数据失败'
+          };
+        }
+
+        checkoutItems = cartItemsResponse.data.filter(item => 
+          selectedIds.includes(item.productId)
+        );
+      } else {
+        // Use currently selected items
+        const selectedItemsResponse = await this.getSelectedItems();
+        
+        if (!selectedItemsResponse.success || !selectedItemsResponse.data) {
+          return {
+            success: false,
+            error: '获取选中商品失败'
+          };
+        }
+
+        checkoutItems = selectedItemsResponse.data;
+      }
+
+      if (checkoutItems.length === 0) {
+        return {
+          success: false,
+          error: '没有选中的商品'
+        };
+      }
+
+      // Validate checkout items
+      const validationResult = await this.validateCartItems();
+      
+      if (!validationResult.success || !validationResult.data) {
+        return {
+          success: false,
+          error: '商品验证失败'
+        };
+      }
+
+      // Calculate summary for checkout items
+      const checkoutIds = checkoutItems.map(item => item.productId);
+      const summaryResponse = await this.calculateSelectedTotal(checkoutIds);
+      
+      if (!summaryResponse.success || !summaryResponse.data) {
+        return {
+          success: false,
+          error: '价格计算失败'
+        };
+      }
+
+      console.log('Checkout data prepared successfully');
+
+      return {
+        success: true,
+        data: {
+          items: checkoutItems,
+          summary: summaryResponse.data,
+          validationResult: validationResult.data
+        }
+      };
+
+    } catch (error) {
+      console.error('Failed to prepare checkout data:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR
+      };
+    }
+  }
+
+  /**
+   * Validate checkout items for stock and availability
+   */
+  static async validateCheckoutItems(items: CartItemWithProduct[]): Promise<CartServiceResponse<{
+    isValid: boolean;
+    stockErrors: Array<{
+      productId: string;
+      productName: string;
+      availableStock: number;
+      requestedQuantity: number;
+    }>;
+  }>> {
+    try {
+      console.log('Validating checkout items');
+
+      const { ProductService } = await import('./product');
+      const stockErrors: Array<{
+        productId: string;
+        productName: string;
+        availableStock: number;
+        requestedQuantity: number;
+      }> = [];
+
+      for (const item of items) {
+        const productResponse = await ProductService.getProductById(item.productId);
+        
+        if (!productResponse.success || !productResponse.data) {
+          stockErrors.push({
+            productId: item.productId,
+            productName: item.product.name,
+            availableStock: 0,
+            requestedQuantity: item.quantity
+          });
+          continue;
+        }
+
+        const currentProduct = productResponse.data;
+        
+        if (item.quantity > currentProduct.stock) {
+          stockErrors.push({
+            productId: item.productId,
+            productName: item.product.name,
+            availableStock: currentProduct.stock,
+            requestedQuantity: item.quantity
+          });
+        }
+      }
+
+      const isValid = stockErrors.length === 0;
+
+      console.log('Checkout validation result:', { isValid, errorCount: stockErrors.length });
+
+      return {
+        success: true,
+        data: {
+          isValid,
+          stockErrors
+        }
+      };
+
+    } catch (error) {
+      console.error('Failed to validate checkout items:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.VALIDATION_ERROR
+      };
+    }
+  }
+
+  /**
+   * Create checkout session with state persistence
+   */
+  static async createCheckoutSession(items: CartItemWithProduct[], summary: CartSummary): Promise<CartServiceResponse<{
+    sessionId: string;
+    expiresAt: Date;
+  }>> {
+    try {
+      console.log('Creating checkout session');
+
+      const sessionId = `checkout_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+
+      const sessionData = {
+        sessionId,
+        items,
+        summary,
+        createdAt: new Date(),
+        expiresAt,
+        validated: false
+      };
+
+      // Save session to storage
+      wx.setStorageSync(`checkout_session_${sessionId}`, JSON.stringify(sessionData));
+
+      console.log('Checkout session created:', sessionId);
+
+      return {
+        success: true,
+        data: {
+          sessionId,
+          expiresAt
+        }
+      };
+
+    } catch (error) {
+      console.error('Failed to create checkout session:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.STORAGE_ERROR
+      };
+    }
+  }
+
+  /**
+   * Get checkout session data
+   */
+  static async getCheckoutSession(sessionId: string): Promise<CartServiceResponse<{
+    items: CartItemWithProduct[];
+    summary: CartSummary;
+    createdAt: Date;
+    expiresAt: Date;
+    validated: boolean;
+  } | null>> {
+    try {
+      console.log('Getting checkout session:', sessionId);
+
+      const sessionData = wx.getStorageSync(`checkout_session_${sessionId}`);
+      
+      if (!sessionData) {
+        return {
+          success: true,
+          data: null
+        };
+      }
+
+      const session = JSON.parse(sessionData);
+      
+      // Check if session is expired
+      const now = new Date();
+      const expiresAt = new Date(session.expiresAt);
+      
+      if (now > expiresAt) {
+        console.log('Checkout session expired, removing');
+        wx.removeStorageSync(`checkout_session_${sessionId}`);
+        return {
+          success: true,
+          data: null
+        };
+      }
+
+      return {
+        success: true,
+        data: {
+          items: session.items,
+          summary: session.summary,
+          createdAt: new Date(session.createdAt),
+          expiresAt: new Date(session.expiresAt),
+          validated: session.validated || false
+        }
+      };
+
+    } catch (error) {
+      console.error('Failed to get checkout session:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.STORAGE_ERROR
+      };
+    }
+  }
+
+  /**
+   * Clear checkout session
+   */
+  static async clearCheckoutSession(sessionId: string): Promise<CartServiceResponse<boolean>> {
+    try {
+      console.log('Clearing checkout session:', sessionId);
+
+      wx.removeStorageSync(`checkout_session_${sessionId}`);
+
+      return {
+        success: true,
+        data: true
+      };
+
+    } catch (error) {
+      console.error('Failed to clear checkout session:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.STORAGE_ERROR
+      };
+    }
+  }
+
+  /**
+   * Get sync status for debugging
+   */
+  static async getSyncStatus(): Promise<CartServiceResponse<any>> {
+    try {
+      const { CartStateSynchronizer } = await import('../utils/cart-state-sync');
+      const syncStatus = await CartStateSynchronizer.getSyncStatus();
+      
+      return {
+        success: true,
+        data: syncStatus
+      };
+    } catch (error) {
+      console.error('Failed to get sync status:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR
+      };
+    }
+  }
+
+  /**
+   * Perform data maintenance
+   */
+  static async performDataMaintenance(): Promise<CartServiceResponse<{
+    cleanedItems: number;
+    validatedItems: number;
+    syncStatus: any;
+  }>> {
+    try {
+      console.log('Performing cart data maintenance');
+
+      // Validate and clean cart items
+      const validationResult = await this.validateCartItems();
+      
+      let cleanedItems = 0;
+      let validatedItems = 0;
+
+      if (validationResult.success && validationResult.data) {
+        const { validItems, invalidItems, stockAdjustedItems } = validationResult.data;
+        
+        cleanedItems = invalidItems.length;
+        validatedItems = validItems.length;
+        
+        console.log('Maintenance results:', {
+          validItems: validItems.length,
+          invalidItems: invalidItems.length,
+          stockAdjustedItems: stockAdjustedItems.length
+        });
+      }
+
+      // Get sync status
+      const syncStatusResponse = await this.getSyncStatus();
+      const syncStatus = syncStatusResponse.success ? syncStatusResponse.data : null;
+
+      return {
+        success: true,
+        data: {
+          cleanedItems,
+          validatedItems,
+          syncStatus
+        }
+      };
+
+    } catch (error) {
+      console.error('Failed to perform data maintenance:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR
+      };
+    }
+  }
+
+  /**
    * Perform comprehensive cart data validation and cleanup
    */
   static async performDataMaintenance(): Promise<CartServiceResponse<{

@@ -4,7 +4,8 @@
     "pages/category/index",
     "pages/cart/index",
     "pages/profile/index",
-    "pages/product-detail/index"
+    "pages/product-detail/index",
+    "pages/checkout/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",
