@@ -83,7 +83,7 @@
 }
 
 .retry-button {
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  background: #ff6b35;
   color: white;
   border: none;
   border-radius: 48rpx;
@@ -95,7 +95,7 @@
 }
 
 .retry-button:active {
-  background: linear-gradient(135deg, #e55a2b 0%, #e8851a 100%);
+  background: #e55a2b;
   transform: translateY(2rpx);
   box-shadow: 0 4rpx 12rpx rgba(255, 107, 53, 0.4);
 }
@@ -142,7 +142,7 @@
 }
 
 .go-shopping-button {
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  background: #ff6b35;
   color: white;
   border: none;
   border-radius: 48rpx;
@@ -155,26 +155,15 @@
   overflow: hidden;
 }
 
-.go-shopping-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
+/* Shimmer effect removed for compatibility */
 
 .go-shopping-button:active {
-  background: linear-gradient(135deg, #e55a2b 0%, #e8851a 100%);
+  background: #e55a2b;
   transform: translateY(2rpx);
   box-shadow: 0 6rpx 16rpx rgba(255, 107, 53, 0.4);
 }
 
-.go-shopping-button:active::before {
-  left: 100%;
-}
+/* Pseudo-element removed for compatibility */
 
 /* 购物车内容 */
 .cart-content {
@@ -227,23 +216,7 @@
   transform: scale(0.95);
 }
 
-.edit-button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background-color: rgba(255, 107, 53, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
-}
-
-.edit-button:active::after {
-  width: 100%;
-  height: 100%;
-}
+/* Ripple effect removed for compatibility */
 
 /* 商品列表 */
 .cart-list {
@@ -299,8 +272,6 @@
   border-top: 1rpx solid #f0f0f0;
   box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.08);
   animation: slideUpBottom 0.4s ease-out;
-  backdrop-filter: blur(20rpx);
-  -webkit-backdrop-filter: blur(20rpx);
 }
 
 @keyframes slideUpBottom {
@@ -417,13 +388,13 @@
   
   .retry-button,
   .go-shopping-button {
-    background: linear-gradient(135deg, #ff9f0a 0%, #ff6b35 100%);
+    background: #ff9f0a;
     box-shadow: 0 8rpx 24rpx rgba(255, 159, 10, 0.3);
   }
   
   .retry-button:active,
   .go-shopping-button:active {
-    background: linear-gradient(135deg, #e8851a 0%, #e55a2b 100%);
+    background: #e8851a;
     box-shadow: 0 4rpx 12rpx rgba(255, 159, 10, 0.4);
   }
 }
@@ -508,7 +479,11 @@
 }
 
 /* 交互状态增强 */
-.cart-page * {
+.cart-page,
+.cart-page view,
+.cart-page text,
+.cart-page button,
+.cart-page image {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -517,9 +492,11 @@
 
 /* 可访问性增强 */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  .cart-page,
+  .cart-page view,
+  .cart-page text,
+  .cart-page button,
+  .cart-page image {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -603,7 +580,7 @@
 }
 
 .cart-page.edit-mode .edit-mode-bar {
-  background: linear-gradient(135deg, #fff5f2 0%, #ffffff 100%);
+  background: #fff5f2;
   border-bottom-color: #ffe5dc;
 }
 
@@ -613,7 +590,7 @@
 }
 
 .bottom-bar.has-selection {
-  background: linear-gradient(135deg, #ffffff 0%, #fff8f6 100%);
+  background: #fff8f6;
   border-top-color: #ffe5dc;
 }
 
@@ -655,21 +632,11 @@
   position: relative;
 }
 
-.cart-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1rpx;
-  background: linear-gradient(90deg, transparent 0%, #f0f0f0 50%, transparent 100%);
-}
+/* Gradient line removed for compatibility */
 
 /* 商品列表背景纹理 */
 .cart-list {
-  background-image: 
-    radial-gradient(circle at 1px 1px, rgba(255, 107, 53, 0.02) 1px, transparent 0);
-  background-size: 40rpx 40rpx;
+  background-color: #ffffff;
 }
 
 /* 状态指示器 */
@@ -695,7 +662,9 @@
 /* ==================== 无障碍增强 ==================== */
 
 /* 焦点指示器 */
-.cart-page *:focus {
+.cart-page button:focus,
+.cart-page input:focus,
+.cart-page textarea:focus {
   outline: 3rpx solid #ff6b35;
   outline-offset: 2rpx;
 }
@@ -736,13 +705,13 @@
 
 /* 内存优化 */
 .cart-items cart-item {
-  contain: layout style paint;
+  /* contain: layout style paint; */
 }
 
 /* 渲染优化 */
 .cart-list {
-  contain: strict;
-  content-visibility: auto;
+  /* contain: strict; */
+  /* content-visibility: auto; */
 }
 
 /* ==================== 主题变量 ==================== */
@@ -787,7 +756,7 @@
 /* ==================== 调试辅助 ==================== */
 
 /* 开发环境边界显示 */
-.debug .cart-page * {
+.debug .cart-page view {
   outline: 1rpx solid rgba(255, 0, 0, 0.1);
 }
 
@@ -815,8 +784,6 @@
 
 .bottom-bar.floating {
   box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(40rpx);
-  -webkit-backdrop-filter: blur(40rpx);
   background: rgba(255, 255, 255, 0.95);
   border-top-color: rgba(240, 240, 240, 0.8);
 }
@@ -993,26 +960,19 @@
   transform: translateX(-50%) translateY(-20rpx);
 }
 
-.gesture-hint::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 8rpx solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.8);
-}
+/* Tooltip arrow removed for compatibility */
 
 /* ==================== 最终优化 ==================== */
 
 /* 防止过度滚动 */
 .cart-list {
-  overscroll-behavior: contain;
+  /* overscroll-behavior: contain; */
 }
 
 /* 优化触摸延迟 */
-.cart-page * {
-  touch-action: manipulation;
+.cart-page view,
+.cart-page button {
+  /* touch-action: manipulation; */
 }
 
 /* 优化字体渲染 */
@@ -1022,7 +982,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 内容安全策略 */
-.cart-page img {
-  content-security-policy: default-src 'self';
+/* 图片优化 */
+.cart-page image {
+  max-width: 100%;
+  height: auto;
 }
