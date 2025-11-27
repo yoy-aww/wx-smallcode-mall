@@ -652,7 +652,7 @@ Page({
       });
 
       // 调用产品服务加载数据
-      const response = await ProductService.loadProductsByCategory(categoryId);
+      const response = await ProductService.getProductsByCategory(categoryId);
       
       if (response.success && response.data) {
         const products = response.data;
@@ -715,7 +715,7 @@ Page({
     try {
       console.log('Refreshing products for category:', this.data.selectedCategoryId);
       
-      const response = await ProductService.refreshProducts(this.data.selectedCategoryId);
+      const response = await ProductService.getProductsByCategory(this.data.selectedCategoryId);
       
       if (response.success && response.data) {
         const products = response.data;
