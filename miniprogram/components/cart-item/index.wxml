@@ -1,0 +1,129 @@
+<!--components/cart-item/index.wxml-->
+<view 
+  class="cart-item {{selected ? 'selected' : ''}} {{editMode ? 'edit-mode' : ''}} {{disabled ? 'disabled' : ''}} {{stockStatus}}"
+  data-product-id="{{item.productId}}"
+  animation="{{deleteAnimation}}"
+  bindlongpress="onLongPress"
+>
+  <!-- 选择框 -->
+  <view class="select-container" bindtap="onSelectToggle" animation="{{selectAnimation}}">
+    <view class="select-checkbox {{selected ? 'checked' : ''}}">
+      <text wx:if="{{selected}}" class="check-icon">✓</text>
+    </view>
+  </view>
+
+  <!-- 商品信息区域 -->
+  <view class="product-info" bindtap="onProductTap">
+    <!-- 商品图片 -->
+    <view class="product-image-container">
+      <image 
+        class="product-image {{imageLoading ? 'loading' : ''}}" 
+        src="{{item.product.image}}" 
+        mode="aspectFill"
+        lazy-load="{{true}}"
+        bindload="onImageLoad"
+        binderror="onImageError"
+        show-menu-by-longpress="{{false}}"
+      />
+      
+      <!-- 图片加载占位符 -->
+      <view wx:if="{{imageLoading}}" class="image-placeholder">
+        <view class="placeholder-icon">
+          <text class="icon-image">📷</text>
+        </view>
+      </view>
+      
+      <!-- 图片加载失败占位符 -->
+      <view wx:if="{{imageError}}" class="image-error" bindtap="retryImageLoad">
+        <view class="error-icon">
+          <text class="icon-error">🖼️</text>
+        </view>
+        <text class="error-text">重新加载</text>
+      </view>
+      
+      <!-- 库存状态覆盖层 -->
+      <view wx:if="{{stockStatus === 'out'}}" class="stock-overlay">
+        <text class="stock-overlay-text">缺货</text>
+      </view>
+    </view>
+
+    <!-- 商品详情 -->
+    <view class="product-details">
+      <!-- 商品名称 -->
+      <text class="product-name">{{item.product.name}}</text>
+      
+      <!-- 商品描述 -->
+      <text wx:if="{{item.product.description}}" class="product-description">{{item.product.description}}</text>
+      
+      <!-- 促销标签 -->
+      <view wx:if="{{promotionTags.length > 0}}" class="promotion-tags">
+        <text 
+          wx:for="{{promotionTags}}" 
+          wx:key="*this" 
+          class="promotion-tag {{item === '7天无理由退货' ? 'return-tag' : ''}} {{item === '库存紧张' ? 'stock-tag' : ''}}"
+        >
+          {{item}}
+        </text>
+      </view>
+      
+      <!-- 价格信息 -->
+      <view class="price-container">
+        <!-- 折扣价格 -->
+        <text wx:if="{{hasDiscount()}}" class="discounted-price">
+          {{getDisplayPrice()}}
+        </text>
+        
+        <!-- 原价 -->
+        <text class="original-price {{hasDiscount() ? 'crossed-out' : ''}}">
+          {{hasDiscount() ? getOriginalPrice() : getDisplayPrice()}}
+        </text>
+      </view>
+      
+      <!-- 库存状态 -->
+      <view class="stock-info">
+        <text class="stock-text {{stockStatus === 'low' ? 'low-stock' : ''}} {{stockStatus === 'out' ? 'out-stock' : ''}}">
+          {{getStockStatusText()}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作区域 -->
+  <view class="actions-container">
+    <!-- 编辑模式下的删除按钮 -->
+    <view wx:if="{{editMode}}" class="edit-actions">
+      <button 
+        class="delete-btn"
+        bindtap="onDeleteTap"
+        disabled="{{disabled}}"
+        hover-class="btn-hover"
+        hover-stay-time="100"
+      >
+        <text class="delete-icon">🗑️</text>
+      </button>
+    </view>
+    
+    <!-- 数量选择器 -->
+    <view wx:else class="quantity-container">
+      <quantity-selector
+        quantity="{{item.quantity}}"
+        maxQuantity="{{item.product.stock}}"
+        minQuantity="{{1}}"
+        disabled="{{!canAdjustQuantity()}}"
+        size="small"
+        bindchange="onQuantityChange"
+      />
+    </view>
+    
+    <!-- 小计金额 -->
+    <view class="subtotal-container">
+      <text class="subtotal-label">小计</text>
+      <text class="subtotal-price">{{getSubtotal()}}</text>
+    </view>
+  </view>
+
+  <!-- 滑动删除提示 -->
+  <view wx:if="{{!editMode}}" class="swipe-hint">
+    <text class="hint-text">← 左滑删除</text>
+  </view>
+</view>

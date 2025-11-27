@@ -1,0 +1,75 @@
+<!--components/cart-item/demo.wxml-->
+<view class="demo-container">
+  <view class="demo-title">购物车商品项组件演示</view>
+  
+  <!-- 正常状态 -->
+  <view class="demo-section">
+    <text class="section-title">正常状态</text>
+    <cart-item
+      item="{{normalItem}}"
+      selected="{{false}}"
+      editMode="{{false}}"
+      bindselect="onItemSelect"
+      bindquantitychange="onQuantityChange"
+      binddelete="onItemDelete"
+      bindproducttap="onProductTap"
+    />
+  </view>
+  
+  <!-- 选中状态 -->
+  <view class="demo-section">
+    <text class="section-title">选中状态</text>
+    <cart-item
+      item="{{selectedItem}}"
+      selected="{{true}}"
+      editMode="{{false}}"
+      bindselect="onItemSelect"
+      bindquantitychange="onQuantityChange"
+      binddelete="onItemDelete"
+      bindproducttap="onProductTap"
+    />
+  </view>
+  
+  <!-- 编辑模式 -->
+  <view class="demo-section">
+    <text class="section-title">编辑模式</text>
+    <cart-item
+      item="{{editItem}}"
+      selected="{{true}}"
+      editMode="{{true}}"
+      bindselect="onItemSelect"
+      bindquantitychange="onQuantityChange"
+      binddelete="onItemDelete"
+      bindproducttap="onProductTap"
+    />
+  </view>
+  
+  <!-- 库存不足 -->
+  <view class="demo-section">
+    <text class="section-title">库存不足</text>
+    <cart-item
+      item="{{outOfStockItem}}"
+      selected="{{false}}"
+      editMode="{{false}}"
+      bindselect="onItemSelect"
+      bindquantitychange="onQuantityChange"
+      binddelete="onItemDelete"
+      bindproducttap="onProductTap"
+    />
+  </view>
+  
+  <!-- 禁用状态 -->
+  <view class="demo-section">
+    <text class="section-title">禁用状态</text>
+    <cart-item
+      item="{{disabledItem}}"
+      selected="{{false}}"
+      editMode="{{false}}"
+      disabled="{{true}}"
+      bindselect="onItemSelect"
+      bindquantitychange="onQuantityChange"
+      binddelete="onItemDelete"
+      bindproducttap="onProductTap"
+    />
+  </view>
+</view>
