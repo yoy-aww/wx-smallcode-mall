@@ -1,6 +1,7 @@
 // pages/cart/index.ts
 import { CartService } from '../../services/cart';
 import { CartManager, CartEventType } from '../../utils/cart-manager';
+// Simplified imports for WeChat Mini Program compatibility
 
 /**
  * 购物车页面
@@ -126,7 +127,7 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
       console.log('Cart page initialized successfully');
     } catch (error) {
       console.error('Failed to initialize cart page:', error);
-      this.handleError('页面初始化失败，请重试');
+      await this.handleError(error, 'initializePage');
     }
   },
 
@@ -170,8 +171,8 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
       // 获取购物车商品
       const cartItemsResponse = await CartService.getCartItemsWithProducts();
       
-      if (!cartItemsResponse.success) {
-        throw new Error(cartItemsResponse.error || '获取购物车数据失败');
+      if (!cartItemsResponse?.success) {
+        throw new Error(cartItemsResponse?.error || '获取购物车数据失败');
       }
 
       const cartItems = cartItemsResponse.data || [];
@@ -206,7 +207,7 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
     } catch (error) {
       console.error('Failed to load cart data:', error);
       this.setData({ loading: false });
-      this.handleError(error instanceof Error ? error.message : '加载购物车数据失败');
+      await this.handleError(error, 'loadCartData');
     }
   },
 
@@ -300,7 +301,7 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
    */
   async onQuantityChange(event: WechatMiniprogram.CustomEvent) {
     try {
-      const { productId, quantity } = event.detail;
+      const { productId, quantity, productName } = event.detail;
       console.log('Quantity changed:', productId, quantity);
 
       const response = await CartService.updateCartItemQuantity(productId, quantity);
@@ -316,7 +317,7 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
 
     } catch (error) {
       console.error('Failed to update quantity:', error);
-      this.handleError(error instanceof Error ? error.message : '更新数量失败');
+      await this.handleError(error, 'onQuantityChange', productId);
     }
   },
 
@@ -325,8 +326,22 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
    */
   async onItemDelete(event: WechatMiniprogram.CustomEvent) {
     try {
-      const { productId } = event.detail;
+      const { productId, productName } = event.detail;
       console.log('Item delete requested:', productId);
+
+      // 确认删除操作
+      const confirmed = await new Promise<boolean>((resolve) => {
+        wx.showModal({
+          title: '确认删除',
+          content: `确定要删除 ${productName || '该商品'} 吗？`,
+          success: (res) => resolve(res.confirm),
+          fail: () => resolve(false)
+        });
+      });
+      
+      if (!confirmed) {
+        return;
+      }
 
       const response = await CartService.removeFromCart(productId);
       
@@ -341,7 +356,7 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
 
     } catch (error) {
       console.error('Failed to delete item:', error);
-      this.handleError('删除失败，请重试');
+      await this.handleError(error, 'onItemDelete', productId);
     }
   },
 
@@ -353,7 +368,21 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
       const { selectedItems } = this.data;
       
       if (selectedItems.length === 0) {
-        this.showToast('请选择要删除的商品');
+        this.showToast('请选择要删除的商品', 'none');
+        return;
+      }
+
+      // 确认批量删除操作
+      const confirmed = await new Promise<boolean>((resolve) => {
+        wx.showModal({
+          title: '确认删除',
+          content: `确定要删除${selectedItems.length}件商品吗？`,
+          success: (res) => resolve(res.confirm),
+          fail: () => resolve(false)
+        });
+      });
+      
+      if (!confirmed) {
         return;
       }
 
@@ -372,7 +401,7 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
 
     } catch (error) {
       console.error('Failed to batch delete:', error);
-      this.handleError('删除失败，请重试');
+      await this.handleError(error, 'onBatchDelete');
     }
   },
 
@@ -593,21 +622,17 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
   },
 
   /**
-   * 错误处理
+   * 增强的错误处理
    */
-  handleError(message: string) {
-    console.error('Cart page error:', message);
+  async handleError(error: any, context: string, productId?: string) {
+    console.error(`Cart page error in ${context}:`, error);
+    
+    // 使用错误处理器处理错误
+    await CartService.handleCartError(error, context, productId);
     
     this.setData({
-      error: message,
+      error: error instanceof Error ? error.message : '操作失败',
       loading: false
-    });
-
-    // 显示错误提示
-    wx.showToast({
-      title: message,
-      icon: 'none',
-      duration: 3000
     });
   },
 

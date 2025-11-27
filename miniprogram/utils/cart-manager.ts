@@ -314,7 +314,7 @@ export function initializeCartManager() {
     });
 
     // Set up periodic data maintenance
-    CartManager.setupPeriodicMaintenance();
+    CartManagerExtended.setupPeriodicMaintenance();
   }
   
   console.log('Cart manager initialized successfully');

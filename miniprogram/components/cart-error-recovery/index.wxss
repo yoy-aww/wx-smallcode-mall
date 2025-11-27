@@ -1,0 +1,262 @@
+/* components/cart-error-recovery/index.wxss */
+.cart-error-recovery {
+  position: relative;
+  background: #fff;
+  border-radius: 12rpx;
+  margin: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Error Header */
+.error-header {
+  display: flex;
+  align-items: flex-start;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+}
+
+.error-icon {
+  margin-right: 16rpx;
+  margin-top: 4rpx;
+}
+
+.error-icon .iconfont {
+  font-size: 32rpx;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 8rpx;
+}
+
+.error-subtitle {
+  font-size: 24rpx;
+  opacity: 0.9;
+  line-height: 1.3;
+}
+
+.error-actions {
+  margin-left: 16rpx;
+}
+
+.action-button {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.action-button:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.95);
+}
+
+.action-button .iconfont {
+  font-size: 24rpx;
+}
+
+/* Network Status */
+.network-status {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background: #f8f9fa;
+  border-bottom: 1rpx solid #e9ecef;
+}
+
+.status-indicator {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+}
+
+.status-indicator.connected {
+  background: #28a745;
+}
+
+.status-indicator.disconnected {
+  background: #dc3545;
+}
+
+.status-text {
+  font-size: 24rpx;
+  color: #6c757d;
+}
+
+/* Recovery Options */
+.recovery-options {
+  padding: 24rpx;
+}
+
+.options-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.option-item:active {
+  background: #e9ecef;
+  transform: scale(0.98);
+}
+
+.option-item.primary {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+}
+
+.option-item.primary:active {
+  background: linear-gradient(135deg, #0056b3, #004085);
+}
+
+.option-icon {
+  margin-right: 16rpx;
+}
+
+.option-icon .iconfont {
+  font-size: 28rpx;
+}
+
+.option-label {
+  flex: 1;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.option-arrow .iconfont,
+.option-loading .iconfont {
+  font-size: 24rpx;
+  opacity: 0.7;
+}
+
+.option-loading .iconfont {
+  animation: spin 1s linear infinite;
+}
+
+/* Additional Actions */
+.additional-actions {
+  display: flex;
+  border-top: 1rpx solid #e9ecef;
+}
+
+.action-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+  transition: background 0.3s ease;
+}
+
+.action-item:active {
+  background: #f8f9fa;
+}
+
+.action-item:not(:last-child) {
+  border-right: 1rpx solid #e9ecef;
+}
+
+.action-item .iconfont {
+  font-size: 24rpx;
+  margin-right: 8rpx;
+  color: #6c757d;
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #6c757d;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-spinner {
+  width: 48rpx;
+  height: 48rpx;
+  border: 4rpx solid #e9ecef;
+  border-top: 4rpx solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16rpx;
+}
+
+.loading-text {
+  font-size: 24rpx;
+  color: #6c757d;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 750rpx) {
+  .cart-error-recovery {
+    margin: 16rpx;
+  }
+  
+  .error-header {
+    padding: 20rpx;
+  }
+  
+  .recovery-options {
+    padding: 20rpx;
+  }
+  
+  .option-item {
+    padding: 16rpx;
+  }
+  
+  .additional-actions .action-item {
+    padding: 16rpx;
+  }
+}

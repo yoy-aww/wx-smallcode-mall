@@ -1,0 +1,72 @@
+<!-- components/cart-error-recovery/index.wxml -->
+<view class="cart-error-recovery" wx:if="{{error}}">
+  <!-- Error Header -->
+  <view class="error-header">
+    <view class="error-icon">
+      <text class="iconfont icon-warning"></text>
+    </view>
+    <view class="error-content">
+      <view class="error-title">{{error.userMessage || '操作失败'}}</view>
+      <view class="error-subtitle" wx:if="{{context}}">{{context}}</view>
+    </view>
+    <view class="error-actions">
+      <view class="action-button dismiss" bind:tap="onDismiss">
+        <text class="iconfont icon-close"></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Network Status -->
+  <view class="network-status" wx:if="{{networkStatus}}">
+    <view class="status-indicator {{networkStatus.isConnected ? 'connected' : 'disconnected'}}"></view>
+    <text class="status-text">
+      {{networkStatus.isConnected ? '网络已连接' : '网络未连接'}}
+      <text wx:if="{{networkStatus.networkType}}">({{networkStatus.networkType}})</text>
+    </text>
+  </view>
+
+  <!-- Recovery Options -->
+  <view class="recovery-options" wx:if="{{showRecovery && recoveryOptions.length > 0}}">
+    <view class="options-title">解决方案</view>
+    <view class="options-list">
+      <view 
+        class="option-item {{item.primary ? 'primary' : ''}}" 
+        wx:for="{{recoveryOptions}}" 
+        wx:key="id"
+        data-option-id="{{item.id}}"
+        bind:tap="onRecoveryOptionTap"
+      >
+        <view class="option-icon">
+          <text class="iconfont icon-{{item.icon}}"></text>
+        </view>
+        <view class="option-label">{{item.label}}</view>
+        <view class="option-arrow" wx:if="{{!recovering}}">
+          <text class="iconfont icon-arrow-right"></text>
+        </view>
+        <view class="option-loading" wx:if="{{recovering}}">
+          <text class="iconfont icon-loading"></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Additional Actions -->
+  <view class="additional-actions">
+    <view class="action-item" bind:tap="onShowDetails">
+      <text class="iconfont icon-info"></text>
+      <text class="action-text">查看详情</text>
+    </view>
+    <view class="action-item" bind:tap="onGetHelp">
+      <text class="iconfont icon-help"></text>
+      <text class="action-text">获取帮助</text>
+    </view>
+  </view>
+
+  <!-- Loading Overlay -->
+  <view class="loading-overlay" wx:if="{{recovering}}">
+    <view class="loading-content">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">正在处理...</text>
+    </view>
+  </view>
+</view>
