@@ -408,12 +408,16 @@ export class CartService {
   }
 
   /**
-   * Save cart items to storage
+   * Save cart items to storage with synchronization
    */
   private static async saveCartItems(cartItems: CartItem[]): Promise<void> {
     try {
       const cartData = JSON.stringify(cartItems);
       wx.setStorageSync(this.CART_STORAGE_KEY, cartData);
+
+      // Trigger state synchronization
+      const { CartStateSynchronizer } = await import('../utils/cart-state-sync');
+      await CartStateSynchronizer.syncToStorage(cartItems);
     } catch (error) {
       console.error('Error saving cart items:', error);
       throw new Error(CART_ERROR_MESSAGES.STORAGE_ERROR);
@@ -771,7 +775,7 @@ export class CartService {
   }
 
   /**
-   * Save selections to storage
+   * Save selections to storage with synchronization
    */
   static async saveSelections(selections: Map<string, boolean>): Promise<void> {
     try {
@@ -782,6 +786,10 @@ export class CartService {
 
       const selectionsData = JSON.stringify(selectionsObj);
       wx.setStorageSync(CART_STORAGE_KEYS.CART_SELECTIONS, selectionsData);
+
+      // Trigger state synchronization
+      const { CartStateSynchronizer } = await import('../utils/cart-state-sync');
+      await CartStateSynchronizer.syncSelections(selections);
     } catch (error) {
       console.error('Error saving selections:', error);
       throw new Error(CART_ERROR_MESSAGES.STORAGE_ERROR);
@@ -965,6 +973,172 @@ export class CartService {
       };
     } catch (error) {
       console.error('Error checking if all items are selected:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Initialize cart with data persistence and synchronization
+   */
+  static async initializeCart(): Promise<CartServiceResponse<{
+    items: CartItem[];
+    selections: Map<string, boolean>;
+    syncStatus: any;
+  }>> {
+    try {
+      console.log('Initializing cart with data persistence');
+
+      // Initialize synchronizer
+      const { CartStateSynchronizer } = await import('../utils/cart-state-sync');
+      await CartStateSynchronizer.initialize();
+
+      // Sync from storage with validation
+      const syncResult = await CartStateSynchronizer.syncFromStorage();
+      
+      // Get sync status
+      const syncStatus = await CartStateSynchronizer.getSyncStatus();
+
+      // If data was expired and validated, update cart
+      if (syncResult.isExpired) {
+        await this.saveCartItems(syncResult.items);
+        await this.saveSelections(syncResult.selections);
+        await this.updateCartBadge();
+
+        // Notify about data validation
+        const { CartManager } = await import('../utils/cart-manager');
+        CartManager.emit(CartEventType.BATCH_OPERATION_COMPLETED, {
+          operation: 'dataValidation',
+          affectedItems: syncResult.items.map(item => item.productId)
+        });
+      }
+
+      console.log('Cart initialized successfully');
+
+      return {
+        success: true,
+        data: {
+          items: syncResult.items,
+          selections: syncResult.selections,
+          syncStatus
+        }
+      };
+    } catch (error) {
+      console.error('Error initializing cart:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Perform comprehensive cart data validation and cleanup
+   */
+  static async performDataMaintenance(): Promise<CartServiceResponse<{
+    validatedItems: number;
+    removedItems: number;
+    adjustedItems: number;
+    clearedSelections: number;
+  }>> {
+    try {
+      console.log('Performing cart data maintenance');
+
+      const { CartStateSynchronizer } = await import('../utils/cart-state-sync');
+      
+      // Validate stored data integrity
+      const isValid = await CartStateSynchronizer.validateStoredData();
+      if (!isValid) {
+        await CartStateSynchronizer.cleanupInvalidData();
+      }
+
+      // Validate cart items
+      const validationResponse = await this.validateCartItems();
+      if (!validationResponse.success || !validationResponse.data) {
+        throw new Error('Cart validation failed');
+      }
+
+      const validationResult = validationResponse.data;
+      
+      // Update cart with validated items
+      const validCartItems = validationResult.validItems.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        selectedAt: item.selectedAt
+      }));
+
+      await this.saveCartItems(validCartItems);
+
+      // Clean up selections for removed items
+      const selections = await this.getSelections();
+      const validProductIds = new Set(validCartItems.map(item => item.productId));
+      const cleanedSelections = new Map<string, boolean>();
+      let clearedSelections = 0;
+
+      selections.forEach((selected, productId) => {
+        if (validProductIds.has(productId)) {
+          cleanedSelections.set(productId, selected);
+        } else {
+          clearedSelections++;
+        }
+      });
+
+      await this.saveSelections(cleanedSelections);
+      await this.updateCartBadge();
+
+      const maintenanceResult = {
+        validatedItems: validationResult.validItems.length,
+        removedItems: validationResult.invalidItems.length,
+        adjustedItems: validationResult.stockAdjustedItems.length,
+        clearedSelections
+      };
+
+      console.log('Cart data maintenance completed:', maintenanceResult);
+
+      return {
+        success: true,
+        data: maintenanceResult
+      };
+    } catch (error) {
+      console.error('Error performing data maintenance:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Get cart synchronization status
+   */
+  static async getSyncStatus(): Promise<CartServiceResponse<{
+    lastSync: number | null;
+    version: number;
+    deviceId: string;
+    isExpired: boolean;
+    itemCount: number;
+    selectionCount: number;
+  }>> {
+    try {
+      const { CartStateSynchronizer } = await import('../utils/cart-state-sync');
+      const syncStatus = await CartStateSynchronizer.getSyncStatus();
+      
+      const itemCount = await this.getCartItemCount();
+      const selections = await this.getSelections();
+      const selectionCount = Array.from(selections.values()).filter(Boolean).length;
+
+      return {
+        success: true,
+        data: {
+          ...syncStatus,
+          itemCount,
+          selectionCount
+        }
+      };
+    } catch (error) {
+      console.error('Error getting sync status:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,

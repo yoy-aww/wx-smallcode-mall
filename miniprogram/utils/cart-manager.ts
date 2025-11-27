@@ -312,7 +312,145 @@ export function initializeCartManager() {
     (wx as any).$on('cartUpdated', () => {
       CartManager.updateBadge();
     });
+
+    // Set up periodic data maintenance
+    CartManager.setupPeriodicMaintenance();
   }
   
   console.log('Cart manager initialized successfully');
+}
+
+/**
+ * Enhanced CartManager with data persistence integration
+ */
+export class CartManagerExtended extends CartManager {
+  private static maintenanceInterval: number | null = null;
+  private static readonly MAINTENANCE_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+
+  /**
+   * Set up periodic data maintenance
+   */
+  static setupPeriodicMaintenance() {
+    // Clear existing interval
+    if (this.maintenanceInterval) {
+      clearInterval(this.maintenanceInterval);
+    }
+
+    // Set up periodic maintenance
+    this.maintenanceInterval = setInterval(async () => {
+      try {
+        console.log('Running periodic cart data maintenance');
+        const { CartService } = await import('../services/cart');
+        await CartService.performDataMaintenance();
+      } catch (error) {
+        console.error('Error in periodic maintenance:', error);
+      }
+    }, this.MAINTENANCE_INTERVAL);
+
+    console.log('Periodic cart maintenance scheduled');
+  }
+
+  /**
+   * Initialize cart with data persistence
+   */
+  static async initializeWithPersistence(): Promise<void> {
+    try {
+      console.log('Initializing cart manager with persistence');
+
+      // Initialize base cart manager
+      this.initialize();
+
+      // Initialize cart service with persistence
+      const { CartService } = await import('../services/cart');
+      const initResult = await CartService.initializeCart();
+
+      if (initResult.success && initResult.data) {
+        // Emit initialization complete event
+        this.emit(CartEventType.BATCH_OPERATION_COMPLETED, {
+          operation: 'initialization',
+          affectedItems: initResult.data.items.map(item => item.productId)
+        });
+
+        console.log('Cart manager initialized with persistence successfully');
+      } else {
+        console.warn('Cart initialization completed with warnings:', initResult.error);
+      }
+
+      // Set up periodic maintenance
+      this.setupPeriodicMaintenance();
+    } catch (error) {
+      console.error('Error initializing cart manager with persistence:', error);
+    }
+  }
+
+  /**
+   * Perform immediate data maintenance
+   */
+  static async performMaintenance(): Promise<void> {
+    try {
+      console.log('Performing immediate cart data maintenance');
+      
+      const { CartService } = await import('../services/cart');
+      const maintenanceResult = await CartService.performDataMaintenance();
+
+      if (maintenanceResult.success && maintenanceResult.data) {
+        // Emit maintenance complete event
+        this.emit(CartEventType.BATCH_OPERATION_COMPLETED, {
+          operation: 'maintenance',
+          affectedItems: []
+        });
+
+        console.log('Cart maintenance completed:', maintenanceResult.data);
+      } else {
+        console.warn('Cart maintenance completed with warnings:', maintenanceResult.error);
+      }
+    } catch (error) {
+      console.error('Error performing cart maintenance:', error);
+    }
+  }
+
+  /**
+   * Get comprehensive cart status
+   */
+  static async getCartStatus(): Promise<{
+    itemCount: number;
+    syncStatus: any;
+    isHealthy: boolean;
+  }> {
+    try {
+      const { CartService } = await import('../services/cart');
+      
+      const itemCount = await CartService.getCartItemCount();
+      const syncStatusResponse = await CartService.getSyncStatus();
+      
+      const syncStatus = syncStatusResponse.success ? syncStatusResponse.data : null;
+      const isHealthy = syncStatusResponse.success && !syncStatus?.isExpired;
+
+      return {
+        itemCount,
+        syncStatus,
+        isHealthy
+      };
+    } catch (error) {
+      console.error('Error getting cart status:', error);
+      return {
+        itemCount: 0,
+        syncStatus: null,
+        isHealthy: false
+      };
+    }
+  }
+
+  /**
+   * Clean up resources
+   */
+  static cleanup(): void {
+    if (this.maintenanceInterval) {
+      clearInterval(this.maintenanceInterval);
+      this.maintenanceInterval = null;
+    }
+    
+    this.clearAllListeners();
+    console.log('Cart manager cleaned up');
+  }
 }

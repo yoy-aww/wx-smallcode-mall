@@ -54,3 +54,24 @@ export const CART_UI = {
   DEBOUNCE_DELAY: 500,
   MAX_BADGE_COUNT: 99
 } as const;
+
+/**
+ * Cart synchronization constants
+ */
+export const CART_SYNC = {
+  AUTO_SYNC_DEBOUNCE: 1000,
+  MAINTENANCE_INTERVAL: 24 * 60 * 60 * 1000, // 24 hours
+  CONFLICT_RESOLUTION_STRATEGY: 'local_priority',
+  MAX_BACKUP_COUNT: 5
+} as const;
+
+/**
+ * Cart data validation constants
+ */
+export const CART_DATA_VALIDATION = {
+  MAX_PRODUCT_NAME_LENGTH: 100,
+  MAX_QUANTITY_PER_ITEM: 999,
+  MIN_QUANTITY_PER_ITEM: 1,
+  MAX_CART_ITEMS: 100,
+  PRICE_CACHE_EXPIRY: 60 * 60 * 1000 // 1 hour
+} as const;
