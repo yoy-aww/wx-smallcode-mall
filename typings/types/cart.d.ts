@@ -144,6 +144,8 @@ interface CartPageData extends WechatMiniprogram.Page.DataOption {
   };
   /** Whether page is in edit mode */
   editMode: boolean;
+  /** Whether to show floating bottom bar */
+  showFloatingBar: boolean;
 }
 
 /**

@@ -29,7 +29,9 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
       finalPrice: 0
     },
     // 编辑模式
-    editMode: false
+    editMode: false,
+    // 显示浮动操作栏
+    showFloatingBar: false
   },
 
   /**
@@ -72,6 +74,32 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
     this.refreshCartData().finally(() => {
       wx.stopPullDownRefresh();
     });
+  },
+
+  /**
+   * 页面滚动事件
+   */
+  onPageScroll(event: WechatMiniprogram.Page.IPageScrollOption) {
+    const { scrollTop } = event;
+    
+    // 根据滚动位置调整底部操作栏样式
+    if (scrollTop > 100) {
+      this.setData({
+        showFloatingBar: true
+      });
+    } else {
+      this.setData({
+        showFloatingBar: false
+      });
+    }
+  },
+
+  /**
+   * 页面到达底部
+   */
+  onReachBottom() {
+    console.log('Reached bottom of cart page');
+    // 可以在这里实现分页加载等功能
   },
 
   /**

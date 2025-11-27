@@ -1,37 +1,55 @@
 <!--pages/cart/index.wxml-->
-<view class="cart-page">
+<view class="cart-page" role="main" aria-label="购物车页面">
   <!-- 加载状态 -->
-  <view wx:if="{{loading}}" class="loading-container">
-    <view class="loading-spinner"></view>
+  <view wx:if="{{loading}}" class="loading-container" role="status" aria-label="正在加载购物车数据">
+    <view class="loading-spinner" aria-hidden="true"></view>
     <text class="loading-text">加载中...</text>
   </view>
 
   <!-- 错误状态 -->
-  <view wx:elif="{{error}}" class="error-container">
-    <view class="error-icon">⚠️</view>
+  <view wx:elif="{{error}}" class="error-container" role="alert" aria-label="购物车加载出错">
+    <view class="error-icon" aria-hidden="true">⚠️</view>
     <text class="error-message">{{error}}</text>
-    <button class="retry-button" bindtap="onRetry">重试</button>
+    <button class="retry-button" bindtap="onRetry" aria-label="重新加载购物车数据">重试</button>
   </view>
 
   <!-- 空购物车状态 -->
-  <view wx:elif="{{cartItems.length === 0}}" class="empty-container">
-    <view class="empty-icon">🛒</view>
+  <view wx:elif="{{cartItems.length === 0}}" class="empty-container" role="status" aria-label="购物车为空">
+    <view class="empty-icon" aria-hidden="true">🛒</view>
     <text class="empty-title">购物车是空的</text>
     <text class="empty-subtitle">快去添加一些商品吧</text>
-    <button class="go-shopping-button" bindtap="goShopping">去逛逛</button>
+    <button class="go-shopping-button" bindtap="goShopping" aria-label="前往商品页面购物">去逛逛</button>
   </view>
 
   <!-- 购物车内容 -->
   <view wx:else class="cart-content">
     <!-- 编辑模式切换 -->
-    <view class="edit-mode-bar">
-      <button class="edit-button" bindtap="toggleEditMode">
+    <view class="edit-mode-bar" role="toolbar" aria-label="购物车操作工具栏">
+      <button 
+        class="edit-button" 
+        bindtap="toggleEditMode"
+        aria-label="{{editMode ? '完成编辑' : '进入编辑模式'}}"
+        aria-pressed="{{editMode}}"
+      >
         {{editMode ? '完成' : '编辑'}}
       </button>
     </view>
 
     <!-- 商品列表 -->
-    <scroll-view class="cart-list" scroll-y enhanced show-scrollbar="{{false}}">
+    <scroll-view 
+      class="cart-list" 
+      scroll-y 
+      enhanced 
+      show-scrollbar="{{false}}"
+      enable-back-to-top
+      scroll-with-animation
+      refresher-enabled="{{true}}"
+      refresher-triggered="{{loading}}"
+      bindrefresherrefresh="onPullDownRefresh"
+      bindscroll="onPageScroll"
+      role="list"
+      aria-label="购物车商品列表，共{{cartItems.length}}件商品"
+    >
       <view class="cart-items">
         <cart-item
           wx:for="{{cartItems}}"
@@ -44,13 +62,15 @@
           bind:delete="onItemDelete"
           bind:producttap="onProductTap"
           bind:longpress="onProductLongPress"
+          role="listitem"
+          aria-label="商品：{{item.product.name}}，价格：{{item.product.price}}元"
         />
       </view>
     </scroll-view>
 
     <!-- 底部操作栏 -->
     <cart-bottom-bar
-      class="bottom-bar"
+      class="bottom-bar {{showFloatingBar ? 'floating' : ''}}"
       select-all="{{selectAll}}"
       selected-count="{{selectedItems.length}}"
       total-price="{{summary.totalPrice}}"
@@ -61,6 +81,8 @@
       bind:checkout="onCheckout"
       bind:batchdelete="onBatchDelete"
       bind:discountdetail="onDiscountDetailTap"
+      role="toolbar"
+      aria-label="购物车操作栏"
     />
   </view>
 </view>

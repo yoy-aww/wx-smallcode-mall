@@ -5,6 +5,8 @@
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
+  position: relative;
+  overflow: hidden;
 }
 
 /* 加载状态 */
@@ -15,16 +17,18 @@
   align-items: center;
   justify-content: center;
   padding: 80rpx 40rpx;
+  background-color: #ffffff;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .loading-spinner {
-  width: 60rpx;
-  height: 60rpx;
-  border: 4rpx solid #e5e5e5;
-  border-top: 4rpx solid #07c160;
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #f0f0f0;
+  border-top: 6rpx solid #ff6b35;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 20rpx;
+  margin-bottom: 32rpx;
 }
 
 @keyframes spin {
@@ -33,8 +37,15 @@
 }
 
 .loading-text {
-  font-size: 28rpx;
-  color: #999;
+  font-size: 32rpx;
+  color: #666;
+  font-weight: 500;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 /* 错误状态 */
@@ -45,32 +56,48 @@
   align-items: center;
   justify-content: center;
   padding: 80rpx 40rpx;
+  background-color: #ffffff;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .error-icon {
-  font-size: 120rpx;
-  margin-bottom: 20rpx;
+  font-size: 160rpx;
+  margin-bottom: 32rpx;
+  color: #ff6b35;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-20rpx); }
+  60% { transform: translateY(-10rpx); }
 }
 
 .error-message {
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #666;
   text-align: center;
-  margin-bottom: 40rpx;
-  line-height: 1.5;
+  margin-bottom: 48rpx;
+  line-height: 1.6;
+  max-width: 500rpx;
 }
 
 .retry-button {
-  background-color: #07c160;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   color: white;
   border: none;
-  border-radius: 8rpx;
-  padding: 20rpx 40rpx;
-  font-size: 28rpx;
+  border-radius: 48rpx;
+  padding: 24rpx 48rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 53, 0.3);
+  transition: all 0.3s ease;
 }
 
 .retry-button:active {
-  background-color: #06ad56;
+  background: linear-gradient(135deg, #e55a2b 0%, #e8851a 100%);
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 53, 0.4);
 }
 
 /* 空购物车状态 */
@@ -80,39 +107,73 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80rpx 40rpx;
+  padding: 120rpx 40rpx;
+  background-color: #ffffff;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .empty-icon {
-  font-size: 120rpx;
-  margin-bottom: 20rpx;
-  opacity: 0.6;
+  font-size: 200rpx;
+  margin-bottom: 40rpx;
+  opacity: 0.8;
+  color: #ff6b35;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20rpx); }
 }
 
 .empty-title {
-  font-size: 32rpx;
+  font-size: 40rpx;
   color: #333;
-  font-weight: 500;
-  margin-bottom: 10rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+  text-align: center;
 }
 
 .empty-subtitle {
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: #999;
-  margin-bottom: 40rpx;
+  margin-bottom: 60rpx;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .go-shopping-button {
-  background-color: #07c160;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   color: white;
   border: none;
-  border-radius: 8rpx;
-  padding: 20rpx 40rpx;
-  font-size: 28rpx;
+  border-radius: 48rpx;
+  padding: 28rpx 56rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  box-shadow: 0 12rpx 32rpx rgba(255, 107, 53, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.go-shopping-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .go-shopping-button:active {
-  background-color: #06ad56;
+  background: linear-gradient(135deg, #e55a2b 0%, #e8851a 100%);
+  transform: translateY(2rpx);
+  box-shadow: 0 6rpx 16rpx rgba(255, 107, 53, 0.4);
+}
+
+.go-shopping-button:active::before {
+  left: 100%;
 }
 
 /* 购物车内容 */
@@ -121,47 +182,136 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* 编辑模式栏 */
 .edit-mode-bar {
   background-color: white;
-  padding: 20rpx 30rpx;
-  border-bottom: 1rpx solid #e5e5e5;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
   display: flex;
   justify-content: flex-end;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
 }
 
 .edit-button {
   background: none;
   border: none;
-  color: #07c160;
-  font-size: 28rpx;
-  padding: 0;
+  color: #ff6b35;
+  font-size: 32rpx;
+  font-weight: 500;
+  padding: 8rpx 16rpx;
+  border-radius: 24rpx;
   line-height: 1;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .edit-button:active {
-  opacity: 0.7;
+  background-color: rgba(255, 107, 53, 0.1);
+  transform: scale(0.95);
+}
+
+.edit-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 107, 53, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+}
+
+.edit-button:active::after {
+  width: 100%;
+  height: 100%;
 }
 
 /* 商品列表 */
 .cart-list {
   flex: 1;
   background-color: white;
+  position: relative;
+  overflow: hidden;
 }
 
 .cart-items {
-  padding-bottom: 20rpx;
+  padding-bottom: 160rpx; /* 为底部操作栏留出空间 */
+  min-height: 100%;
+  
+  /* 商品项之间的分隔线 */
+  cart-item:not(:last-child) {
+    border-bottom: 1rpx solid #f8f8f8;
+  }
+  
+  /* 商品项进入动画 */
+  cart-item {
+    animation: slideInRight 0.3s ease-out;
+    animation-fill-mode: both;
+  }
+  
+  /* 为每个商品项添加延迟动画 */
+  cart-item:nth-child(1) { animation-delay: 0.1s; }
+  cart-item:nth-child(2) { animation-delay: 0.2s; }
+  cart-item:nth-child(3) { animation-delay: 0.3s; }
+  cart-item:nth-child(4) { animation-delay: 0.4s; }
+  cart-item:nth-child(5) { animation-delay: 0.5s; }
+  cart-item:nth-child(n+6) { animation-delay: 0.6s; }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* 底部操作栏 */
 .bottom-bar {
-  position: sticky;
+  position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   background-color: white;
-  border-top: 1rpx solid #e5e5e5;
+  border-top: 1rpx solid #f0f0f0;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.08);
+  animation: slideUpBottom 0.4s ease-out;
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+}
+
+@keyframes slideUpBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* 响应式设计 */
@@ -169,58 +319,127 @@
   .loading-container,
   .error-container,
   .empty-container {
-    padding: 60rpx 30rpx;
+    padding: 80rpx 32rpx;
   }
   
-  .empty-icon,
+  .empty-icon {
+    font-size: 160rpx;
+  }
+  
   .error-icon {
-    font-size: 100rpx;
+    font-size: 120rpx;
   }
   
   .empty-title {
-    font-size: 30rpx;
+    font-size: 36rpx;
   }
   
   .empty-subtitle,
   .error-message {
-    font-size: 24rpx;
+    font-size: 26rpx;
+  }
+  
+  .loading-spinner {
+    width: 60rpx;
+    height: 60rpx;
+    border-width: 4rpx;
+  }
+  
+  .loading-text {
+    font-size: 28rpx;
+  }
+  
+  .edit-mode-bar {
+    padding: 20rpx 24rpx;
+  }
+  
+  .edit-button {
+    font-size: 28rpx;
+  }
+}
+
+/* 大屏适配 */
+@media screen and (min-width: 768px) {
+  .cart-page {
+    max-width: 750rpx;
+    margin: 0 auto;
+    box-shadow: 0 0 32rpx rgba(0, 0, 0, 0.1);
+  }
+  
+  .empty-container,
+  .error-container,
+  .loading-container {
+    padding: 160rpx 80rpx;
+  }
+  
+  .empty-icon {
+    font-size: 240rpx;
+  }
+  
+  .error-icon {
+    font-size: 200rpx;
   }
 }
 
 /* 暗色模式支持 */
 @media (prefers-color-scheme: dark) {
   .cart-page {
-    background-color: #1a1a1a;
+    background-color: #000000;
   }
   
+  .loading-container,
+  .error-container,
+  .empty-container,
   .edit-mode-bar,
   .cart-list,
   .bottom-bar {
-    background-color: #2a2a2a;
-    border-color: #3a3a3a;
+    background-color: #1c1c1e;
+    border-color: #38383a;
   }
   
   .empty-title {
-    color: #e5e5e5;
+    color: #ffffff;
   }
   
   .empty-subtitle,
   .error-message,
   .loading-text {
-    color: #999;
+    color: #aeaeb2;
+  }
+  
+  .edit-button {
+    color: #ff9f0a;
+  }
+  
+  .edit-button:active {
+    background-color: rgba(255, 159, 10, 0.1);
+  }
+  
+  .retry-button,
+  .go-shopping-button {
+    background: linear-gradient(135deg, #ff9f0a 0%, #ff6b35 100%);
+    box-shadow: 0 8rpx 24rpx rgba(255, 159, 10, 0.3);
+  }
+  
+  .retry-button:active,
+  .go-shopping-button:active {
+    background: linear-gradient(135deg, #e8851a 0%, #e55a2b 100%);
+    box-shadow: 0 4rpx 12rpx rgba(255, 159, 10, 0.4);
   }
 }
 
 /* 安全区域适配 */
 .cart-page {
+  padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* 动画效果 */
-.cart-items {
-  animation: fadeIn 0.3s ease-out;
+.bottom-bar {
+  padding-bottom: calc(24rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 }
 
+/* 全局动画效果 */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -237,18 +456,573 @@
   display: none;
 }
 
-/* 触摸反馈 */
+.cart-list {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* 滚动增强 */
+.cart-list {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 触摸反馈增强 */
 .retry-button,
-.go-shopping-button,
+.go-shopping-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
 .edit-button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, background-color;
+}
+
+/* 性能优化 */
+.cart-page,
+.cart-content,
+.cart-list,
+.cart-items {
+  will-change: transform;
+  transform: translateZ(0); /* 启用硬件加速 */
+}
+
+/* 加载状态优化 */
+.loading-container {
+  will-change: opacity;
+}
+
+.loading-spinner {
+  will-change: transform;
+}
+
+/* 空状态优化 */
+.empty-icon {
+  will-change: transform;
+}
+
+/* 错误状态优化 */
+.error-icon {
+  will-change: transform;
+}
+
+/* 交互状态增强 */
+.cart-page * {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 可访问性增强 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .cart-page {
+    background-color: #ffffff;
+  }
+  
+  .empty-title,
+  .error-message,
+  .loading-text {
+    color: #000000;
+  }
+  
+  .empty-subtitle {
+    color: #333333;
+  }
+  
+  .edit-button {
+    color: #0066cc;
+    border: 2rpx solid #0066cc;
+  }
+  
+  .retry-button,
+  .go-shopping-button {
+    background: #0066cc;
+    border: 2rpx solid #0066cc;
+  }
+}
+/*
+ ==================== 微交互增强 ==================== */
+
+/* 页面切换动画 */
+.cart-page.page-enter {
+  animation: pageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-page.page-exit {
+  animation: pageExit 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pageExit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+/* 商品项悬停效果 */
+.cart-items cart-item {
   transition: all 0.2s ease;
 }
 
-.retry-button:active,
-.go-shopping-button:active {
+.cart-items cart-item:active {
+  transform: scale(0.98);
+  background-color: rgba(255, 107, 53, 0.02);
+}
+
+/* 编辑模式切换动画 */
+.edit-mode-bar {
+  transition: all 0.3s ease;
+}
+
+.cart-page.edit-mode .edit-mode-bar {
+  background: linear-gradient(135deg, #fff5f2 0%, #ffffff 100%);
+  border-bottom-color: #ffe5dc;
+}
+
+/* 底部操作栏状态动画 */
+.bottom-bar {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bottom-bar.has-selection {
+  background: linear-gradient(135deg, #ffffff 0%, #fff8f6 100%);
+  border-top-color: #ffe5dc;
+}
+
+/* 加载状态脉冲效果 */
+.loading-container.pulse {
+  animation: containerPulse 2s ease-in-out infinite;
+}
+
+@keyframes containerPulse {
+  0%, 100% { background-color: #ffffff; }
+  50% { background-color: #fafafa; }
+}
+
+/* 错误状态摇摆效果 */
+.error-container.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10rpx); }
+  75% { transform: translateX(10rpx); }
+}
+
+/* 空状态呼吸效果 */
+.empty-container .empty-icon {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+/* ==================== 视觉层次增强 ==================== */
+
+/* 内容分组 */
+.cart-content {
+  position: relative;
+}
+
+.cart-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent 0%, #f0f0f0 50%, transparent 100%);
+}
+
+/* 商品列表背景纹理 */
+.cart-list {
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255, 107, 53, 0.02) 1px, transparent 0);
+  background-size: 40rpx 40rpx;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  position: absolute;
+  top: 24rpx;
+  right: 32rpx;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #00c851;
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.loading {
+  background: #ff6b35;
+}
+
+.status-indicator.error {
+  background: #ff4757;
+}
+
+/* ==================== 无障碍增强 ==================== */
+
+/* 焦点指示器 */
+.cart-page *:focus {
+  outline: 3rpx solid #ff6b35;
+  outline-offset: 2rpx;
+}
+
+/* 高对比度文本 */
+@media (prefers-contrast: high) {
+  .loading-text,
+  .error-message,
+  .empty-title,
+  .empty-subtitle {
+    text-shadow: 0 0 1rpx currentColor;
+  }
+}
+
+/* 大字体支持 */
+@media (prefers-font-size: large) {
+  .loading-text { font-size: 36rpx; }
+  .error-message { font-size: 36rpx; }
+  .empty-title { font-size: 44rpx; }
+  .empty-subtitle { font-size: 32rpx; }
+  .edit-button { font-size: 36rpx; }
+}
+
+/* ==================== 性能优化 ==================== */
+
+/* GPU 加速 */
+.cart-page,
+.loading-spinner,
+.empty-icon,
+.error-icon,
+.edit-button,
+.retry-button,
+.go-shopping-button {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000rpx;
+}
+
+/* 内存优化 */
+.cart-items cart-item {
+  contain: layout style paint;
+}
+
+/* 渲染优化 */
+.cart-list {
+  contain: strict;
+  content-visibility: auto;
+}
+
+/* ==================== 主题变量 ==================== */
+
+:root {
+  --cart-primary-color: #ff6b35;
+  --cart-secondary-color: #f7931e;
+  --cart-success-color: #00c851;
+  --cart-error-color: #ff4757;
+  --cart-warning-color: #ffa502;
+  --cart-text-primary: #333333;
+  --cart-text-secondary: #666666;
+  --cart-text-tertiary: #999999;
+  --cart-bg-primary: #ffffff;
+  --cart-bg-secondary: #f5f5f5;
+  --cart-border-color: #f0f0f0;
+  --cart-shadow-light: rgba(0, 0, 0, 0.04);
+  --cart-shadow-medium: rgba(0, 0, 0, 0.08);
+  --cart-shadow-heavy: rgba(0, 0, 0, 0.12);
+}
+
+/* 暗色主题变量 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cart-primary-color: #ff9f0a;
+    --cart-secondary-color: #ff6b35;
+    --cart-success-color: #30d158;
+    --cart-error-color: #ff453a;
+    --cart-warning-color: #ff9f0a;
+    --cart-text-primary: #ffffff;
+    --cart-text-secondary: #aeaeb2;
+    --cart-text-tertiary: #8e8e93;
+    --cart-bg-primary: #1c1c1e;
+    --cart-bg-secondary: #000000;
+    --cart-border-color: #38383a;
+    --cart-shadow-light: rgba(255, 255, 255, 0.04);
+    --cart-shadow-medium: rgba(255, 255, 255, 0.08);
+    --cart-shadow-heavy: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ==================== 调试辅助 ==================== */
+
+/* 开发环境边界显示 */
+.debug .cart-page * {
+  outline: 1rpx solid rgba(255, 0, 0, 0.1);
+}
+
+.debug .cart-content {
+  outline-color: rgba(0, 255, 0, 0.3);
+}
+
+.debug .cart-list {
+  outline-color: rgba(0, 0, 255, 0.3);
+}
+
+/* 性能监控 */
+.perf-monitor {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8rpx;
+  font-size: 20rpx;
+  z-index: 9999;
+  pointer-events: none;
+}/*
+ ==================== 浮动底部栏效果 ==================== */
+
+.bottom-bar.floating {
+  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(40rpx);
+  -webkit-backdrop-filter: blur(40rpx);
+  background: rgba(255, 255, 255, 0.95);
+  border-top-color: rgba(240, 240, 240, 0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  .bottom-bar.floating {
+    background: rgba(28, 28, 30, 0.95);
+    border-top-color: rgba(56, 56, 58, 0.8);
+  }
+}
+
+/* ==================== 商品项动画序列 ==================== */
+
+.cart-items.loading cart-item {
+  animation: none;
+}
+
+.cart-items.loaded cart-item {
+  animation: slideInUp 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.cart-items.loaded cart-item:nth-child(1) { animation-delay: 0.1s; }
+.cart-items.loaded cart-item:nth-child(2) { animation-delay: 0.15s; }
+.cart-items.loaded cart-item:nth-child(3) { animation-delay: 0.2s; }
+.cart-items.loaded cart-item:nth-child(4) { animation-delay: 0.25s; }
+.cart-items.loaded cart-item:nth-child(5) { animation-delay: 0.3s; }
+.cart-items.loaded cart-item:nth-child(n+6) { animation-delay: 0.35s; }
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(60rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ==================== 状态切换动画 ==================== */
+
+.cart-page.state-loading {
+  .cart-content {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+.cart-page.state-error {
+  .cart-content {
+    filter: grayscale(100%);
+    opacity: 0.5;
+  }
+}
+
+.cart-page.state-empty {
+  .edit-mode-bar {
+    display: none;
+  }
+}
+
+/* ==================== 编辑模式视觉反馈 ==================== */
+
+.cart-page.edit-mode {
+  .cart-list {
+    background-color: #fafafa;
+  }
+  
+  .cart-items cart-item {
+    margin: 8rpx 16rpx;
+    border-radius: 16rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .cart-page.edit-mode {
+    .cart-list {
+      background-color: #0a0a0a;
+    }
+    
+    .cart-items cart-item {
+      box-shadow: 0 2rpx 8rpx rgba(255, 255, 255, 0.06);
+    }
+  }
+}
+
+/* ==================== 触觉反馈增强 ==================== */
+
+.haptic-feedback {
+  transition: all 0.1s ease;
+}
+
+.haptic-feedback:active {
   transform: scale(0.98);
 }
 
-.edit-button:active {
+.haptic-feedback.light:active {
+  transform: scale(0.99);
+}
+
+.haptic-feedback.heavy:active {
   transform: scale(0.95);
+}
+
+/* ==================== 网络状态指示 ==================== */
+
+.network-status {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #ff6b35, #f7931e);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.network-status.offline {
+  background: #ff4757;
+  transform: translateY(0);
+}
+
+.network-status.slow {
+  background: #ffa502;
+  transform: translateY(0);
+}
+
+/* ==================== 数据更新指示器 ==================== */
+
+.update-indicator {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  width: 12rpx;
+  height: 12rpx;
+  background: #00c851;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.update-indicator.active {
+  opacity: 1;
+}
+
+.update-indicator.error {
+  background: #ff4757;
+}
+
+/* ==================== 手势提示 ==================== */
+
+.gesture-hint {
+  position: absolute;
+  bottom: 200rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 16rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 200;
+}
+
+.gesture-hint.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-20rpx);
+}
+
+.gesture-hint::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8rpx solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.8);
+}
+
+/* ==================== 最终优化 ==================== */
+
+/* 防止过度滚动 */
+.cart-list {
+  overscroll-behavior: contain;
+}
+
+/* 优化触摸延迟 */
+.cart-page * {
+  touch-action: manipulation;
+}
+
+/* 优化字体渲染 */
+.cart-page {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 内容安全策略 */
+.cart-page img {
+  content-security-policy: default-src 'self';
 }
