@@ -1,0 +1,306 @@
+// components/quantity-selector/index.scss
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: $background-primary;
+  border: 2rpx solid $border-color;
+  border-radius: $border-radius-sm;
+  overflow: hidden;
+
+  // 尺寸变体
+  &.small {
+    height: 56rpx;
+    
+    .quantity-btn {
+      width: 56rpx;
+      height: 56rpx;
+      
+      .btn-icon {
+        font-size: $font-size-sm;
+      }
+    }
+    
+    .quantity-display {
+      min-width: 60rpx;
+      
+      .quantity-text,
+      .quantity-input {
+        font-size: $font-size-sm;
+      }
+    }
+  }
+
+  &.medium {
+    height: 64rpx;
+    
+    .quantity-btn {
+      width: 64rpx;
+      height: 64rpx;
+      
+      .btn-icon {
+        font-size: $font-size-base;
+      }
+    }
+    
+    .quantity-display {
+      min-width: 80rpx;
+      
+      .quantity-text,
+      .quantity-input {
+        font-size: $font-size-base;
+      }
+    }
+  }
+
+  &.large {
+    height: 80rpx;
+    
+    .quantity-btn {
+      width: 80rpx;
+      height: 80rpx;
+      
+      .btn-icon {
+        font-size: $font-size-lg;
+      }
+    }
+    
+    .quantity-display {
+      min-width: 100rpx;
+      
+      .quantity-text,
+      .quantity-input {
+        font-size: $font-size-lg;
+      }
+    }
+  }
+
+  // 禁用状态
+  &.disabled {
+    opacity: 0.6;
+    background: $background-secondary;
+    
+    .quantity-btn {
+      background: $background-secondary;
+      color: $text-disabled;
+      cursor: not-allowed;
+    }
+    
+    .quantity-display {
+      background: $background-secondary;
+      
+      .quantity-text,
+      .quantity-input {
+        color: $text-disabled;
+      }
+    }
+  }
+}
+
+// 数量按钮
+.quantity-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $background-primary;
+  border: none;
+  color: $text-primary;
+  font-weight: $font-weight-medium;
+  transition: all $transition-duration-fast $transition-timing-function;
+  position: relative;
+  
+  &::after {
+    border: none;
+  }
+  
+  .btn-icon {
+    line-height: 1;
+    font-weight: $font-weight-bold;
+  }
+  
+  // 悬停效果
+  &.btn-hover {
+    background: $background-secondary;
+    transform: scale(0.95);
+  }
+  
+  // 禁用状态
+  &.btn-disabled {
+    background: $background-secondary;
+    color: $text-disabled;
+    cursor: not-allowed;
+    
+    &.btn-hover {
+      background: $background-secondary;
+      transform: none;
+    }
+  }
+  
+  // 减少按钮
+  &.decrease-btn {
+    border-right: 2rpx solid $border-color;
+    
+    .btn-icon {
+      font-size: 1.2em;
+    }
+  }
+  
+  // 增加按钮
+  &.increase-btn {
+    border-left: 2rpx solid $border-color;
+    
+    .btn-icon {
+      font-size: 1.1em;
+    }
+  }
+}
+
+// 数量显示区域
+.quantity-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $background-primary;
+  position: relative;
+  
+  .quantity-text {
+    color: $text-primary;
+    font-weight: $font-weight-medium;
+    text-align: center;
+    line-height: 1;
+  }
+  
+  .quantity-input {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: $text-primary;
+    font-weight: $font-weight-medium;
+    background: transparent;
+    border: none;
+    outline: none;
+    
+    &.inputting {
+      background: rgba($primary-color, 0.05);
+      color: $primary-color;
+    }
+    
+    &:disabled {
+      color: $text-disabled;
+      background: transparent;
+    }
+  }
+}
+
+// 库存提示
+.stock-hint {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8rpx;
+  padding: 4rpx 8rpx;
+  background: rgba($warning-color, 0.1);
+  border-radius: $border-radius-xs;
+  white-space: nowrap;
+  z-index: 10;
+  
+  .hint-text {
+    font-size: $font-size-xs;
+    color: $warning-color;
+    line-height: 1.2;
+  }
+}
+
+// 动画效果
+@keyframes quantity-bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes button-press {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// 响应式设计
+@media (max-width: 480rpx) {
+  .quantity-selector {
+    &.medium {
+      height: 56rpx;
+      
+      .quantity-btn {
+        width: 56rpx;
+        height: 56rpx;
+      }
+      
+      .quantity-display {
+        min-width: 60rpx;
+      }
+    }
+    
+    &.large {
+      height: 64rpx;
+      
+      .quantity-btn {
+        width: 64rpx;
+        height: 64rpx;
+      }
+      
+      .quantity-display {
+        min-width: 80rpx;
+      }
+    }
+  }
+}
+
+// 无障碍支持
+.quantity-selector {
+  &:focus-within {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 4rpx rgba($primary-color, 0.1);
+  }
+}
+
+// 高对比度模式支持
+@media (prefers-contrast: high) {
+  .quantity-selector {
+    border-width: 3rpx;
+    
+    .quantity-btn {
+      border-width: 3rpx;
+      
+      &.btn-disabled {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// 减少动画模式支持
+@media (prefers-reduced-motion: reduce) {
+  .quantity-selector,
+  .quantity-btn,
+  .quantity-display {
+    transition: none;
+    animation: none;
+  }
+}

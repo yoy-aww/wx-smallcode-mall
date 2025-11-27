@@ -1,0 +1,54 @@
+<!--components/quantity-selector/index.wxml-->
+<view class="quantity-selector {{size}} {{disabled ? 'disabled' : ''}}" data-component="quantity-selector">
+  <!-- 减少按钮 -->
+  <button 
+    class="quantity-btn decrease-btn {{!canDecrease() ? 'btn-disabled' : ''}}"
+    disabled="{{disabled || !canDecrease()}}"
+    bindtap="onDecrease"
+    hover-class="btn-hover"
+    hover-stay-time="100"
+    animation="{{decreaseAnimation}}"
+  >
+    <text class="btn-icon">−</text>
+  </button>
+
+  <!-- 数量显示/输入区域 -->
+  <view class="quantity-display" animation="{{quantityAnimation}}">
+    <!-- 只读显示模式 -->
+    <text wx:if="{{!showInput}}" class="quantity-text">{{internalQuantity}}</text>
+    
+    <!-- 输入框模式 -->
+    <input 
+      wx:else
+      class="quantity-input {{isInputting ? 'inputting' : ''}}"
+      type="number"
+      value="{{inputValue}}"
+      disabled="{{disabled}}"
+      bindfocus="onInputFocus"
+      bindblur="onInputBlur"
+      bindinput="onInputChange"
+      bindconfirm="onInputConfirm"
+      maxlength="3"
+      cursor-spacing="0"
+      selection-start="-1"
+      selection-end="-1"
+    />
+  </view>
+
+  <!-- 增加按钮 -->
+  <button 
+    class="quantity-btn increase-btn {{!canIncrease() ? 'btn-disabled' : ''}}"
+    disabled="{{disabled || !canIncrease()}}"
+    bindtap="onIncrease"
+    hover-class="btn-hover"
+    hover-stay-time="100"
+    animation="{{increaseAnimation}}"
+  >
+    <text class="btn-icon">+</text>
+  </button>
+
+  <!-- 库存提示 -->
+  <view wx:if="{{internalQuantity >= maxQuantity && maxQuantity < 999}}" class="stock-hint">
+    <text class="hint-text">库存仅剩{{maxQuantity}}件</text>
+  </view>
+</view>

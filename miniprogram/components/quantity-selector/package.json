@@ -1,0 +1,21 @@
+{
+  "name": "quantity-selector",
+  "version": "1.0.0",
+  "description": "一个功能完整的数量选择器组件，支持数量增减、手动输入、库存限制、防抖处理和动画效果。",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": ["wechat", "miniprogram", "component", "quantity-selector"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0",
+    "jsdom": "^22.0.0"
+  }
+}

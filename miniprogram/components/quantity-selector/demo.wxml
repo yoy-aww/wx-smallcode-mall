@@ -1,0 +1,80 @@
+<!--demo.wxml - 数量选择器组件演示页面-->
+<view class="demo-container">
+  <view class="demo-section">
+    <text class="section-title">基础用法</text>
+    <quantity-selector
+      id="basic-selector"
+      quantity="{{basicQuantity}}"
+      max-quantity="{{10}}"
+      min-quantity="{{1}}"
+      bind:change="onBasicQuantityChange"
+    />
+    <text class="demo-info">当前数量: {{basicQuantity}}</text>
+  </view>
+
+  <view class="demo-section">
+    <text class="section-title">不同尺寸</text>
+    <view class="size-demo">
+      <view class="size-item">
+        <text class="size-label">Small</text>
+        <quantity-selector
+          quantity="{{smallQuantity}}"
+          size="small"
+          bind:change="onSmallQuantityChange"
+        />
+      </view>
+      <view class="size-item">
+        <text class="size-label">Medium</text>
+        <quantity-selector
+          quantity="{{mediumQuantity}}"
+          size="medium"
+          bind:change="onMediumQuantityChange"
+        />
+      </view>
+      <view class="size-item">
+        <text class="size-label">Large</text>
+        <quantity-selector
+          quantity="{{largeQuantity}}"
+          size="large"
+          bind:change="onLargeQuantityChange"
+        />
+      </view>
+    </view>
+  </view>
+
+  <view class="demo-section">
+    <text class="section-title">库存限制</text>
+    <quantity-selector
+      quantity="{{stockQuantity}}"
+      max-quantity="{{5}}"
+      min-quantity="{{1}}"
+      bind:change="onStockQuantityChange"
+    />
+    <text class="demo-info">库存限制: 最多5件，当前: {{stockQuantity}}</text>
+  </view>
+
+  <view class="demo-section">
+    <text class="section-title">禁用状态</text>
+    <quantity-selector
+      quantity="{{disabledQuantity}}"
+      disabled="{{true}}"
+    />
+    <text class="demo-info">组件已禁用</text>
+  </view>
+
+  <view class="demo-section">
+    <text class="section-title">只读显示</text>
+    <quantity-selector
+      quantity="{{readonlyQuantity}}"
+      show-input="{{false}}"
+      disabled="{{true}}"
+      size="small"
+    />
+    <text class="demo-info">只读模式，数量: {{readonlyQuantity}}</text>
+  </view>
+
+  <view class="demo-actions">
+    <button class="demo-btn" bindtap="resetAllQuantities">重置所有数量</button>
+    <button class="demo-btn" bindtap="testMethods">测试组件方法</button>
+  </view>
+</view>
