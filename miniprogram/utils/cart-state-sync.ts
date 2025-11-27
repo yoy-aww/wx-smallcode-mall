@@ -93,13 +93,15 @@ export class CartStateSynchronizer {
       console.log('Syncing cart state to storage with metadata');
 
       // Get current data if not provided
-      if (!items) {
+      let cartItems = items;
+      if (!cartItems) {
         const { CartService } = await import('../services/cart');
-        items = await CartService.getCartItems();
+        cartItems = await CartService.getCartItems();
       }
 
-      if (!selections) {
-        selections = await this.getSelections();
+      let cartSelections = selections;
+      if (!cartSelections) {
+        cartSelections = await this.getSelections();
       }
 
       // Create metadata
@@ -112,13 +114,13 @@ export class CartStateSynchronizer {
 
       // Create data with metadata
       const dataWithMetadata: CartDataWithMetadata = {
-        items,
-        selections: this.mapToObject(selections),
+        items: cartItems,
+        selections: this.mapToObject(cartSelections),
         metadata
       };
 
       // Save to storage
-      wx.setStorageSync(CART_STORAGE_KEYS.CART_ITEMS, JSON.stringify(items));
+      wx.setStorageSync(CART_STORAGE_KEYS.CART_ITEMS, JSON.stringify(cartItems));
       wx.setStorageSync(CART_STORAGE_KEYS.CART_SELECTIONS, JSON.stringify(dataWithMetadata.selections));
       wx.setStorageSync(this.SYNC_METADATA_KEY, JSON.stringify(metadata));
 
@@ -279,7 +281,7 @@ export class CartStateSynchronizer {
           }
 
           // Validate each cart item structure
-          for (const item of cartItems) {
+          for (const item: any of cartItems) {
             if (!item.productId || typeof item.quantity !== 'number' || !item.selectedAt) {
               console.warn('Invalid cart item structure:', item);
               return false;
@@ -575,7 +577,7 @@ export class CartStateSynchronizer {
    * Generate unique device ID
    */
   private static generateDeviceId(): string {
-    return 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    return 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
   }
 
   /**

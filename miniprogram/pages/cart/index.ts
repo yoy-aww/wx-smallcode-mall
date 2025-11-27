@@ -1,6 +1,14 @@
 // pages/cart/index.ts
 import { CartService } from '../../services/cart';
 import { CartManager, CartEventType } from '../../utils/cart-manager';
+import { 
+  CartPerformanceOptimizer, 
+  CartDebouncer, 
+  CartThrottler,
+  CartImageLazyLoader,
+  CartMemoryManager
+} from '../../utils/cart-performance-optimizer';
+import { DevTestRunner } from '../../utils/test-runner';
 // Simplified imports for WeChat Mini Program compatibility
 
 /**
@@ -40,6 +48,13 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
    */
   onLoad() {
     console.log('Cart page loaded');
+    
+    // Initialize performance optimization
+    CartPerformanceOptimizer.initialize();
+    
+    // Setup debounced and throttled functions
+    this.setupPerformanceOptimizations();
+    
     this.initializePage();
   },
 
@@ -65,6 +80,9 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
   onUnload() {
     console.log('Cart page unloaded');
     this.cleanup();
+    
+    // Cleanup performance optimizations
+    CartPerformanceOptimizer.cleanup();
   },
 
   /**
@@ -81,17 +99,9 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
    * 页面滚动事件
    */
   onPageScroll(event: WechatMiniprogram.Page.IPageScrollOption) {
-    const { scrollTop } = event;
-    
-    // 根据滚动位置调整底部操作栏样式
-    if (scrollTop > 100) {
-      this.setData({
-        showFloatingBar: true
-      });
-    } else {
-      this.setData({
-        showFloatingBar: false
-      });
+    // Use throttled scroll handler for better performance
+    if (this.throttledScrollHandler) {
+      this.throttledScrollHandler(event.scrollTop);
     }
   },
 
@@ -715,5 +725,120 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
       title: '我的购物车',
       path: '/pages/cart/index'
     };
+  },
+
+  /**
+   * Setup performance optimizations
+   */
+  setupPerformanceOptimizations() {
+    // Setup debounced quantity update
+    this.debouncedQuantityUpdate = CartDebouncer.debounce(
+      'cart_quantity_update',
+      async (productId: string, quantity: number) => {
+        await this.performQuantityUpdate(productId, quantity);
+      },
+      300
+    );
+
+    // Setup throttled scroll handler
+    this.throttledScrollHandler = CartThrottler.throttle(
+      'cart_page_scroll',
+      (scrollTop: number) => {
+        this.handleScrollOptimized(scrollTop);
+      },
+      100
+    );
+
+    // Setup debounced selection update
+    this.debouncedSelectionUpdate = CartDebouncer.debounce(
+      'cart_selection_update',
+      async () => {
+        await this.updateSelectionState();
+      },
+      200
+    );
+
+    console.log('Performance optimizations setup completed');
+  },
+
+  /**
+   * Optimized scroll handler
+   */
+  handleScrollOptimized(scrollTop: number) {
+    // Check cache first
+    const cachedFloatingBarState = CartMemoryManager.getCache<boolean>('floating_bar_state');
+    const shouldShowFloatingBar = scrollTop > 100;
+
+    if (cachedFloatingBarState !== shouldShowFloatingBar) {
+      this.setData({
+        showFloatingBar: shouldShowFloatingBar
+      });
+      
+      // Cache the state
+      CartMemoryManager.setCache('floating_bar_state', shouldShowFloatingBar, 5000);
+    }
+  },
+
+  /**
+   * Perform quantity update with caching
+   */
+  async performQuantityUpdate(productId: string, quantity: number) {
+    try {
+      const response = await CartService.updateCartItemQuantity(productId, quantity);
+      
+      if (!response.success) {
+        throw new Error(response.error || '更新数量失败');
+      }
+
+      // Clear related cache
+      CartMemoryManager.setCache(`product_${productId}_quantity`, quantity, 30000);
+      
+      // Refresh data
+      await this.refreshCartData();
+
+      this.showToast('数量已更新');
+
+    } catch (error) {
+      console.error('Failed to update quantity:', error);
+      await this.handleError(error, 'performQuantityUpdate', productId);
+    }
+  },
+
+  /**
+   * Enhanced quantity change with debouncing
+   */
+  onQuantityChangeOptimized(event: WechatMiniprogram.CustomEvent) {
+    const { productId, quantity } = event.detail;
+    console.log('Quantity change (optimized):', productId, quantity);
+
+    // Use debounced update
+    if (this.debouncedQuantityUpdate) {
+      this.debouncedQuantityUpdate(productId, quantity);
+    }
+  },
+
+  /**
+   * Enhanced selection with debouncing
+   */
+  onItemSelectOptimized(event: WechatMiniprogram.CustomEvent) {
+    const { productId } = event.detail;
+    console.log('Item selection (optimized):', productId);
+
+    // Update selection immediately for UI responsiveness
+    CartService.toggleItemSelection(productId).then(() => {
+      // Use debounced state update
+      if (this.debouncedSelectionUpdate) {
+        this.debouncedSelectionUpdate();
+      }
+    });
+  },
+
+  /**
+   * Development test menu (only in development)
+   */
+  onLongPress() {
+    if (DevTestRunner.isDevelopment()) {
+      DevTestRunner.showTestMenu();
+    }
   }
 });

@@ -558,7 +558,7 @@ export class CartService {
     expiresAt: Date;
   }>> {
     try {
-      const sessionId = `checkout_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const sessionId = `checkout_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
       const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
       const sessionData = {
@@ -781,8 +781,7 @@ export class CartService {
    */
   static async handleCartError(
     error: any,
-    operation: string,
-    productId?: string
+    operation: string
   ): Promise<void> {
     console.error(`Cart operation error in ${operation}:`, error);
     
