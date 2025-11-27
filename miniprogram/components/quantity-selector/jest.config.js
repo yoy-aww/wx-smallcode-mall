@@ -4,18 +4,18 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   roots: ['<rootDir>'],
-  testMatch: ['**/__tests__/**/*.test.ts'],
+  testMatch: ['**/tests/**/*.test.ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js'],
   collectCoverageFrom: [
     'index.ts',
-    '!**/__tests__/**',
+    '!**/tests/**',
     '!**/node_modules/**',
   ],
   coverageReporters: ['text', 'lcov', 'html'],
-  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   globals: {
     'ts-jest': {
       tsconfig: {

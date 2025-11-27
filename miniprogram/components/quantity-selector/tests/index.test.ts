@@ -1,4 +1,4 @@
-// components/quantity-selector/__tests__/index.test.ts
+// components/quantity-selector/tests/index.test.ts
 
 /**
  * 数量选择器组件单元测试

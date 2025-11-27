@@ -1,4 +1,4 @@
-// __tests__/setup.ts - Test setup file
+// tests/setup.ts - Test setup file
 
 // Mock WeChat miniprogram global objects
 declare global {
