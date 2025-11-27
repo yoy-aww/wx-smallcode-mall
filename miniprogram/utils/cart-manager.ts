@@ -13,7 +13,7 @@ export enum CartEventType {
   CART_CLEARED = 'cart:cleared',
   BADGE_UPDATED = 'cart:badge_updated',
   SELECTION_CHANGED = 'cart:selection_changed',
-  BATCH_OPERATION_COMPLETED = 'cart:batch_operation_completed'
+  BATCH_OPERATION_COMPLETED = 'cart:batch_operation_completed',
 }
 
 /**
@@ -52,7 +52,7 @@ export class CartManager {
     }
 
     console.log('Initializing CartManager');
-    
+
     // Initialize event listener maps
     Object.values(CartEventType).forEach(eventType => {
       this.listeners.set(eventType, []);
@@ -66,11 +66,11 @@ export class CartManager {
    */
   static addEventListener(eventType: CartEventType, listener: CartEventListener) {
     this.initialize();
-    
+
     const listeners = this.listeners.get(eventType) || [];
     listeners.push(listener);
     this.listeners.set(eventType, listeners);
-    
+
     console.log(`Added listener for ${eventType}, total listeners: ${listeners.length}`);
   }
 
@@ -80,7 +80,7 @@ export class CartManager {
   static removeEventListener(eventType: CartEventType, listener: CartEventListener) {
     const listeners = this.listeners.get(eventType) || [];
     const index = listeners.indexOf(listener);
-    
+
     if (index > -1) {
       listeners.splice(index, 1);
       this.listeners.set(eventType, listeners);
@@ -93,9 +93,9 @@ export class CartManager {
    */
   static emit(eventType: CartEventType, eventData: CartEventData = {}) {
     console.log(`Emitting cart event: ${eventType}`, eventData);
-    
+
     const listeners = this.listeners.get(eventType) || [];
-    
+
     listeners.forEach(listener => {
       try {
         listener(eventData);
@@ -112,9 +112,9 @@ export class CartManager {
     this.emit(CartEventType.ITEM_ADDED, {
       productId,
       quantity,
-      product
+      product,
     });
-    
+
     // Also update badge
     this.updateBadge();
   }
@@ -125,9 +125,9 @@ export class CartManager {
   static notifyItemRemoved(productId: string, product?: Product) {
     this.emit(CartEventType.ITEM_REMOVED, {
       productId,
-      product
+      product,
     });
-    
+
     // Also update badge
     this.updateBadge();
   }
@@ -139,9 +139,9 @@ export class CartManager {
     this.emit(CartEventType.ITEM_UPDATED, {
       productId,
       quantity,
-      product
+      product,
     });
-    
+
     // Also update badge
     this.updateBadge();
   }
@@ -151,7 +151,7 @@ export class CartManager {
    */
   static notifyCartCleared() {
     this.emit(CartEventType.CART_CLEARED, {});
-    
+
     // Also update badge
     this.updateBadge();
   }
@@ -161,16 +161,15 @@ export class CartManager {
    */
   static async updateBadge() {
     try {
-      // Import CartService dynamically to avoid circular dependency
-      const { CartService } = await import('../services/cart');
+      // Use require instead of dynamic import for WeChat miniprogram compatibility
+      const { CartService } = require('../services/cart');
       const totalItems = await CartService.getCartItemCount();
-      
+
       this.emit(CartEventType.BADGE_UPDATED, {
-        totalItems
+        totalItems,
       });
-      
+
       console.log('Cart badge updated:', totalItems);
-      
     } catch (error) {
       console.error('Failed to update cart badge:', error);
     }
@@ -181,7 +180,7 @@ export class CartManager {
    */
   static async getCurrentItemCount(): Promise<number> {
     try {
-      const { CartService } = await import('../services/cart');
+      const { CartService } = require('../services/cart');
       return await CartService.getCartItemCount();
     } catch (error) {
       console.error('Failed to get current cart item count:', error);
@@ -194,7 +193,7 @@ export class CartManager {
    */
   static async isProductInCart(productId: string): Promise<boolean> {
     try {
-      const { CartService } = await import('../services/cart');
+      const { CartService } = require('../services/cart');
       return await CartService.isProductInCart(productId);
     } catch (error) {
       console.error('Failed to check if product is in cart:', error);
@@ -207,7 +206,7 @@ export class CartManager {
    */
   static async getProductQuantityInCart(productId: string): Promise<number> {
     try {
-      const { CartService } = await import('../services/cart');
+      const { CartService } = require('../services/cart');
       return await CartService.getProductQuantityInCart(productId);
     } catch (error) {
       console.error('Failed to get product quantity in cart:', error);
@@ -231,12 +230,12 @@ export class CartManager {
     if (eventType) {
       return this.listeners.get(eventType)?.length || 0;
     }
-    
+
     let total = 0;
     this.listeners.forEach(listeners => {
       total += listeners.length;
     });
-    
+
     return total;
   }
 
@@ -247,7 +246,7 @@ export class CartManager {
     this.emit(CartEventType.SELECTION_CHANGED, {
       productId,
       selected,
-      product
+      product,
     });
   }
 
@@ -257,9 +256,9 @@ export class CartManager {
   static notifyBatchOperationCompleted(operation: string, affectedItems: string[]) {
     this.emit(CartEventType.BATCH_OPERATION_COMPLETED, {
       operation,
-      affectedItems
+      affectedItems,
     });
-    
+
     // Update badge after batch operations
     this.updateBadge();
   }
@@ -270,14 +269,14 @@ export class CartManager {
  */
 export function initializeCartManager() {
   CartManager.initialize();
-  
+
   // Set up global cart update handler
   if (typeof wx !== 'undefined') {
     // Add global event emitter if not exists
     if (!(wx as any).$emit) {
       const eventListeners: { [key: string]: Function[] } = {};
-      
-      (wx as any).$emit = function(eventName: string, data?: any) {
+
+      (wx as any).$emit = function (eventName: string, data?: any) {
         const listeners = eventListeners[eventName] || [];
         listeners.forEach(listener => {
           try {
@@ -287,15 +286,15 @@ export function initializeCartManager() {
           }
         });
       };
-      
-      (wx as any).$on = function(eventName: string, listener: Function) {
+
+      (wx as any).$on = function (eventName: string, listener: Function) {
         if (!eventListeners[eventName]) {
           eventListeners[eventName] = [];
         }
         eventListeners[eventName].push(listener);
       };
-      
-      (wx as any).$off = function(eventName: string, listener?: Function) {
+
+      (wx as any).$off = function (eventName: string, listener?: Function) {
         if (!listener) {
           delete eventListeners[eventName];
         } else {
@@ -307,7 +306,7 @@ export function initializeCartManager() {
         }
       };
     }
-    
+
     // Listen for global cart updates
     (wx as any).$on('cartUpdated', () => {
       CartManager.updateBadge();
@@ -316,7 +315,7 @@ export function initializeCartManager() {
     // Set up periodic data maintenance
     CartManagerExtended.setupPeriodicMaintenance();
   }
-  
+
   console.log('Cart manager initialized successfully');
 }
 
@@ -340,7 +339,7 @@ export class CartManagerExtended extends CartManager {
     this.maintenanceInterval = setInterval(async () => {
       try {
         console.log('Running periodic cart data maintenance');
-        const { CartService } = await import('../services/cart');
+        const { CartService } = require('../services/cart');
         await CartService.performDataMaintenance();
       } catch (error) {
         console.error('Error in periodic maintenance:', error);
@@ -361,14 +360,14 @@ export class CartManagerExtended extends CartManager {
       this.initialize();
 
       // Initialize cart service with persistence
-      const { CartService } = await import('../services/cart');
+      const { CartService } = require('../services/cart');
       const initResult = await CartService.initializeCart();
 
       if (initResult.success && initResult.data) {
         // Emit initialization complete event
         this.emit(CartEventType.BATCH_OPERATION_COMPLETED, {
           operation: 'initialization',
-          affectedItems: initResult.data.items.map(item => item.productId)
+          affectedItems: initResult.data.items.map(item => item.productId),
         });
 
         console.log('Cart manager initialized with persistence successfully');
@@ -389,15 +388,15 @@ export class CartManagerExtended extends CartManager {
   static async performMaintenance(): Promise<void> {
     try {
       console.log('Performing immediate cart data maintenance');
-      
-      const { CartService } = await import('../services/cart');
+
+      const { CartService } = require('../services/cart');
       const maintenanceResult = await CartService.performDataMaintenance();
 
       if (maintenanceResult.success && maintenanceResult.data) {
         // Emit maintenance complete event
         this.emit(CartEventType.BATCH_OPERATION_COMPLETED, {
           operation: 'maintenance',
-          affectedItems: []
+          affectedItems: [],
         });
 
         console.log('Cart maintenance completed:', maintenanceResult.data);
@@ -418,25 +417,25 @@ export class CartManagerExtended extends CartManager {
     isHealthy: boolean;
   }> {
     try {
-      const { CartService } = await import('../services/cart');
-      
+      const { CartService } = require('../services/cart');
+
       const itemCount = await CartService.getCartItemCount();
       const syncStatusResponse = await CartService.getSyncStatus();
-      
+
       const syncStatus = syncStatusResponse.success ? syncStatusResponse.data : null;
       const isHealthy = syncStatusResponse.success && !syncStatus?.isExpired;
 
       return {
         itemCount,
         syncStatus,
-        isHealthy
+        isHealthy,
       };
     } catch (error) {
       console.error('Error getting cart status:', error);
       return {
         itemCount: 0,
         syncStatus: null,
-        isHealthy: false
+        isHealthy: false,
       };
     }
   }
@@ -449,7 +448,7 @@ export class CartManagerExtended extends CartManager {
       clearInterval(this.maintenanceInterval);
       this.maintenanceInterval = null;
     }
-    
+
     this.clearAllListeners();
     console.log('Cart manager cleaned up');
   }

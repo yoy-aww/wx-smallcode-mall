@@ -314,7 +314,7 @@ Page<CheckoutPageData, WechatMiniprogram.Page.CustomOption>({
       const errors: StockValidationResult['errors'] = [];
 
       // 重新获取最新的商品信息进行库存检查
-      const { ProductService } = await import('../../services/product');
+      const { ProductService } = require('../../services/product');
 
       for (const item of items) {
         const productResponse = await ProductService.getProductById(item.productId);

@@ -39,7 +39,7 @@ Page({
       });
 
       // 导入产品服务
-      const { ProductService } = await import('../../services/product');
+      const { ProductService } = require('../../services/product');
       
       // 加载产品详情
       const response = await ProductService.getProductById(productId);
@@ -164,7 +164,7 @@ Page({
       });
 
       // 导入购物车服务
-      const { CartService } = await import('../../services/cart');
+      const { CartService } = require('../../services/cart');
       
       // 添加到购物车
       const response = await CartService.addToCart(product.id, quantity);

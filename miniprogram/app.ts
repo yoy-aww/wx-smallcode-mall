@@ -12,6 +12,13 @@ App<IAppOption>({
     // 初始化购物车管理器（基础版本）
     initializeCartManager();
 
+    // 验证购物车管理器初始化
+    try {
+      console.log('Cart manager initialized successfully');
+    } catch (error) {
+      console.error('Cart manager initialization failed:', error);
+    }
+
     // 初始化增强版购物车管理器（带数据持久化）
     try {
       await CartManagerExtended.initializeWithPersistence();
@@ -60,7 +67,7 @@ App<IAppOption>({
    */
   async syncCartData() {
     try {
-      const { CartStateSynchronizer } = await import('./utils/cart-state-sync');
+      const { CartStateSynchronizer } = require('./utils/cart-state-sync');
       await CartStateSynchronizer.syncToStorage();
       console.log('Cart data synced on app hide');
     } catch (error) {

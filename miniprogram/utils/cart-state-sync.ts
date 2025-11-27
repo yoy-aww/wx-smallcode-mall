@@ -95,7 +95,7 @@ export class CartStateSynchronizer {
       // Get current data if not provided
       let cartItems = items;
       if (!cartItems) {
-        const { CartService } = await import('../services/cart');
+        const { CartService } = require('../services/cart');
         cartItems = await CartService.getCartItems();
       }
 
@@ -461,7 +461,7 @@ export class CartStateSynchronizer {
     try {
       console.log('Validating expired cart data');
 
-      const { ProductService } = await import('../services/product');
+      const { ProductService } = require('../services/product');
       const validItems: CartItem[] = [];
 
       for (const item of items) {
@@ -495,7 +495,7 @@ export class CartStateSynchronizer {
    */
   private static async validateSelections(selections: Map<string, boolean>): Promise<Map<string, boolean>> {
     try {
-      const { CartService } = await import('../services/cart');
+      const { CartService } = require('../services/cart');
       const cartItems = await CartService.getCartItems();
       const validProductIds = new Set(cartItems.map(item => item.productId));
 

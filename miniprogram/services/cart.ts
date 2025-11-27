@@ -193,8 +193,8 @@ export class CartService {
         };
       }
 
-      // Import ProductService dynamically to avoid circular dependency
-      const { ProductService } = await import('./product');
+      // Import ProductService using require to avoid circular dependency
+      const { ProductService } = require('./product');
 
       const cartItemsWithProducts: CartItemWithProduct[] = [];
 
@@ -504,8 +504,8 @@ export class CartService {
         availableStock: number;
       }> = [];
 
-      // Import ProductService dynamically
-      const { ProductService } = await import('./product');
+      // Import ProductService using require
+      const { ProductService } = require('./product');
 
       for (const item of items) {
         const productResponse = await ProductService.getProductById(item.productId);
@@ -661,6 +661,84 @@ export class CartService {
   }
 
   /**
+   * Initialize cart service
+   */
+  static async initializeCart(): Promise<CartServiceResponse<{
+    items: CartItem[];
+    initialized: boolean;
+  }>> {
+    try {
+      console.log('Initializing cart service');
+
+      // Load existing cart items
+      const cartItems = await this.getCartItems();
+      
+      // Update badge
+      await this.updateCartBadge();
+
+      return {
+        success: true,
+        data: {
+          items: cartItems,
+          initialized: true,
+        },
+      };
+    } catch (error) {
+      console.error('Error initializing cart:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Get sync status
+   */
+  static async getSyncStatus(): Promise<CartServiceResponse<{
+    lastSyncTime: Date | null;
+    isExpired: boolean;
+    itemCount: number;
+  }>> {
+    try {
+      const lastSyncTime = wx.getStorageSync('cart_last_sync');
+      const itemCount = await this.getCartItemCount();
+      
+      const syncTime = lastSyncTime ? new Date(lastSyncTime) : null;
+      const isExpired = syncTime ? (Date.now() - syncTime.getTime()) > 24 * 60 * 60 * 1000 : true;
+
+      return {
+        success: true,
+        data: {
+          lastSyncTime: syncTime,
+          isExpired,
+          itemCount,
+        },
+      };
+    } catch (error) {
+      console.error('Error getting sync status:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : CART_ERROR_MESSAGES.UNKNOWN_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Get product quantity in cart
+   */
+  static async getProductQuantityInCart(productId: string): Promise<number> {
+    try {
+      const cartItems = await this.getCartItems();
+      const item = cartItems.find(item => item.productId === productId);
+      return item ? item.quantity : 0;
+    } catch (error) {
+      console.error('Error getting product quantity in cart:', error);
+      return 0;
+    }
+  }
+
+  /**
    * Perform data maintenance
    */
   static async performDataMaintenance(): Promise<CartServiceResponse<{
@@ -768,6 +846,9 @@ export class CartService {
 
       // Store badge count for other components to access
       wx.setStorageSync(this.CART_BADGE_KEY, itemCount);
+
+      // Update sync time
+      wx.setStorageSync('cart_last_sync', new Date().toISOString());
 
       console.log('Cart badge updated:', itemCount);
     } catch (error) {
