@@ -29,12 +29,15 @@ interface CartSummary {
   finalPrice: number;
 }
 
+import { CART_STORAGE_KEYS, CART_ERROR_MESSAGES } from '../constants/cart';
+
 /**
  * Cart service class for managing shopping cart operations
+ * Extended with selection and batch operation functionality
  */
 export class CartService {
-  private static readonly CART_STORAGE_KEY = 'shopping_cart';
-  private static readonly CART_BADGE_KEY = 'cart_badge_count';
+  private static readonly CART_STORAGE_KEY = CART_STORAGE_KEYS.CART_ITEMS;
+  private static readonly CART_BADGE_KEY = CART_STORAGE_KEYS.CART_BADGE;
 
   /**
    * Add product to cart
@@ -464,6 +467,376 @@ export class CartService {
       return {
         success: false,
         error: error instanceof Error ? error.message : '购物车验证失败'
+      };
+    }
+  }
+
+  // Extended functionality for shopping cart page
+
+  /**
+   * Select multiple items in cart
+   */
+  static async selectItems(productIds: string[]): Promise<CartServiceResponse<boolean>> {
+    try {
+      console.log('Selecting cart items:', productIds);
+
+      const selections = await this.getSelections();
+      
+      // Update selections
+      productIds.forEach(productId => {
+        selections.set(productId, true);
+      });
+
+      await this.saveSelections(selections);
+
+      // Notify cart manager
+      const { CartManager } = await import('../utils/cart-manager');
+      productIds.forEach(productId => {
+        CartManager.notifySelectionChanged(productId, true);
+      });
+
+      return {
+        success: true,
+        data: true
+      };
+
+    } catch (error) {
+      console.error('Error selecting cart items:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '选择商品失败'
+      };
+    }
+  }
+
+  /**
+   * Get selected cart items with product details
+   */
+  static async getSelectedItems(): Promise<CartServiceResponse<CartItemWithProduct[]>> {
+    try {
+      const cartItemsResponse = await this.getCartItemsWithProducts();
+      
+      if (!cartItemsResponse.success || !cartItemsResponse.data) {
+        return {
+          success: false,
+          error: cartItemsResponse.error || '获取购物车商品失败'
+        };
+      }
+
+      const selections = await this.getSelections();
+      const selectedItems = cartItemsResponse.data.filter(item => 
+        selections.get(item.productId) === true
+      );
+
+      return {
+        success: true,
+        data: selectedItems
+      };
+
+    } catch (error) {
+      console.error('Error getting selected items:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '获取选中商品失败'
+      };
+    }
+  }
+
+  /**
+   * Batch remove items from cart
+   */
+  static async batchRemoveFromCart(productIds: string[]): Promise<CartServiceResponse<boolean>> {
+    try {
+      console.log('Batch removing items from cart:', productIds);
+
+      const cartItems = await this.getCartItems();
+      const filteredItems = cartItems.filter(item => !productIds.includes(item.productId));
+      
+      await this.saveCartItems(filteredItems);
+      await this.updateCartBadge();
+
+      // Remove from selections
+      const selections = await this.getSelections();
+      productIds.forEach(productId => {
+        selections.delete(productId);
+      });
+      await this.saveSelections(selections);
+
+      // Notify cart manager
+      const { CartManager } = await import('../utils/cart-manager');
+      CartManager.notifyBatchOperationCompleted('remove', productIds);
+
+      return {
+        success: true,
+        data: true
+      };
+
+    } catch (error) {
+      console.error('Error batch removing items:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '批量删除失败'
+      };
+    }
+  }
+
+  /**
+   * Validate cart items with detailed results
+   */
+  static async validateCartItems(): Promise<CartServiceResponse<CartValidationResult>> {
+    try {
+      console.log('Validating cart items with details');
+
+      const cartItems = await this.getCartItems();
+      const { ProductService } = await import('./product');
+      
+      const validItems: CartItemWithProduct[] = [];
+      const invalidItems: CartItem[] = [];
+      const stockAdjustedItems: CartItem[] = [];
+      
+      for (const cartItem of cartItems) {
+        const productResponse = await ProductService.getProductById(cartItem.productId);
+        
+        if (productResponse.success && productResponse.data) {
+          const product = productResponse.data;
+          
+          if (product.stock > 0) {
+            if (cartItem.quantity > product.stock) {
+              // Stock adjusted item
+              const adjustedItem = {
+                ...cartItem,
+                quantity: product.stock
+              };
+              stockAdjustedItems.push(adjustedItem);
+              validItems.push({
+                ...adjustedItem,
+                product
+              });
+            } else {
+              // Valid item
+              validItems.push({
+                ...cartItem,
+                product
+              });
+            }
+          } else {
+            // No stock - invalid item
+            invalidItems.push(cartItem);
+          }
+        } else {
+          // Product not found - invalid item
+          invalidItems.push(cartItem);
+        }
+      }
+
+      // Save only valid items
+      const validCartItems = validItems.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        selectedAt: item.selectedAt
+      }));
+      
+      await this.saveCartItems(validCartItems);
+      await this.updateCartBadge();
+
+      const result: CartValidationResult = {
+        validItems,
+        invalidItems,
+        stockAdjustedItems
+      };
+
+      return {
+        success: true,
+        data: result
+      };
+
+    } catch (error) {
+      console.error('Error validating cart items:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '购物车验证失败'
+      };
+    }
+  }
+
+  /**
+   * Calculate total for selected items
+   */
+  static async calculateSelectedTotal(selectedIds: string[]): Promise<CartServiceResponse<CartSummary>> {
+    try {
+      const cartItemsResponse = await this.getCartItemsWithProducts();
+      
+      if (!cartItemsResponse.success || !cartItemsResponse.data) {
+        return {
+          success: false,
+          error: cartItemsResponse.error || '获取购物车信息失败'
+        };
+      }
+
+      const selectedItems = cartItemsResponse.data.filter(item => 
+        selectedIds.includes(item.productId)
+      );
+      
+      let totalItems = 0;
+      let totalPrice = 0;
+      let discountAmount = 0;
+
+      for (const item of selectedItems) {
+        totalItems += item.quantity;
+        
+        const itemPrice = item.product.discountedPrice || item.product.originalPrice;
+        totalPrice += itemPrice * item.quantity;
+        
+        if (item.product.discountedPrice) {
+          discountAmount += (item.product.originalPrice - item.product.discountedPrice) * item.quantity;
+        }
+      }
+
+      const finalPrice = totalPrice;
+
+      return {
+        success: true,
+        data: {
+          totalItems,
+          totalPrice: totalPrice + discountAmount, // Original total
+          discountAmount,
+          finalPrice
+        }
+      };
+
+    } catch (error) {
+      console.error('Error calculating selected total:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '计算选中商品总计失败'
+      };
+    }
+  }
+
+  // Selection management methods
+
+  /**
+   * Get current selections from storage
+   */
+  static async getSelections(): Promise<Map<string, boolean>> {
+    try {
+      const selectionsData = wx.getStorageSync(CART_STORAGE_KEYS.CART_SELECTIONS);
+      
+      if (!selectionsData) {
+        return new Map();
+      }
+
+      const selections: CartSelectionsStorage = JSON.parse(selectionsData);
+      return new Map(Object.entries(selections));
+
+    } catch (error) {
+      console.error('Error getting selections:', error);
+      return new Map();
+    }
+  }
+
+  /**
+   * Save selections to storage
+   */
+  static async saveSelections(selections: Map<string, boolean>): Promise<void> {
+    try {
+      const selectionsObj: CartSelectionsStorage = {};
+      selections.forEach((selected, productId) => {
+        selectionsObj[productId] = selected;
+      });
+
+      const selectionsData = JSON.stringify(selectionsObj);
+      wx.setStorageSync(CART_STORAGE_KEYS.CART_SELECTIONS, selectionsData);
+
+    } catch (error) {
+      console.error('Error saving selections:', error);
+      throw new Error('保存选择状态失败');
+    }
+  }
+
+  /**
+   * Toggle item selection
+   */
+  static async toggleItemSelection(productId: string): Promise<CartServiceResponse<boolean>> {
+    try {
+      const selections = await this.getSelections();
+      const currentSelection = selections.get(productId) || false;
+      const newSelection = !currentSelection;
+      
+      selections.set(productId, newSelection);
+      await this.saveSelections(selections);
+
+      // Notify cart manager
+      const { CartManager } = await import('../utils/cart-manager');
+      CartManager.notifySelectionChanged(productId, newSelection);
+
+      return {
+        success: true,
+        data: newSelection
+      };
+
+    } catch (error) {
+      console.error('Error toggling item selection:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '切换选择状态失败'
+      };
+    }
+  }
+
+  /**
+   * Select all items
+   */
+  static async selectAllItems(): Promise<CartServiceResponse<boolean>> {
+    try {
+      const cartItems = await this.getCartItems();
+      const selections = new Map<string, boolean>();
+      
+      cartItems.forEach(item => {
+        selections.set(item.productId, true);
+      });
+
+      await this.saveSelections(selections);
+
+      // Notify cart manager
+      const { CartManager } = await import('../utils/cart-manager');
+      CartManager.notifyBatchOperationCompleted('selectAll', cartItems.map(item => item.productId));
+
+      return {
+        success: true,
+        data: true
+      };
+
+    } catch (error) {
+      console.error('Error selecting all items:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '全选失败'
+      };
+    }
+  }
+
+  /**
+   * Clear all selections
+   */
+  static async clearAllSelections(): Promise<CartServiceResponse<boolean>> {
+    try {
+      await this.saveSelections(new Map());
+
+      // Notify cart manager
+      const { CartManager } = await import('../utils/cart-manager');
+      CartManager.notifyBatchOperationCompleted('clearSelections', []);
+
+      return {
+        success: true,
+        data: true
+      };
+
+    } catch (error) {
+      console.error('Error clearing selections:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '清除选择失败'
       };
     }
   }

@@ -11,7 +11,9 @@ export enum CartEventType {
   ITEM_REMOVED = 'cart:item_removed',
   ITEM_UPDATED = 'cart:item_updated',
   CART_CLEARED = 'cart:cleared',
-  BADGE_UPDATED = 'cart:badge_updated'
+  BADGE_UPDATED = 'cart:badge_updated',
+  SELECTION_CHANGED = 'cart:selection_changed',
+  BATCH_OPERATION_COMPLETED = 'cart:batch_operation_completed'
 }
 
 /**
@@ -22,6 +24,9 @@ interface CartEventData {
   quantity?: number;
   totalItems?: number;
   product?: Product;
+  selected?: boolean;
+  operation?: string;
+  affectedItems?: string[];
 }
 
 /**
@@ -233,6 +238,30 @@ export class CartManager {
     });
     
     return total;
+  }
+
+  /**
+   * Notify selection changed
+   */
+  static notifySelectionChanged(productId: string, selected: boolean, product?: Product) {
+    this.emit(CartEventType.SELECTION_CHANGED, {
+      productId,
+      selected,
+      product
+    });
+  }
+
+  /**
+   * Notify batch operation completed
+   */
+  static notifyBatchOperationCompleted(operation: string, affectedItems: string[]) {
+    this.emit(CartEventType.BATCH_OPERATION_COMPLETED, {
+      operation,
+      affectedItems
+    });
+    
+    // Update badge after batch operations
+    this.updateBadge();
   }
 }
 

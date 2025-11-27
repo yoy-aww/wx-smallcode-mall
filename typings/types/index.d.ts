@@ -3,3 +3,4 @@
 /// <reference path="./components.d.ts" />
 /// <reference path="./page.d.ts" />
 /// <reference path="./utils.d.ts" />
+/// <reference path="./cart.d.ts" />
