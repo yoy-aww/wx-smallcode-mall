@@ -1,0 +1,110 @@
+<!--购物车底部操作栏组件演示页面-->
+<view class="demo-container">
+  <view class="demo-header">
+    <text class="demo-title">购物车底部操作栏组件演示</text>
+  </view>
+
+  <!-- 控制面板 -->
+  <view class="control-panel">
+    <view class="control-group">
+      <text class="control-label">全选状态：</text>
+      <switch checked="{{selectAll}}" bind:change="onSelectAllChange" />
+    </view>
+    
+    <view class="control-group">
+      <text class="control-label">编辑模式：</text>
+      <switch checked="{{editMode}}" bind:change="onEditModeChange" />
+    </view>
+    
+    <view class="control-group">
+      <text class="control-label">选中数量：</text>
+      <slider 
+        value="{{selectedCount}}" 
+        min="0" 
+        max="10" 
+        step="1" 
+        show-value 
+        bind:change="onSelectedCountChange"
+      />
+    </view>
+    
+    <view class="control-group">
+      <text class="control-label">商品总价：</text>
+      <slider 
+        value="{{totalPrice}}" 
+        min="0" 
+        max="1000" 
+        step="10" 
+        show-value 
+        bind:change="onTotalPriceChange"
+      />
+    </view>
+    
+    <view class="control-group">
+      <text class="control-label">优惠金额：</text>
+      <slider 
+        value="{{discountAmount}}" 
+        min="0" 
+        max="100" 
+        step="5" 
+        show-value 
+        bind:change="onDiscountAmountChange"
+      />
+    </view>
+  </view>
+
+  <!-- 状态显示 -->
+  <view class="status-panel">
+    <view class="status-item">
+      <text class="status-label">当前状态：</text>
+      <text class="status-value">{{editMode ? '编辑模式' : '正常模式'}}</text>
+    </view>
+    <view class="status-item">
+      <text class="status-label">最终价格：</text>
+      <text class="status-value">¥{{finalPrice}}</text>
+    </view>
+    <view class="status-item">
+      <text class="status-label">节省金额：</text>
+      <text class="status-value">¥{{discountAmount}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-panel">
+    <button class="demo-button" bind:tap="onResetDemo">重置演示</button>
+    <button class="demo-button" bind:tap="onRandomData">随机数据</button>
+  </view>
+
+  <!-- 事件日志 -->
+  <view class="log-panel">
+    <view class="log-header">
+      <text class="log-title">事件日志</text>
+      <button class="clear-log-btn" bind:tap="onClearLog">清空</button>
+    </view>
+    <scroll-view class="log-content" scroll-y>
+      <view class="log-item" wx:for="{{eventLogs}}" wx:key="index">
+        <text class="log-time">{{item.time}}</text>
+        <text class="log-event">{{item.event}}</text>
+        <text class="log-data">{{item.data}}</text>
+      </view>
+      <view class="log-empty" wx:if="{{eventLogs.length === 0}}">
+        <text>暂无事件日志</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 购物车底部操作栏组件 -->
+  <cart-bottom-bar
+    id="cartBottomBar"
+    selectAll="{{selectAll}}"
+    selectedCount="{{selectedCount}}"
+    totalPrice="{{totalPrice}}"
+    discountAmount="{{discountAmount}}"
+    finalPrice="{{finalPrice}}"
+    editMode="{{editMode}}"
+    bind:selectall="onSelectAll"
+    bind:checkout="onCheckout"
+    bind:batchdelete="onBatchDelete"
+    bind:discountdetail="onDiscountDetail"
+  />
+</view>

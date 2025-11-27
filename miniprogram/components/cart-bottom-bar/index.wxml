@@ -1,0 +1,51 @@
+<!--购物车底部操作栏组件-->
+<view class="cart-bottom-bar">
+  <!-- 全选控制 -->
+  <view class="select-all-section" bind:tap="onSelectAllTap">
+    <view class="select-checkbox {{selectAll ? 'selected' : ''}}">
+      <text class="checkbox-icon">{{selectAll ? '✓' : ''}}</text>
+    </view>
+    <text class="select-all-text">全选</text>
+  </view>
+
+  <!-- 价格信息和操作按钮 -->
+  <view class="action-section">
+    <!-- 价格合计显示 -->
+    <view class="price-info">
+      <view class="item-count">
+        <text class="count-text">共{{selectedCount}}件</text>
+        <text class="discount-link" bind:tap="onDiscountDetailTap" wx:if="{{discountAmount > 0}}">
+          优惠明细>
+        </text>
+      </view>
+      <view class="total-price">
+        <text class="price-label">合计：</text>
+        <text class="price-value">¥{{finalPrice}}</text>
+        <text class="original-price" wx:if="{{discountAmount > 0}}">¥{{totalPrice}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <!-- 编辑模式：批量删除按钮 -->
+      <button 
+        wx:if="{{editMode}}" 
+        class="delete-button {{selectedCount > 0 ? 'enabled' : 'disabled'}}"
+        disabled="{{selectedCount === 0}}"
+        bind:tap="onBatchDeleteTap"
+      >
+        删除({{selectedCount}})
+      </button>
+      
+      <!-- 正常模式：结算按钮 -->
+      <button 
+        wx:else
+        class="checkout-button {{selectedCount > 0 ? 'enabled' : 'disabled'}}"
+        disabled="{{selectedCount === 0}}"
+        bind:tap="onCheckoutTap"
+      >
+        去结算({{selectedCount}})
+      </button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,197 @@
+/* 购物车底部操作栏组件演示页面样式 */
+.demo-container {
+  padding: 16px;
+  padding-bottom: 120px; /* 为底部操作栏预留空间 */
+  background: #f5f5f5;
+  min-height: 100vh;
+
+  .demo-header {
+    text-align: center;
+    margin-bottom: 24px;
+
+    .demo-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+
+  .control-panel {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .control-label {
+        font-size: 14px;
+        color: #333;
+        flex-shrink: 0;
+        margin-right: 16px;
+      }
+
+      slider {
+        flex: 1;
+      }
+    }
+  }
+
+  .status-panel {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .status-label {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .status-value {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+  }
+
+  .action-panel {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .demo-button {
+      flex: 1;
+      height: 44px;
+      background: #07c160;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+
+      &:active {
+        background: #06a552;
+      }
+    }
+  }
+
+  .log-panel {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f0f0f0;
+
+      .log-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .clear-log-btn {
+        padding: 4px 12px;
+        background: #ff6b35;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    }
+
+    .log-content {
+      height: 200px;
+
+      .log-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #f8f8f8;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .log-time {
+          display: block;
+          font-size: 12px;
+          color: #999;
+          margin-bottom: 4px;
+        }
+
+        .log-event {
+          display: block;
+          font-size: 14px;
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 2px;
+        }
+
+        .log-data {
+          display: block;
+          font-size: 12px;
+          color: #666;
+          background: #f8f8f8;
+          padding: 4px 8px;
+          border-radius: 4px;
+          word-break: break-all;
+        }
+      }
+
+      .log-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #999;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+/* 响应式适配 */
+@media (max-width: 375px) {
+  .demo-container {
+    padding: 12px;
+    padding-bottom: 100px;
+
+    .control-panel,
+    .status-panel,
+    .log-panel {
+      padding: 12px;
+    }
+
+    .action-panel {
+      .demo-button {
+        height: 40px;
+        font-size: 13px;
+      }
+    }
+  }
+}
