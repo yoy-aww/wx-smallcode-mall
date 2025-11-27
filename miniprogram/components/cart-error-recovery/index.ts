@@ -4,7 +4,7 @@
  * Provides user-friendly error handling and recovery options
  */
 
-import { CartErrorHandler, CartErrorType } from '../../utils/cart-error-handler';
+import { CartErrorType } from '../../utils/cart-error-handler';
 import { CartFeedback } from '../../utils/cart-feedback';
 import { NetworkRecovery } from '../../utils/network-recovery';
 
@@ -16,7 +16,7 @@ Component({
     // Error information
     error: {
       type: Object,
-      value: null
+      value: {}
     },
     // Show recovery options
     showRecovery: {
@@ -39,7 +39,7 @@ Component({
     // Loading state
     recovering: false,
     // Network status
-    networkStatus: null
+    networkStatus: {}
   },
 
   /**
@@ -177,7 +177,10 @@ Component({
           break;
 
         case 'emergency_recovery':
-          await CartService.emergencyRecovery();
+          {
+            const { CartService } = await import('../../services/cart');
+            await CartService.emergencyRecovery();
+          }
           break;
 
         case 'adjust_quantity':
@@ -193,7 +196,10 @@ Component({
           break;
 
         case 'fix_data':
-          await CartService.validateDataIntegrity();
+          {
+            const { CartService } = await import('../../services/cart');
+            await CartService.validateDataIntegrity();
+          }
           break;
 
         case 'clear_invalid':
@@ -296,7 +302,7 @@ Component({
       const integrityResult = await CartService.validateDataIntegrity();
       
       if (integrityResult.success && integrityResult.data) {
-        const { autoFixed, issues } = integrityResult.data;
+        const { autoFixed } = integrityResult.data;
         
         if (autoFixed) {
           CartFeedback.showSuccess('无效数据已清理');

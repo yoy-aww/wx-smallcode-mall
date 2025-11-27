@@ -5,7 +5,6 @@ import {
   CartPerformanceOptimizer, 
   CartDebouncer, 
   CartThrottler,
-  CartImageLazyLoader,
   CartMemoryManager
 } from '../../utils/cart-performance-optimizer';
 import { DevTestRunner } from '../../utils/test-runner';
@@ -15,7 +14,37 @@ import { DevTestRunner } from '../../utils/test-runner';
  * 购物车页面
  * 实现商品展示、选择、数量调整、删除和结算功能
  */
-Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
+interface CartPageMethods {
+  debouncedQuantityUpdate?: (productId: string, quantity: number) => void;
+  throttledScrollHandler?: (scrollTop: number) => void;
+  debouncedSelectionUpdate?: () => void;
+  
+  // Page lifecycle and initialization
+  initializePage(): Promise<void>;
+  registerEventListeners(): void;
+  setupPerformanceOptimizations(): void;
+  cleanup(): void;
+  
+  // Data management
+  loadCartData(): Promise<void>;
+  refreshCartData(): Promise<void>;
+  updateSelectionState(): Promise<void>;
+  calculateSummary(selectedItems: string[]): Promise<CartPageData['summary']>;
+  saveCurrentState(): Promise<void>;
+  
+  // User interactions
+  toggleEditMode(): void;
+  
+  // Performance optimizations
+  handleScrollOptimized(scrollTop: number): void;
+  performQuantityUpdate(productId: string, quantity: number): Promise<void>;
+  
+  // Error handling and UI
+  handleError(error: any, context?: string, productId?: string): Promise<void>;
+  showToast(message: string, icon?: 'success' | 'error' | 'none'): void;
+}
+
+Page<CartPageData, CartPageMethods>({
   /**
    * 页面数据
    */
@@ -310,8 +339,8 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
    * 商品数量变化
    */
   async onQuantityChange(event: WechatMiniprogram.CustomEvent) {
+    const { productId, quantity } = event.detail;
     try {
-      const { productId, quantity, productName } = event.detail;
       console.log('Quantity changed:', productId, quantity);
 
       const response = await CartService.updateCartItemQuantity(productId, quantity);
@@ -335,8 +364,8 @@ Page<CartPageData, WechatMiniprogram.Page.CustomOption>({
    * 删除商品
    */
   async onItemDelete(event: WechatMiniprogram.CustomEvent) {
+    const { productId, productName } = event.detail;
     try {
-      const { productId, productName } = event.detail;
       console.log('Item delete requested:', productId);
 
       // 确认删除操作

@@ -267,10 +267,8 @@ Component({
         showHotKeywords: this.data.searchKeyword.length === 0,
       });
 
-      // 添加聚焦样式
-      const query = this.createSelectorQuery();
-      query.select('.search-bar').addClass('focused');
-      query.exec();
+      // 添加聚焦样式 - WeChat Mini Program doesn't support addClass
+      // Use setData to update CSS classes instead
     },
 
     // 搜索框失焦事件
@@ -282,10 +280,8 @@ Component({
           showHotKeywords: false,
         });
 
-        // 移除聚焦样式
-        const query = this.createSelectorQuery();
-        query.select('.search-bar').removeClass('focused');
-        query.exec();
+        // 移除聚焦样式 - WeChat Mini Program doesn't support removeClass
+        // Use setData to update CSS classes instead
       }, 200);
     },
 

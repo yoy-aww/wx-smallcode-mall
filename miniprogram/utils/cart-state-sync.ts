@@ -114,7 +114,7 @@ export class CartStateSynchronizer {
 
       // Create data with metadata
       const dataWithMetadata: CartDataWithMetadata = {
-        items: cartItems,
+        items: cartItems || [],
         selections: this.mapToObject(cartSelections),
         metadata
       };
@@ -281,7 +281,7 @@ export class CartStateSynchronizer {
           }
 
           // Validate each cart item structure
-          for (const item: any of cartItems) {
+          for (const item of cartItems) {
             if (!item.productId || typeof item.quantity !== 'number' || !item.selectedAt) {
               console.warn('Invalid cart item structure:', item);
               return false;
