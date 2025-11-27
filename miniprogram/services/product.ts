@@ -4,6 +4,8 @@
  * Mock implementation for checkout integration
  */
 
+import { MOCK_PRODUCTS, CATEGORY_PRODUCTS, ALL_PRODUCTS, POPULAR_PRODUCTS } from '../data/mock-products';
+
 /**
  * Product service response interface
  */
@@ -24,48 +26,12 @@ export class ProductService {
     try {
       console.log('Getting product by ID:', productId);
 
-      // Mock product data - in real implementation, this would fetch from API
-      const mockProducts: { [key: string]: Product } = {
-        'product_1': {
-          id: 'product_1',
-          name: '优质商品A',
-          image: 'https://via.placeholder.com/300x300',
-          originalPrice: 99.00,
-          discountedPrice: 79.00,
-          categoryId: 'category_1',
-          description: '这是一个优质的商品A',
-          stock: 50,
-          tags: ['热销', '推荐']
-        },
-        'product_2': {
-          id: 'product_2',
-          name: '精选商品B',
-          image: 'https://via.placeholder.com/300x300',
-          originalPrice: 158.00,
-          categoryId: 'category_1',
-          description: '这是一个精选的商品B',
-          stock: 30,
-          tags: ['新品', '限量']
-        },
-        'product_3': {
-          id: 'product_3',
-          name: '特价商品C',
-          image: 'https://via.placeholder.com/300x300',
-          originalPrice: 477.00,
-          discountedPrice: 399.00,
-          categoryId: 'category_2',
-          description: '这是一个特价的商品C',
-          stock: 5, // Low stock for testing
-          tags: ['特价', '清仓']
-        }
-      };
-
-      const product = mockProducts[productId];
+      const product = MOCK_PRODUCTS[productId];
 
       if (!product) {
         return {
           success: false,
-          error: '商品不存在'
+          error: '商品不存在',
         };
       }
 
@@ -74,14 +40,13 @@ export class ProductService {
 
       return {
         success: true,
-        data: product
+        data: product,
       };
-
     } catch (error) {
       console.error('Failed to get product by ID:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '获取商品信息失败'
+        error: error instanceof Error ? error.message : '获取商品信息失败',
       };
     }
   }
@@ -97,7 +62,7 @@ export class ProductService {
 
       for (const productId of productIds) {
         const productResponse = await this.getProductById(productId);
-        
+
         if (productResponse.success && productResponse.data) {
           products.push(productResponse.data);
         }
@@ -105,14 +70,13 @@ export class ProductService {
 
       return {
         success: true,
-        data: products
+        data: products,
       };
-
     } catch (error) {
       console.error('Failed to get products by IDs:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '获取商品信息失败'
+        error: error instanceof Error ? error.message : '获取商品信息失败',
       };
     }
   }
@@ -120,20 +84,25 @@ export class ProductService {
   /**
    * Check product stock
    */
-  static async checkProductStock(productId: string, quantity: number): Promise<ProductServiceResponse<{
-    available: boolean;
-    currentStock: number;
-    requestedQuantity: number;
-  }>> {
+  static async checkProductStock(
+    productId: string,
+    quantity: number
+  ): Promise<
+    ProductServiceResponse<{
+      available: boolean;
+      currentStock: number;
+      requestedQuantity: number;
+    }>
+  > {
     try {
       console.log('Checking product stock:', productId, quantity);
 
       const productResponse = await this.getProductById(productId);
-      
+
       if (!productResponse.success || !productResponse.data) {
         return {
           success: false,
-          error: productResponse.error || '商品不存在'
+          error: productResponse.error || '商品不存在',
         };
       }
 
@@ -145,15 +114,14 @@ export class ProductService {
         data: {
           available,
           currentStock: product.stock,
-          requestedQuantity: quantity
-        }
+          requestedQuantity: quantity,
+        },
       };
-
     } catch (error) {
       console.error('Failed to check product stock:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '检查库存失败'
+        error: error instanceof Error ? error.message : '检查库存失败',
       };
     }
   }
@@ -161,7 +129,10 @@ export class ProductService {
   /**
    * Update product stock (for order processing)
    */
-  static async updateProductStock(productId: string, quantity: number): Promise<ProductServiceResponse<boolean>> {
+  static async updateProductStock(
+    productId: string,
+    quantity: number
+  ): Promise<ProductServiceResponse<boolean>> {
     try {
       console.log('Updating product stock:', productId, quantity);
 
@@ -171,14 +142,13 @@ export class ProductService {
 
       return {
         success: true,
-        data: true
+        data: true,
       };
-
     } catch (error) {
       console.error('Failed to update product stock:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '更新库存失败'
+        error: error instanceof Error ? error.message : '更新库存失败',
       };
     }
   }
@@ -190,50 +160,25 @@ export class ProductService {
     try {
       console.log('Searching products:', query);
 
-      // Mock search results
-      const allProducts = [
-        {
-          id: 'product_1',
-          name: '优质商品A',
-          image: 'https://via.placeholder.com/300x300',
-          originalPrice: 99.00,
-          discountedPrice: 79.00,
-          categoryId: 'category_1',
-          description: '这是一个优质的商品A',
-          stock: 50,
-          tags: ['热销', '推荐']
-        },
-        {
-          id: 'product_2',
-          name: '精选商品B',
-          image: 'https://via.placeholder.com/300x300',
-          originalPrice: 158.00,
-          categoryId: 'category_1',
-          description: '这是一个精选的商品B',
-          stock: 30,
-          tags: ['新品', '限量']
-        }
-      ];
-
-      // Simple search filter
-      const results = allProducts.filter(product => 
-        product.name.includes(query) || 
-        product.description?.includes(query) ||
-        product.tags?.some(tag => tag.includes(query))
+      // Simple search filter using imported products
+      const results = POPULAR_PRODUCTS.filter(
+        product =>
+          product.name.includes(query) ||
+          product.description?.includes(query) ||
+          product.tags?.some(tag => tag.includes(query))
       );
 
       await new Promise(resolve => setTimeout(resolve, 200));
 
       return {
         success: true,
-        data: results
+        data: results,
       };
-
     } catch (error) {
       console.error('Failed to search products:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '搜索商品失败'
+        error: error instanceof Error ? error.message : '搜索商品失败',
       };
     }
   }
@@ -241,64 +186,25 @@ export class ProductService {
   /**
    * Get products by category
    */
-  static async getProductsByCategory(categoryId: string): Promise<ProductServiceResponse<Product[]>> {
+  static async getProductsByCategory(
+    categoryId: string
+  ): Promise<ProductServiceResponse<Product[]>> {
     try {
       console.log('Getting products by category:', categoryId);
 
-      // Mock category products
-      const categoryProducts: { [key: string]: Product[] } = {
-        'category_1': [
-          {
-            id: 'product_1',
-            name: '优质商品A',
-            image: 'https://via.placeholder.com/300x300',
-            originalPrice: 99.00,
-            discountedPrice: 79.00,
-            categoryId: 'category_1',
-            description: '这是一个优质的商品A',
-            stock: 50,
-            tags: ['热销', '推荐']
-          },
-          {
-            id: 'product_2',
-            name: '精选商品B',
-            image: 'https://via.placeholder.com/300x300',
-            originalPrice: 158.00,
-            categoryId: 'category_1',
-            description: '这是一个精选的商品B',
-            stock: 30,
-            tags: ['新品', '限量']
-          }
-        ],
-        'category_2': [
-          {
-            id: 'product_3',
-            name: '特价商品C',
-            image: 'https://via.placeholder.com/300x300',
-            originalPrice: 477.00,
-            discountedPrice: 399.00,
-            categoryId: 'category_2',
-            description: '这是一个特价的商品C',
-            stock: 5,
-            tags: ['特价', '清仓']
-          }
-        ]
-      };
-
-      const products = categoryProducts[categoryId] || [];
+      const products = CATEGORY_PRODUCTS[categoryId] || [];
 
       await new Promise(resolve => setTimeout(resolve, 150));
 
       return {
         success: true,
-        data: products
+        data: products,
       };
-
     } catch (error) {
       console.error('Failed to get products by category:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '获取分类商品失败'
+        error: error instanceof Error ? error.message : '获取分类商品失败',
       };
     }
   }
