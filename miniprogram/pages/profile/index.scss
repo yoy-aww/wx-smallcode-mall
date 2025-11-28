@@ -1,19 +1,202 @@
 /* pages/profile/index.scss */
-.container {
-  padding: 40rpx;
+.profile-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* Loading States */
+.loading-container {
+  padding: 24rpx;
+}
+
+.loading-skeleton {
+  .skeleton-header {
+    height: 200rpx;
+    background-color: #ffffff;
+    border-radius: 16rpx;
+    margin-bottom: 24rpx;
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: skeleton-loading 1.5s infinite;
+    }
+  }
+
+  .skeleton-metrics {
+    height: 160rpx;
+    background-color: #ffffff;
+    border-radius: 16rpx;
+    margin-bottom: 24rpx;
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: skeleton-loading 1.5s infinite;
+    }
+  }
+
+  .skeleton-orders {
+    height: 200rpx;
+    background-color: #ffffff;
+    border-radius: 16rpx;
+    margin-bottom: 24rpx;
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: skeleton-loading 1.5s infinite;
+    }
+  }
+
+  .skeleton-services {
+    height: 300rpx;
+    background-color: #ffffff;
+    border-radius: 16rpx;
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: skeleton-loading 1.5s infinite;
+    }
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Error States */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24rpx;
+}
+
+.error-content {
   text-align: center;
+  
+  .error-message {
+    display: block;
+    font-size: 28rpx;
+    color: #666666;
+    margin-bottom: 32rpx;
+  }
+  
+  .retry-button {
+    background-color: #8B4513;
+    color: #ffffff;
+    border: none;
+    border-radius: 8rpx;
+    padding: 16rpx 32rpx;
+    font-size: 28rpx;
+    
+    &:active {
+      background-color: #7a3c10;
+    }
+  }
 }
 
-.title {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #333;
-  display: block;
-  margin-bottom: 20rpx;
+/* Main Content */
+.profile-content {
+  padding-bottom: 24rpx;
+  
+  /* Add spacing between components */
+  user-header {
+    margin-bottom: 24rpx;
+  }
+  
+  account-metrics {
+    margin-bottom: 24rpx;
+  }
+  
+  order-section {
+    margin-bottom: 24rpx;
+  }
+  
+  service-menu {
+    margin-bottom: 24rpx;
+  }
 }
 
-.subtitle {
-  font-size: 28rpx;
-  color: #666;
-  display: block;
+/* Responsive Design */
+@media screen and (max-width: 375px) {
+  .loading-skeleton {
+    .skeleton-header {
+      height: 180rpx;
+    }
+    
+    .skeleton-metrics {
+      height: 140rpx;
+    }
+    
+    .skeleton-orders {
+      height: 180rpx;
+    }
+    
+    .skeleton-services {
+      height: 280rpx;
+    }
+  }
+}
+
+@media screen and (min-width: 414px) {
+  .profile-content {
+    max-width: 750rpx;
+    margin: 0 auto;
+  }
+}
+
+/* Accessibility */
+.retry-button {
+  min-height: 88rpx;
+  min-width: 120rpx;
+}
+
+/* Performance optimizations */
+.profile-page {
+  will-change: scroll-position;
+}
+
+.loading-skeleton {
+  contain: layout style paint;
+}
+
+.error-container {
+  contain: layout style paint;
 }

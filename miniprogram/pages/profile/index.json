@@ -1,4 +1,11 @@
 {
-  "usingComponents": {},
-  "navigationBarTitleText": "我的"
+  "usingComponents": {
+    "user-header": "../../components/user-header/user-header",
+    "account-metrics": "../../components/account-metrics/account-metrics",
+    "order-section": "../../components/order-section/order-section",
+    "service-menu": "../../components/service-menu/service-menu"
+  },
+  "navigationBarTitleText": "我的",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
 }

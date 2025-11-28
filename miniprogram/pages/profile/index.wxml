@@ -1,5 +1,50 @@
 <!--pages/profile/index.wxml-->
-<view class="container">
-  <text class="title">我的</text>
-  <text class="subtitle">个人中心页面开发中...</text>
+<view class="profile-page">
+  <!-- Loading State -->
+  <view wx:if="{{pageLoading}}" class="loading-container">
+    <view class="loading-skeleton">
+      <view class="skeleton-header"></view>
+      <view class="skeleton-metrics"></view>
+      <view class="skeleton-orders"></view>
+      <view class="skeleton-services"></view>
+    </view>
+  </view>
+
+  <!-- Error State -->
+  <view wx:elif="{{hasError}}" class="error-container">
+    <view class="error-content">
+      <text class="error-message">{{errorMessage}}</text>
+      <button class="retry-button" bindtap="onRetryTap">重试</button>
+    </view>
+  </view>
+
+  <!-- Main Content -->
+  <view wx:else class="profile-content">
+    <!-- User Header Component -->
+    <user-header
+      is-logged-in="{{isLoggedIn}}"
+      user-info="{{userInfo}}"
+      bind:login="onLoginTap"
+    />
+
+    <!-- Account Metrics Component -->
+    <account-metrics
+      metrics="{{accountMetrics}}"
+      loading="{{accountMetricsLoading}}"
+      bind:metricTap="onAccountMetricTap"
+    />
+
+    <!-- Order Section Component -->
+    <order-section
+      order-counts="{{orderCounts}}"
+      loading="{{orderCountsLoading}}"
+      bind:viewAllOrders="onViewAllOrdersTap"
+      bind:orderStatusTap="onOrderStatusTap"
+    />
+
+    <!-- Service Menu Component -->
+    <service-menu
+      bind:serviceTap="onServiceMenuTap"
+    />
+  </view>
 </view>
