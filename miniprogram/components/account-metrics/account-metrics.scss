@@ -1,61 +1,138 @@
+@import '../../styles/variables.scss';
+
 .account-metrics {
-  padding: 24rpx;
-  background: #ffffff;
-  border-radius: 16rpx;
-  margin: 16rpx 24rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  padding: $padding-md;
+  background: $background-primary;
+  border-radius: $border-radius-md;
+  margin: $margin-md;
+  box-shadow: $shadow-sm;
+  position: relative;
+  
+  // 平滑过渡效果
+  transition: all $transition-duration-fast $transition-timing-function;
 
   .metrics-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16rpx;
+    gap: $spacing-sm;
 
     .metric-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24rpx 16rpx;
-      border-radius: 12rpx;
-      transition: background-color 0.2s ease;
+      padding: $padding-md $padding-sm;
+      border-radius: $border-radius-sm;
+      min-height: 120rpx;
+      position: relative;
+      
+      // 触摸反馈
+      transition: all $transition-duration-fast $transition-timing-function;
       cursor: pointer;
 
       &:active {
-        background-color: #f5f5f5;
+        background-color: $background-tertiary;
+        transform: scale(0.95);
+      }
+      
+      // 悬浮效果（仅在支持hover的设备上）
+      @media (hover: hover) {
+        &:hover {
+          background-color: $background-tertiary;
+          transform: translateY(-2rpx);
+        }
       }
 
       .metric-content {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         width: 100%;
+        height: 100%;
 
         .metric-value {
-          font-size: 32rpx;
-          font-weight: 600;
-          color: #333333;
-          margin-bottom: 8rpx;
+          font-size: $font-size-lg;
+          font-weight: $font-weight-bold;
+          color: $text-primary;
+          margin-bottom: $margin-xs;
           text-align: center;
           min-height: 44rpx;
           display: flex;
           align-items: center;
+          justify-content: center;
+          
+          // 数字动画效果
+          transition: all $transition-duration-fast $transition-timing-function;
+          
+          // 大数字格式化
+          &--large {
+            font-size: $font-size-base;
+          }
         }
 
         .metric-skeleton {
           width: 60rpx;
           height: 32rpx;
-          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background: linear-gradient(90deg, $background-secondary 25%, $background-tertiary 50%, $background-secondary 75%);
           background-size: 200% 100%;
-          animation: skeleton-loading 1.5s infinite;
-          border-radius: 4rpx;
-          margin-bottom: 8rpx;
+          animation: skeleton-loading $transition-duration-slow infinite;
+          border-radius: $border-radius-xs;
+          margin-bottom: $margin-xs;
         }
 
         .metric-label {
-          font-size: 24rpx;
-          color: #666666;
+          font-size: $font-size-sm;
+          color: $text-secondary;
           text-align: center;
-          line-height: 1.2;
+          line-height: $line-height-tight;
+          font-weight: $font-weight-normal;
+          
+          // 文字溢出处理
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 100%;
         }
+      }
+      
+      // 添加微妙的边框效果
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: $border-radius-sm;
+        border: 1rpx solid transparent;
+        transition: border-color $transition-duration-fast $transition-timing-function;
+      }
+      
+      &:active::before {
+        border-color: $border-light;
+      }
+    }
+  }
+  
+  // 添加标题区域（如果需要）
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $margin-sm;
+    
+    &-title {
+      font-size: $font-size-base;
+      font-weight: $font-weight-medium;
+      color: $text-primary;
+    }
+    
+    &-action {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      
+      &:active {
+        color: $primary-color;
       }
     }
   }
@@ -70,21 +147,24 @@
   }
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 375px) {
+// ==================== 响应式设计 ====================
+
+// 小屏幕适配
+@media (max-width: $breakpoint-xs) {
   .account-metrics {
-    margin: 16rpx 16rpx;
-    padding: 20rpx;
+    margin: $margin-sm;
+    padding: $padding-sm;
 
     .metrics-grid {
-      gap: 12rpx;
+      gap: $spacing-xs;
 
       .metric-item {
-        padding: 20rpx 12rpx;
+        padding: $padding-sm $padding-xs;
+        min-height: 100rpx;
 
         .metric-content {
           .metric-value {
-            font-size: 28rpx;
+            font-size: $font-size-base;
           }
 
           .metric-label {
@@ -94,4 +174,124 @@
       }
     }
   }
+}
+
+// 中等屏幕适配
+@media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md) {
+  .account-metrics {
+    margin: $margin-md $margin-sm;
+    
+    .metrics-grid {
+      .metric-item {
+        min-height: 130rpx;
+        
+        .metric-content {
+          .metric-value {
+            font-size: $font-size-xl;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 大屏幕适配
+@media (min-width: $breakpoint-md) {
+  .account-metrics {
+    margin: $margin-lg auto;
+    max-width: $container-width;
+    
+    .metrics-grid {
+      gap: $spacing-md;
+      
+      .metric-item {
+        padding: $padding-lg $padding-md;
+        min-height: 140rpx;
+        
+        .metric-content {
+          .metric-value {
+            font-size: $font-size-xl;
+          }
+          
+          .metric-label {
+            font-size: $font-size-base;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==================== 无障碍访问支持 ====================
+
+// 确保触摸目标大小
+.account-metrics .metrics-grid .metric-item {
+  min-height: 88rpx;
+  min-width: 88rpx;
+}
+
+// 高对比度模式
+@media (prefers-contrast: high) {
+  .account-metrics {
+    border: 2rpx solid $border-color;
+    
+    .metrics-grid .metric-item {
+      border: 1rpx solid $border-light;
+      
+      &:active {
+        border-color: $primary-color;
+      }
+    }
+  }
+}
+
+// 减少动画模式
+@media (prefers-reduced-motion: reduce) {
+  .account-metrics,
+  .account-metrics .metrics-grid .metric-item,
+  .account-metrics .metrics-grid .metric-item .metric-content .metric-value {
+    transition: none;
+  }
+  
+  .account-metrics .metrics-grid .metric-item .metric-content .metric-skeleton {
+    animation: none;
+  }
+}
+
+// ==================== 深色模式支持 ====================
+@media (prefers-color-scheme: dark) {
+  .account-metrics {
+    background: #2a2a2a;
+    
+    .metrics-grid .metric-item {
+      &:active,
+      &:hover {
+        background-color: #3a3a3a;
+      }
+      
+      .metric-content {
+        .metric-value {
+          color: #ffffff;
+        }
+        
+        .metric-label {
+          color: #cccccc;
+        }
+        
+        .metric-skeleton {
+          background: linear-gradient(90deg, #3a3a3a 25%, #4a4a4a 50%, #3a3a3a 75%);
+        }
+      }
+    }
+  }
+}
+
+// ==================== 性能优化 ====================
+.account-metrics {
+  contain: layout style;
+  will-change: transform;
+}
+
+.account-metrics .metrics-grid .metric-item {
+  will-change: transform, background-color;
 }

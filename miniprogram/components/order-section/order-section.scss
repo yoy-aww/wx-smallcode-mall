@@ -1,60 +1,89 @@
-/* order-section.scss */
+@import '../../styles/variables.scss';
+
 .order-section {
-  background: #ffffff;
-  border-radius: 16rpx;
-  margin: 24rpx;
-  padding: 32rpx 24rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  background: $background-primary;
+  border-radius: $border-radius-md;
+  margin: $margin-md;
+  padding: $padding-lg $padding-md;
+  box-shadow: $shadow-sm;
+  position: relative;
+  
+  // 平滑过渡效果
+  transition: all $transition-duration-fast $transition-timing-function;
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32rpx;
+    margin-bottom: $margin-lg;
   }
 
   &__title {
-    font-size: 32rpx;
-    font-weight: 600;
-    color: #333333;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    line-height: $line-height-base;
   }
 
   &__view-all {
     display: flex;
     align-items: center;
-    padding: 8rpx 0;
+    padding: $padding-xs 0;
+    min-height: 44rpx;
+    
+    // 触摸反馈
+    transition: all $transition-duration-fast $transition-timing-function;
     
     &:active {
       opacity: 0.7;
+      transform: scale(0.95);
     }
   }
 
   &__view-all-text {
-    font-size: 28rpx;
-    color: #666666;
-    margin-right: 8rpx;
+    font-size: $font-size-base;
+    color: $text-secondary;
+    margin-right: $margin-xs;
+    line-height: $line-height-base;
   }
 
   &__arrow {
-    font-size: 24rpx;
-    color: #999999;
+    font-size: $font-size-sm;
+    color: $text-tertiary;
     transform: rotate(0deg);
-    transition: transform 0.2s ease;
+    transition: transform $transition-duration-fast $transition-timing-function;
+    
+    // 箭头图标
+    &::before {
+      content: '›';
+      font-weight: bold;
+    }
   }
 
   &__content {
     width: 100%;
+    position: relative;
   }
 
   &__scroll {
     width: 100%;
     white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    
+    // 隐藏滚动条但保持功能
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &__status-list {
     display: flex;
-    gap: 32rpx;
-    padding: 0 8rpx;
+    gap: $spacing-lg;
+    padding: 0 $padding-xs;
     min-width: 100%;
   }
 
@@ -63,55 +92,115 @@
     flex-direction: column;
     align-items: center;
     min-width: 120rpx;
-    padding: 16rpx 8rpx;
-    border-radius: 12rpx;
-    transition: background-color 0.2s ease;
+    padding: $padding-md $padding-xs;
+    border-radius: $border-radius-sm;
     position: relative;
+    
+    // 触摸反馈
+    transition: all $transition-duration-fast $transition-timing-function;
 
     &:active {
-      background-color: #f5f5f5;
+      background-color: $background-tertiary;
+      transform: scale(0.95);
+    }
+    
+    // 悬浮效果（仅在支持hover的设备上）
+    @media (hover: hover) {
+      &:hover {
+        background-color: $background-tertiary;
+        transform: translateY(-2rpx);
+      }
+    }
+    
+    // 加载状态
+    &--loading {
+      pointer-events: none;
+      opacity: 0.6;
     }
   }
 
   &__icon-container {
     position: relative;
-    margin-bottom: 16rpx;
+    margin-bottom: $margin-md;
+    
+    // 图标容器动画
+    transition: transform $transition-duration-fast $transition-timing-function;
   }
 
   &__icon {
     width: 48rpx;
     height: 48rpx;
     display: block;
+    border-radius: $border-radius-xs;
+    
+    // 图标过渡效果
+    transition: all $transition-duration-fast $transition-timing-function;
+    
+    // 图标加载状态
+    &--loading {
+      background: linear-gradient(90deg, $background-secondary 25%, $background-tertiary 50%, $background-secondary 75%);
+      background-size: 200% 100%;
+      animation: icon-loading $transition-duration-slow infinite;
+    }
   }
 
   &__badge {
     position: absolute;
     top: -8rpx;
     right: -8rpx;
-    background: #ff4444;
-    border-radius: 20rpx;
+    background: $error-color;
+    border-radius: $border-radius-lg;
     min-width: 32rpx;
     height: 32rpx;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8rpx;
+    padding: 0 $padding-xs;
     box-sizing: border-box;
+    box-shadow: 0 2rpx 4rpx rgba($error-color, 0.3);
+    
+    // 徽章动画
+    animation: badge-pulse 2s infinite;
+    
+    // 隐藏状态
+    &--hidden {
+      display: none;
+    }
+    
+    // 大数字徽章
+    &--large {
+      min-width: 40rpx;
+      height: 40rpx;
+      top: -10rpx;
+      right: -10rpx;
+    }
   }
 
   &__badge-text {
     font-size: 20rpx;
-    color: #ffffff;
-    font-weight: 500;
+    color: $text-white;
+    font-weight: $font-weight-medium;
     line-height: 1;
+    
+    // 大数字文字
+    &--large {
+      font-size: 18rpx;
+    }
   }
 
   &__label {
-    font-size: 24rpx;
-    color: #666666;
+    font-size: $font-size-sm;
+    color: $text-secondary;
     text-align: center;
-    line-height: 1.2;
+    line-height: $line-height-tight;
     word-break: keep-all;
+    font-weight: $font-weight-normal;
+    
+    // 文字溢出处理
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
   }
 
   &__loading-skeleton {
@@ -120,14 +209,15 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background: linear-gradient(90deg, $background-secondary 25%, $background-tertiary 50%, $background-secondary 75%);
     background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-    border-radius: 12rpx;
+    animation: skeleton-loading $transition-duration-slow infinite;
+    border-radius: $border-radius-sm;
   }
 }
 
-@keyframes loading {
+// 动画定义
+@keyframes skeleton-loading {
   0% {
     background-position: 200% 0;
   }
@@ -136,18 +226,216 @@
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 375px) {
+@keyframes icon-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// ==================== 响应式设计 ====================
+
+// 小屏幕适配
+@media (max-width: $breakpoint-xs) {
   .order-section {
-    margin: 16rpx;
-    padding: 24rpx 16rpx;
+    margin: $margin-sm;
+    padding: $padding-md $padding-sm;
+
+    &__header {
+      margin-bottom: $margin-md;
+    }
+
+    &__title {
+      font-size: $font-size-base;
+    }
+
+    &__view-all-text {
+      font-size: $font-size-sm;
+    }
 
     &__status-list {
-      gap: 24rpx;
+      gap: $spacing-md;
     }
 
     &__status-item {
       min-width: 100rpx;
+      padding: $padding-sm $padding-xs;
+    }
+
+    &__icon {
+      width: 40rpx;
+      height: 40rpx;
+    }
+
+    &__badge {
+      min-width: 28rpx;
+      height: 28rpx;
+      top: -6rpx;
+      right: -6rpx;
+    }
+
+    &__badge-text {
+      font-size: 18rpx;
+    }
+
+    &__label {
+      font-size: 22rpx;
     }
   }
+}
+
+// 中等屏幕适配
+@media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md) {
+  .order-section {
+    margin: $margin-md $margin-sm;
+    
+    &__status-list {
+      gap: $spacing-xl;
+    }
+    
+    &__status-item {
+      min-width: 130rpx;
+    }
+  }
+}
+
+// 大屏幕适配
+@media (min-width: $breakpoint-md) {
+  .order-section {
+    margin: $margin-lg auto;
+    max-width: $container-width;
+    
+    &__status-list {
+      gap: $spacing-xxl;
+      justify-content: center;
+    }
+    
+    &__status-item {
+      min-width: 140rpx;
+      padding: $padding-lg $padding-md;
+    }
+    
+    &__icon {
+      width: 56rpx;
+      height: 56rpx;
+    }
+    
+    &__label {
+      font-size: $font-size-base;
+    }
+  }
+}
+
+// ==================== 无障碍访问支持 ====================
+
+// 确保触摸目标大小
+.order-section__status-item {
+  min-height: 88rpx;
+  min-width: 88rpx;
+}
+
+.order-section__view-all {
+  min-height: 44rpx;
+}
+
+// 高对比度模式
+@media (prefers-contrast: high) {
+  .order-section {
+    border: 2rpx solid $border-color;
+    
+    &__status-item {
+      border: 1rpx solid $border-light;
+      
+      &:active {
+        border-color: $primary-color;
+      }
+    }
+    
+    &__badge {
+      border: 2rpx solid $background-primary;
+    }
+  }
+}
+
+// 减少动画模式
+@media (prefers-reduced-motion: reduce) {
+  .order-section,
+  .order-section__view-all,
+  .order-section__status-item,
+  .order-section__icon-container,
+  .order-section__icon {
+    transition: none;
+  }
+  
+  .order-section__loading-skeleton,
+  .order-section__icon--loading {
+    animation: none;
+  }
+  
+  .order-section__badge {
+    animation: none;
+  }
+}
+
+// ==================== 深色模式支持 ====================
+@media (prefers-color-scheme: dark) {
+  .order-section {
+    background: #2a2a2a;
+    
+    &__title {
+      color: #ffffff;
+    }
+    
+    &__view-all-text {
+      color: #cccccc;
+    }
+    
+    &__arrow {
+      color: #999999;
+    }
+    
+    &__status-item {
+      &:active,
+      &:hover {
+        background-color: #3a3a3a;
+      }
+    }
+    
+    &__label {
+      color: #cccccc;
+    }
+    
+    &__loading-skeleton {
+      background: linear-gradient(90deg, #3a3a3a 25%, #4a4a4a 50%, #3a3a3a 75%);
+    }
+    
+    &__icon--loading {
+      background: linear-gradient(90deg, #3a3a3a 25%, #4a4a4a 50%, #3a3a3a 75%);
+    }
+  }
+}
+
+// ==================== 性能优化 ====================
+.order-section {
+  contain: layout style;
+  will-change: transform;
+}
+
+.order-section__status-item {
+  will-change: transform, background-color;
+}
+
+.order-section__icon-container {
+  will-change: transform;
 }
