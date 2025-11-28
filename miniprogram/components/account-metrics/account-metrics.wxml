@@ -1,0 +1,17 @@
+<view class="account-metrics">
+  <view class="metrics-grid">
+    <view 
+      class="metric-item" 
+      wx:for="{{metricItems}}" 
+      wx:key="type"
+      bindtap="onMetricTap"
+      data-type="{{item.type}}"
+    >
+      <view class="metric-content">
+        <view class="metric-value" wx:if="{{!loading}}">{{item.displayValue}}</view>
+        <view class="metric-skeleton" wx:if="{{loading}}"></view>
+        <view class="metric-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+</view>
