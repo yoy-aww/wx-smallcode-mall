@@ -1,0 +1,25 @@
+<view class="service-menu">
+  <view class="service-menu__list">
+    <view 
+      wx:for="{{services}}" 
+      wx:key="id"
+      class="service-menu__item"
+      data-service="{{item}}"
+      bindtap="onServiceTap"
+      hover-class="service-menu__item--hover"
+      hover-stay-time="150"
+    >
+      <view class="service-menu__item-content">
+        <view class="service-menu__icon-container">
+          <view class="service-menu__icon service-menu__icon--{{item.icon}}"></view>
+        </view>
+        
+        <view class="service-menu__title">{{item.title}}</view>
+        
+        <view class="service-menu__arrow">
+          <view class="service-menu__arrow-icon"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

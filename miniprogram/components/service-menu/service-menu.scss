@@ -1,0 +1,108 @@
+.service-menu {
+  background: #ffffff;
+  border-radius: 16rpx;
+  margin: 24rpx;
+  overflow: hidden;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item {
+    position: relative;
+    
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 88rpx; // Align with title text
+      right: 24rpx;
+      height: 1rpx;
+      background: #f0f0f0;
+    }
+
+    &--hover {
+      background: #f8f8f8;
+    }
+  }
+
+  &__item-content {
+    display: flex;
+    align-items: center;
+    padding: 32rpx 24rpx;
+    min-height: 88rpx;
+  }
+
+  &__icon-container {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 24rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__icon {
+    width: 40rpx;
+    height: 40rpx;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    // Icon styles for different service types
+    &--task {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMwIDEwSDEwQzguOSAxMCA4IDEwLjkgOCAxMlYzMEM4IDMxLjEgOC45IDMyIDEwIDMySDMwQzMxLjEgMzIgMzIgMzEuMSAzMiAzMFYxMkMzMiAxMC45IDMxLjEgMTAgMzAgMTBaTTI4IDE2SDE0VjE0SDI4VjE2Wk0yOCAyMEgxNFYxOEgyOFYyMFpNMjQgMjRIMTRWMjJIMjRWMjRaIiBmaWxsPSIjOEI0NTEzIi8+Cjwvc3ZnPgo=');
+    }
+
+    &--address {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDhDMTUuNTggOCAxMiAxMS41OCAxMiAxNkMxMiAyMi41IDIwIDMyIDIwIDMyUzI4IDIyLjUgMjggMTZDMjggMTEuNTggMjQuNDIgOCAyMCA4Wk0yMCAxOUMxOC4zNCAxOSAxNyAxNy42NiAxNyAxNkMxNyAxNC4zNCAxOC4zNCAxMyAyMCAxM0MyMS66IDEzIDIzIDE0LjM0IDIzIDE2QzIzIDE3LjY2IDIxLjY2IDE5IDIwIDE5WiIgZmlsbD0iIzhCNDUxMyIvPgo8L3N2Zz4K');
+    }
+
+    &--phone {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTI2LjYyIDIzLjM4QzI2LjIyIDIyLjk4IDI1LjY2IDIyLjc2IDI1LjA4IDIyLjc2QzI0LjUgMjIuNzYgMjMuOTQgMjIuOTggMjMuNTQgMjMuMzhMMjEuNzYgMjUuMTZDMjEuNDQgMjUuNDggMjAuOTQgMjUuNTggMjAuNTIgMjUuMzZDMTkuNjggMjQuOTIgMTguNzQgMjQuMjggMTcuODYgMjMuNEMxNi45OCAyMi41MiAxNi4zNCAyMS41OCAxNS45IDIwLjc0QzE1LjY4IDIwLjMyIDE1Ljc4IDE5LjgyIDE2LjEgMTkuNUwxNy44OCAxNy43MkMxOC4yOCAxNy4zMiAxOC41IDE2Ljc2IDE4LjUgMTYuMThDMTguNSAxNS42IDE4LjI4IDE1LjA0IDE3Ljg4IDE0LjY0TDE0LjY0IDExLjRDMTQuMjQgMTEgMTMuNjggMTAuNzggMTMuMSAxMC43OEMxMi41MiAxMC43OCAxMS45NiAxMSAxMS41NiAxMS40TDEwLjIgMTIuNzZDOS4zNCAxMy42MiA4Ljg2IDE0Ljc4IDguODYgMTZDOC44NiAxNy4yMiA5LjM0IDE4LjM4IDEwLjIgMTkuMjRMMTAuMjQgMTkuMjhDMTEuNCAyMC44NCAxMi45NCAyMi4yNCAxNC43NiAyMy40NkMxNi41OCAyNC42OCAxOC42NCAyNS41NCAyMC44IDI2QzIxLjk2IDI2LjIyIDIzLjEyIDI2LjA0IDI0LjEyIDI1LjUyQzI1LjEyIDI0Ljk4IDI1LjkgMjQuMTggMjYuMzggMjMuMkwyNy43NCAyMS44NEMyOC4xNCAyMS40NCAyOC4zNiAyMC44OCAyOC4zNiAyMC4zQzI4LjM2IDE5LjcyIDI4LjE0IDE5LjE2IDI3Ljc0IDE4Ljc2TDI2LjYyIDIzLjM4WiIgZmlsbD0iIzhCNDUxMyIvPgo8L3N2Zz4K');
+    }
+
+    &--info {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDhDMTMuMzcgOCA4IDEzLjM3IDggMjBTMTMuMzcgMzIgMjAgMzJTMzIgMjYuNjMgMzIgMjBTMjYuNjMgOCAyMCA4Wk0yMiAyNkgxOFYxOEgyMlYyNlpNMjIgMTZIMThWMTJIMjJWMTZaIiBmaWxsPSIjOEI0NTEzIi8+Cjwvc3ZnPgo=');
+    }
+
+    &--security {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDhMMTIgMTJWMThDMTIgMjQuNSAxNS44NiAzMC41NCAyMCAzMkMyNC4xNCAzMC41NCAyOCAyNC41IDI4IDE4VjEyTDIwIDhaTTI2IDE4QzI2IDIzLjEgMjMuMTQgMjcuNzQgMjAgMjguODZDMTYuODYgMjcuNzQgMTQgMjMuMSAxNCAxOFYxMy4zNkwyMCAxMC42NEwyNiAxMy4zNlYxOFoiIGZpbGw9IiM4QjQ1MTMiLz4KPC9zdmc+Cg==');
+    }
+  }
+
+  &__title {
+    flex: 1;
+    font-size: 28rpx;
+    color: #333333;
+    line-height: 40rpx;
+  }
+
+  &__arrow {
+    width: 24rpx;
+    height: 24rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__arrow-icon {
+    width: 12rpx;
+    height: 12rpx;
+    border-right: 2rpx solid #cccccc;
+    border-bottom: 2rpx solid #cccccc;
+    transform: rotate(-45deg);
+  }
+}
+
+// Hover state for better touch feedback
+.service-menu__item--hover {
+  .service-menu__title {
+    color: #8B4513;
+  }
+  
+  .service-menu__arrow-icon {
+    border-color: #8B4513;
+  }
+}
