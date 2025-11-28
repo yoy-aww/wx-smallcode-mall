@@ -1,0 +1,153 @@
+/* order-section.scss */
+.order-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  margin: 24rpx;
+  padding: 32rpx 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32rpx;
+  }
+
+  &__title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #333333;
+  }
+
+  &__view-all {
+    display: flex;
+    align-items: center;
+    padding: 8rpx 0;
+    
+    &:active {
+      opacity: 0.7;
+    }
+  }
+
+  &__view-all-text {
+    font-size: 28rpx;
+    color: #666666;
+    margin-right: 8rpx;
+  }
+
+  &__arrow {
+    font-size: 24rpx;
+    color: #999999;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+  }
+
+  &__content {
+    width: 100%;
+  }
+
+  &__scroll {
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  &__status-list {
+    display: flex;
+    gap: 32rpx;
+    padding: 0 8rpx;
+    min-width: 100%;
+  }
+
+  &__status-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120rpx;
+    padding: 16rpx 8rpx;
+    border-radius: 12rpx;
+    transition: background-color 0.2s ease;
+    position: relative;
+
+    &:active {
+      background-color: #f5f5f5;
+    }
+  }
+
+  &__icon-container {
+    position: relative;
+    margin-bottom: 16rpx;
+  }
+
+  &__icon {
+    width: 48rpx;
+    height: 48rpx;
+    display: block;
+  }
+
+  &__badge {
+    position: absolute;
+    top: -8rpx;
+    right: -8rpx;
+    background: #ff4444;
+    border-radius: 20rpx;
+    min-width: 32rpx;
+    height: 32rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8rpx;
+    box-sizing: border-box;
+  }
+
+  &__badge-text {
+    font-size: 20rpx;
+    color: #ffffff;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 24rpx;
+    color: #666666;
+    text-align: center;
+    line-height: 1.2;
+    word-break: keep-all;
+  }
+
+  &__loading-skeleton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 12rpx;
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+  .order-section {
+    margin: 16rpx;
+    padding: 24rpx 16rpx;
+
+    &__status-list {
+      gap: 24rpx;
+    }
+
+    &__status-item {
+      min-width: 100rpx;
+    }
+  }
+}

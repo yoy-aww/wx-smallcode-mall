@@ -1,0 +1,47 @@
+<!--order-section.wxml-->
+<view class="order-section">
+  <!-- Section Header -->
+  <view class="order-section__header">
+    <text class="order-section__title">我的订单</text>
+    <view class="order-section__view-all" bindtap="onViewAllOrders">
+      <text class="order-section__view-all-text">查看全部订单</text>
+      <text class="order-section__arrow">></text>
+    </view>
+  </view>
+
+  <!-- Order Status Grid -->
+  <view class="order-section__content">
+    <scroll-view class="order-section__scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+      <view class="order-section__status-list">
+        <view 
+          wx:for="{{orderStatusItems}}" 
+          wx:key="status"
+          class="order-section__status-item"
+          data-status="{{item.status}}"
+          bindtap="onOrderStatusTap"
+        >
+          <!-- Icon with Badge -->
+          <view class="order-section__icon-container">
+            <image 
+              class="order-section__icon" 
+              src="/images/icons/order-{{item.icon}}.svg"
+              mode="aspectFit"
+            />
+            <view 
+              wx:if="{{item.count > 0 && !loading}}"
+              class="order-section__badge"
+            >
+              <text class="order-section__badge-text">{{item.count > 99 ? '99+' : item.count}}</text>
+            </view>
+          </view>
+          
+          <!-- Status Label -->
+          <text class="order-section__label">{{item.title}}</text>
+          
+          <!-- Loading State -->
+          <view wx:if="{{loading}}" class="order-section__loading-skeleton"></view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
