@@ -1,6 +1,5 @@
 // pages/profile/index.ts
-import { ServiceFactory } from '../../services/index';
-import { User } from '../../models/user';
+import { SimpleServiceFactory } from '../../services/simple-factory';
 import { AccountMetrics } from '../../models/account';
 import { OrderCounts } from '../../models/order';
 import { navigationManager } from '../../utils/navigation';
@@ -9,20 +8,20 @@ import { navigationTester } from '../../utils/navigation-test';
 interface ProfilePageData {
   // User data
   isLoggedIn: boolean;
-  userInfo?: {
-    avatar: string;
-    nickname: string;
-    membershipLevel: string;
+  userInfo: {
+    avatar?: string;
+    nickname?: string;
+    membershipLevel?: string;
   };
-  
+
   // Account metrics
   accountMetrics: AccountMetrics;
   accountMetricsLoading: boolean;
-  
+
   // Order counts
   orderCounts: OrderCounts;
   orderCountsLoading: boolean;
-  
+
   // Page state
   pageLoading: boolean;
   hasError: boolean;
@@ -33,17 +32,17 @@ Page({
   data: {
     // User data
     isLoggedIn: false,
-    userInfo: undefined,
-    
+    userInfo: {},
+
     // Account metrics
     accountMetrics: {
       balance: 0,
       points: 0,
       cards: 0,
-      coupons: 0
+      coupons: 0,
     },
     accountMetricsLoading: true,
-    
+
     // Order counts
     orderCounts: {
       pending_payment: 0,
@@ -51,23 +50,23 @@ Page({
       pending_receipt: 0,
       pending_review: 0,
       refund_aftersales: 0,
-      total: 0
+      total: 0,
     },
     orderCountsLoading: true,
-    
+
     // Page state
     pageLoading: true,
     hasError: false,
-    errorMessage: ''
+    errorMessage: '',
   } as ProfilePageData,
 
   /**
    * Page lifecycle - onLoad
    */
-  onLoad(options: { section?: string, action?: string }) {
+  onLoad(options: { section?: string; action?: string }) {
     console.log('Profile page loaded with options:', options);
     this.loadPageData();
-    
+
     // Handle deep linking
     if (options.section) {
       this.handleDeepLink(options.section, options.action);
@@ -81,7 +80,7 @@ Page({
     console.log('Profile page shown');
     // Refresh data when page becomes visible
     this.loadPageData();
-    
+
     // Ensure proper tab bar highlighting
     this.ensureTabBarHighlighting();
   },
@@ -104,27 +103,22 @@ Page({
       this.setData({
         pageLoading: true,
         hasError: false,
-        errorMessage: ''
+        errorMessage: '',
       });
 
       // Load data in parallel for better performance
-      const promises = [
-        this.loadUserData(),
-        this.loadAccountMetrics(),
-        this.loadOrderCounts()
-      ];
+      const promises = [this.loadUserData(), this.loadAccountMetrics(), this.loadOrderCounts()];
 
       await Promise.allSettled(promises);
-
     } catch (error) {
       console.error('Error loading profile page data:', error);
       this.setData({
         hasError: true,
-        errorMessage: '加载失败，请重试'
+        errorMessage: '加载失败，请重试',
       });
     } finally {
       this.setData({
-        pageLoading: false
+        pageLoading: false,
       });
     }
   },
@@ -134,29 +128,42 @@ Page({
    */
   async loadUserData() {
     try {
-      const userService = ServiceFactory.getUserService();
+      console.log('Loading user data...');
+
+      const userService = SimpleServiceFactory.getUserService();
+      console.log('UserService instance:', userService);
+
       const user = await userService.getCurrentUser();
-      
+      console.log('User data loaded:', user);
+
       if (user && user.isLoggedIn) {
         this.setData({
           isLoggedIn: true,
           userInfo: {
-            avatar: user.avatar,
-            nickname: user.nickname,
-            membershipLevel: user.membershipLevel
-          }
+            avatar: user.avatar || '/images/placeholders/default-avatar.svg',
+            nickname: user.nickname || '用户',
+            membershipLevel: user.membershipLevel || 'bronze',
+          },
         });
       } else {
         this.setData({
           isLoggedIn: false,
-          userInfo: undefined
+          userInfo: {
+            avatar: '/images/placeholders/default-avatar.svg',
+            nickname: '用户',
+            membershipLevel: 'bronze',
+          },
         });
       }
     } catch (error) {
       console.error('Error loading user data:', error);
       this.setData({
         isLoggedIn: false,
-        userInfo: undefined
+        userInfo: {
+          avatar: '/images/placeholders/default-avatar.svg',
+          nickname: '用户',
+          membershipLevel: 'bronze',
+        },
       });
     }
   },
@@ -167,14 +174,31 @@ Page({
   async loadAccountMetrics() {
     try {
       this.setData({ accountMetricsLoading: true });
-      
-      const accountService = ServiceFactory.getAccountService();
-      const metrics = await accountService.getAccountMetrics();
-      
-      this.setData({
-        accountMetrics: metrics,
-        accountMetricsLoading: false
-      });
+
+      // Get current user first
+      const userService = SimpleServiceFactory.getUserService();
+      const user = await userService.getCurrentUser();
+
+      if (user && user.id) {
+        const accountService = SimpleServiceFactory.getAccountService();
+        const metrics = await accountService.getAccountMetrics(user.id);
+
+        this.setData({
+          accountMetrics: metrics,
+          accountMetricsLoading: false,
+        });
+      } else {
+        // User not logged in, show default values
+        this.setData({
+          accountMetrics: {
+            balance: 0,
+            points: 0,
+            cards: 0,
+            coupons: 0,
+          },
+          accountMetricsLoading: false,
+        });
+      }
     } catch (error) {
       console.error('Error loading account metrics:', error);
       this.setData({
@@ -182,9 +206,9 @@ Page({
           balance: 0,
           points: 0,
           cards: 0,
-          coupons: 0
+          coupons: 0,
         },
-        accountMetricsLoading: false
+        accountMetricsLoading: false,
       });
     }
   },
@@ -195,14 +219,33 @@ Page({
   async loadOrderCounts() {
     try {
       this.setData({ orderCountsLoading: true });
-      
-      const orderService = ServiceFactory.getOrderService();
-      const counts = await orderService.getOrderCounts();
-      
-      this.setData({
-        orderCounts: counts,
-        orderCountsLoading: false
-      });
+
+      // Get current user first
+      const userService = SimpleServiceFactory.getUserService();
+      const user = await userService.getCurrentUser();
+
+      if (user && user.id) {
+        const orderService = SimpleServiceFactory.getOrderService();
+        const counts = await orderService.getOrderCounts(user.id);
+
+        this.setData({
+          orderCounts: counts,
+          orderCountsLoading: false,
+        });
+      } else {
+        // User not logged in, show default values
+        this.setData({
+          orderCounts: {
+            pending_payment: 0,
+            pending_shipment: 0,
+            pending_receipt: 0,
+            pending_review: 0,
+            refund_aftersales: 0,
+            total: 0,
+          },
+          orderCountsLoading: false,
+        });
+      }
     } catch (error) {
       console.error('Error loading order counts:', error);
       this.setData({
@@ -212,9 +255,9 @@ Page({
           pending_receipt: 0,
           pending_review: 0,
           refund_aftersales: 0,
-          total: 0
+          total: 0,
         },
-        orderCountsLoading: false
+        orderCountsLoading: false,
       });
     }
   },
@@ -230,9 +273,9 @@ Page({
       success: () => {
         console.log('Successfully navigated to login page');
       },
-      fail: (error) => {
+      fail: error => {
         console.error('Failed to navigate to login page:', error);
-      }
+      },
     });
   },
 
@@ -242,22 +285,22 @@ Page({
   onAccountMetricTap(event: any) {
     const { type } = event.detail;
     console.log('Account metric tapped:', type);
-    
+
     // Navigate to corresponding detail page using navigation manager
     const routes: Record<string, string> = {
       balance: '/pages/balance/index',
       points: '/pages/points/index',
       cards: '/pages/cards/index',
-      coupons: '/pages/coupons/index'
+      coupons: '/pages/coupons/index',
     };
-    
+
     const route = routes[type];
     if (route) {
       navigationManager.navigateTo({
         url: route,
         success: () => {
           console.log(`Successfully navigated to ${type} page`);
-        }
+        },
       });
     }
   },
@@ -271,7 +314,7 @@ Page({
       url: '/pages/orders/index',
       success: () => {
         console.log('Successfully navigated to orders page');
-      }
+      },
     });
   },
 
@@ -281,12 +324,12 @@ Page({
   onOrderStatusTap(event: any) {
     const { status } = event.detail;
     console.log('Order status tapped:', status);
-    
+
     navigationManager.navigateTo({
       url: `/pages/orders/index?status=${status}`,
       success: () => {
         console.log(`Successfully navigated to orders page with status: ${status}`);
-      }
+      },
     });
   },
 
@@ -296,44 +339,44 @@ Page({
   onServiceMenuTap(event: any) {
     const { serviceId } = event.detail;
     console.log('Service menu tapped:', serviceId);
-    
+
     // Handle different service actions using navigation manager
     switch (serviceId) {
       case 'task-center':
         navigationManager.navigateTo({
           url: '/pages/task-center/index',
-          success: () => console.log('Successfully navigated to task center')
+          success: () => console.log('Successfully navigated to task center'),
         });
         break;
       case 'delivery-address':
         navigationManager.navigateTo({
           url: '/pages/address/index',
-          success: () => console.log('Successfully navigated to address page')
+          success: () => console.log('Successfully navigated to address page'),
         });
         break;
       case 'call-merchant':
         wx.makePhoneCall({
           phoneNumber: '400-123-4567',
           success: () => console.log('Phone call initiated'),
-          fail: (error) => {
+          fail: error => {
             console.error('Failed to make phone call:', error);
             wx.showToast({
               title: '拨打电话失败',
-              icon: 'none'
+              icon: 'none',
             });
-          }
+          },
         });
         break;
       case 'personal-info':
         navigationManager.navigateTo({
           url: '/pages/personal-info/index',
-          success: () => console.log('Successfully navigated to personal info page')
+          success: () => console.log('Successfully navigated to personal info page'),
         });
         break;
       case 'account-security':
         navigationManager.navigateTo({
           url: '/pages/account-security/index',
-          success: () => console.log('Successfully navigated to account security page')
+          success: () => console.log('Successfully navigated to account security page'),
         });
         break;
       default:
@@ -354,14 +397,14 @@ Page({
    */
   handleDeepLink(section: string, action?: string) {
     console.log('Handling deep link:', section, action);
-    
+
     // Wait for page data to load before handling deep links
     setTimeout(() => {
       switch (section) {
         case 'orders':
           if (action) {
             wx.navigateTo({
-              url: `/pages/orders/index?status=${action}`
+              url: `/pages/orders/index?status=${action}`,
             });
           } else {
             this.onViewAllOrdersTap();
@@ -423,12 +466,12 @@ Page({
   onTabBarItemTap(e: any) {
     const { index, pagePath } = e.detail;
     console.log('Tab bar item tapped:', index, pagePath);
-    
+
     // Ensure proper tab highlighting
     if (typeof wx.setTabBarStyle === 'function') {
       wx.setTabBarStyle({
         selectedColor: '#8B4513',
-        color: '#666666'
+        color: '#666666',
       });
     }
   },
@@ -442,12 +485,15 @@ Page({
       wx.setTabBarStyle({
         selectedColor: '#8B4513',
         color: '#666666',
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
       });
-      
-      // Set the current tab index (profile is index 3)
-      wx.setTabBarIndex({
-        index: 3
+
+      // Set the current tab item (profile is index 3)
+      wx.setTabBarItem({
+        index: 3,
+        text: '我的',
+        iconPath: '/images/profile.png',
+        selectedIconPath: '/images/profile-active.png',
       });
     } catch (error) {
       console.warn('Failed to set tab bar highlighting:', error);
@@ -459,48 +505,48 @@ Page({
    */
   async testAllNavigationFlows() {
     console.log('Testing all navigation flows...');
-    
+
     const testCases = [
       {
         name: 'Login Navigation',
-        test: () => this.onLoginTap()
+        test: () => this.onLoginTap(),
       },
       {
-        name: 'Orders Navigation', 
-        test: () => this.onViewAllOrdersTap()
+        name: 'Orders Navigation',
+        test: () => this.onViewAllOrdersTap(),
       },
       {
         name: 'Balance Navigation',
-        test: () => this.onAccountMetricTap({ detail: { type: 'balance' } })
+        test: () => this.onAccountMetricTap({ detail: { type: 'balance' } }),
       },
       {
         name: 'Points Navigation',
-        test: () => this.onAccountMetricTap({ detail: { type: 'points' } })
+        test: () => this.onAccountMetricTap({ detail: { type: 'points' } }),
       },
       {
         name: 'Cards Navigation',
-        test: () => this.onAccountMetricTap({ detail: { type: 'cards' } })
+        test: () => this.onAccountMetricTap({ detail: { type: 'cards' } }),
       },
       {
         name: 'Coupons Navigation',
-        test: () => this.onAccountMetricTap({ detail: { type: 'coupons' } })
+        test: () => this.onAccountMetricTap({ detail: { type: 'coupons' } }),
       },
       {
         name: 'Task Center Navigation',
-        test: () => this.onServiceMenuTap({ detail: { serviceId: 'task-center' } })
+        test: () => this.onServiceMenuTap({ detail: { serviceId: 'task-center' } }),
       },
       {
         name: 'Address Navigation',
-        test: () => this.onServiceMenuTap({ detail: { serviceId: 'delivery-address' } })
+        test: () => this.onServiceMenuTap({ detail: { serviceId: 'delivery-address' } }),
       },
       {
         name: 'Personal Info Navigation',
-        test: () => this.onServiceMenuTap({ detail: { serviceId: 'personal-info' } })
+        test: () => this.onServiceMenuTap({ detail: { serviceId: 'personal-info' } }),
       },
       {
         name: 'Account Security Navigation',
-        test: () => this.onServiceMenuTap({ detail: { serviceId: 'account-security' } })
-      }
+        test: () => this.onServiceMenuTap({ detail: { serviceId: 'account-security' } }),
+      },
     ];
 
     // Test deep linking
@@ -508,11 +554,11 @@ Page({
       { section: 'orders', action: 'pending_payment' },
       { section: 'balance' },
       { section: 'points' },
-      { section: 'task-center' }
+      { section: 'task-center' },
     ];
 
     console.log(`Running ${testCases.length} navigation tests...`);
-    
+
     for (const testCase of testCases) {
       try {
         console.log(`✓ Testing: ${testCase.name}`);
@@ -527,12 +573,12 @@ Page({
     }
 
     console.log(`Testing ${deepLinkTests.length} deep link scenarios...`);
-    
+
     for (const deepLinkTest of deepLinkTests) {
       try {
         const deepLinkUrl = navigationManager.generateDeepLink(deepLinkTest);
         console.log(`✓ Deep link generated: ${deepLinkUrl}`);
-        
+
         const parsed = navigationManager.parseDeepLink(deepLinkUrl);
         if (parsed) {
           console.log(`  - Deep link parsed successfully:`, parsed);
@@ -543,13 +589,14 @@ Page({
     }
 
     console.log('Navigation flow testing completed');
-    
+
     // Show test results to user in development
-    if (process.env.NODE_ENV === 'development') {
+    // @ts-ignore - WeChat Mini Program doesn't have process.env
+    if (typeof __wxConfig !== 'undefined' && __wxConfig.debug) {
       wx.showModal({
         title: '导航测试完成',
         content: `已测试 ${testCases.length} 个导航流程和 ${deepLinkTests.length} 个深度链接场景`,
-        showCancel: false
+        showCancel: false,
       });
     }
   },
@@ -559,41 +606,44 @@ Page({
    */
   async runNavigationTests() {
     console.log('Running comprehensive navigation tests...');
-    
+
     try {
       wx.showLoading({
         title: '运行导航测试...',
-        mask: true
+        mask: true,
       });
 
       const testResults = await navigationTester.runFullTestSuite();
       const report = navigationTester.generateTestReport(testResults);
-      
+
       wx.hideLoading();
-      
+
       console.log('Navigation test results:', testResults);
       console.log('Test report:', report);
-      
+
       // Show results to user
       wx.showModal({
         title: '导航测试结果',
-        content: `总测试: ${testResults.summary.totalTests}\n通过: ${testResults.summary.passedTests}\n失败: ${testResults.summary.failedTests}\n成功率: ${testResults.summary.successRate.toFixed(1)}%`,
+        content: `总测试: ${testResults.summary.totalTests}\n通过: ${
+          testResults.summary.passedTests
+        }\n失败: ${
+          testResults.summary.failedTests
+        }\n成功率: ${testResults.summary.successRate.toFixed(1)}%`,
         confirmText: '查看详情',
         cancelText: '关闭',
-        success: (res) => {
+        success: res => {
           if (res.confirm) {
             // In a real app, we might show a detailed report page
             console.log('Detailed test report:', report);
           }
-        }
+        },
       });
-      
     } catch (error) {
       wx.hideLoading();
       console.error('Navigation tests failed:', error);
       wx.showToast({
         title: '测试运行失败',
-        icon: 'none'
+        icon: 'none',
       });
     }
   },
@@ -603,15 +653,11 @@ Page({
    */
   onLongPress() {
     // Show development menu in development mode
-    if (process.env.NODE_ENV === 'development') {
+    // @ts-ignore - WeChat Mini Program doesn't have process.env
+    if (typeof __wxConfig !== 'undefined' && __wxConfig.debug) {
       wx.showActionSheet({
-        itemList: [
-          '测试所有导航流程',
-          '测试深度链接',
-          '测试标签栏导航',
-          '查看导航历史'
-        ],
-        success: (res) => {
+        itemList: ['测试所有导航流程', '测试深度链接', '测试标签栏导航', '查看导航历史'],
+        success: res => {
           switch (res.tapIndex) {
             case 0:
               this.runNavigationTests();
@@ -626,7 +672,7 @@ Page({
               this.showNavigationHistory();
               break;
           }
-        }
+        },
       });
     }
   },
@@ -639,12 +685,14 @@ Page({
       wx.showLoading({ title: '测试深度链接...', mask: true });
       const results = await navigationTester.testDeepLinking();
       wx.hideLoading();
-      
+
       const passed = results.filter(r => r.success).length;
       wx.showModal({
         title: '深度链接测试',
-        content: `测试完成\n总数: ${results.length}\n通过: ${passed}\n失败: ${results.length - passed}`,
-        showCancel: false
+        content: `测试完成\n总数: ${results.length}\n通过: ${passed}\n失败: ${
+          results.length - passed
+        }`,
+        showCancel: false,
       });
     } catch (error) {
       wx.hideLoading();
@@ -660,12 +708,14 @@ Page({
       wx.showLoading({ title: '测试标签栏导航...', mask: true });
       const results = await navigationTester.testTabBarNavigation();
       wx.hideLoading();
-      
+
       const passed = results.filter(r => r.success).length;
       wx.showModal({
         title: '标签栏导航测试',
-        content: `测试完成\n总数: ${results.length}\n通过: ${passed}\n失败: ${results.length - passed}`,
-        showCancel: false
+        content: `测试完成\n总数: ${results.length}\n通过: ${passed}\n失败: ${
+          results.length - passed
+        }`,
+        showCancel: false,
       });
     } catch (error) {
       wx.hideLoading();
@@ -678,14 +728,12 @@ Page({
    */
   showNavigationHistory() {
     const history = navigationManager.getNavigationHistory();
-    const historyText = history.length > 0 
-      ? history.slice(-5).join('\n') 
-      : '暂无导航历史';
-    
+    const historyText = history.length > 0 ? history.slice(-5).join('\n') : '暂无导航历史';
+
     wx.showModal({
       title: '导航历史 (最近5条)',
       content: historyText,
-      showCancel: false
+      showCancel: false,
     });
-  }
+  },
 });

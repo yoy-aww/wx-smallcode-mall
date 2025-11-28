@@ -17,7 +17,7 @@ Component({
     },
     userInfo: {
       type: Object,
-      value: null
+      value: {}
     }
   },
 
@@ -43,8 +43,10 @@ Component({
    * Property observers
    */
   observers: {
-    'userInfo.membershipLevel'(membershipLevel: string) {
-      this._updateMembershipLabel();
+    'userInfo'(userInfo: any) {
+      if (userInfo && typeof userInfo === 'object') {
+        this._updateMembershipLabel();
+      }
     }
   },
 
@@ -80,15 +82,22 @@ Component({
      * Update membership level label based on current user info
      */
     _updateMembershipLabel() {
-      const userInfo = this.data.userInfo;
-      if (userInfo && userInfo.membershipLevel) {
-        const membershipLevel = userInfo.membershipLevel as keyof typeof MEMBERSHIP_LEVELS;
+      try {
+        const userInfo = this.properties.userInfo;
+        if (userInfo && typeof userInfo === 'object' && userInfo.membershipLevel) {
+          const membershipLevel = userInfo.membershipLevel as keyof typeof MEMBERSHIP_LEVELS;
+          this.setData({
+            membershipLabel: MEMBERSHIP_LEVELS[membershipLevel] || MEMBERSHIP_LEVELS.bronze
+          });
+        } else {
+          this.setData({
+            membershipLabel: MEMBERSHIP_LEVELS.bronze
+          });
+        }
+      } catch (error) {
+        console.error('Error updating membership label:', error);
         this.setData({
-          membershipLabel: MEMBERSHIP_LEVELS[membershipLevel] || MEMBERSHIP_LEVELS.regular
-        });
-      } else {
-        this.setData({
-          membershipLabel: MEMBERSHIP_LEVELS.regular
+          membershipLabel: MEMBERSHIP_LEVELS.bronze
         });
       }
     }

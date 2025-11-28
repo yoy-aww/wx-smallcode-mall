@@ -3,7 +3,7 @@
  */
 
 export const MEMBERSHIP_LEVELS = {
-  regular: '普通会员',
+  bronze: '铜卡会员',
   silver: '银卡会员',
   gold: '金卡会员',
   platinum: '白金会员'

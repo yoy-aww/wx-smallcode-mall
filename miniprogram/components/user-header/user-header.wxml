@@ -1,6 +1,6 @@
 <view class="user-header">
   <!-- Logged in state -->
-  <view wx:if="{{isLoggedIn && userInfo}}" class="user-header__logged-in">
+  <view wx:if="{{isLoggedIn && userInfo && userInfo.nickname}}" class="user-header__logged-in">
     <view class="user-header__avatar-container" bindtap="onAvatarTap">
       <image 
         class="user-header__avatar" 

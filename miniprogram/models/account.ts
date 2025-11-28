@@ -1,5 +1,5 @@
 /**
- * Account model interfaces and types for account metrics
+ * Account model interfaces and types
  */
 
 export interface Account {

@@ -1,7 +1,12 @@
 /**
- * Barrel export for all model interfaces
+ * Models index - exports all model interfaces and types
  */
 
-export * from './user';
-export * from './account';
-export * from './order';
+// User models
+export type { User, UserInfo } from './user';
+
+// Account models  
+export type { Account, AccountMetrics } from './account';
+
+// Order models
+export type { Order, OrderItem, OrderCounts, OrderStatus } from './order';

@@ -224,6 +224,7 @@
 
   // 按钮文字
   .btn-text {
+    line-height: 1px;
     transition: opacity $transition-duration-base $transition-timing-function;
 
     .loading & {
