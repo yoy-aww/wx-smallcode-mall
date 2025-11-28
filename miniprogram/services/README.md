@@ -129,7 +129,7 @@ Comprehensive unit tests are provided for all services:
 npm test
 
 # Run with simple test runner
-node __tests__/test-runner.js
+node tests/test-runner.js
 ```
 
 ### Test Coverage
