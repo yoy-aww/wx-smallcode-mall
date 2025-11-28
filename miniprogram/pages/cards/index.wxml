@@ -1,0 +1,12 @@
+<!--pages/cards/index.wxml-->
+<view class="cards-page">
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <view wx:elif="{{cards.length === 0}}" class="empty">暂无卡券</view>
+  <view wx:else class="cards-list">
+    <view wx:for="{{cards}}" wx:key="id" class="card-item">
+      <text class="card-name">{{item.name}}</text>
+      <text class="card-balance" wx:if="{{item.balance > 0}}">余额：¥{{item.balance}}</text>
+      <text class="card-status">{{item.status === 'active' ? '有效' : '已过期'}}</text>
+    </view>
+  </view>
+</view>

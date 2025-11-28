@@ -1,0 +1,35 @@
+<!--pages/balance/index.wxml-->
+<view class="balance-page">
+  <view class="balance-header">
+    <view class="balance-amount">
+      <text class="currency">¥</text>
+      <text class="amount">{{balance}}</text>
+    </view>
+    <text class="balance-label">账户余额</text>
+    <button class="recharge-btn" bindtap="onRecharge">充值</button>
+  </view>
+
+  <view class="transactions">
+    <view class="section-title">交易记录</view>
+    
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:elif="{{transactions.length === 0}}" class="empty">
+      <text>暂无交易记录</text>
+    </view>
+    
+    <view wx:else class="transaction-list">
+      <view wx:for="{{transactions}}" wx:key="id" class="transaction-item">
+        <view class="transaction-info">
+          <text class="transaction-desc">{{item.description}}</text>
+          <text class="transaction-time">{{item.time}}</text>
+        </view>
+        <text class="transaction-amount {{item.type}}">
+          {{item.type === 'income' ? '+' : '-'}}¥{{item.amount}}
+        </text>
+      </view>
+    </view>
+  </view>
+</view>

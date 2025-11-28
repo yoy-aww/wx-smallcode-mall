@@ -1,0 +1,25 @@
+<!--pages/points/index.wxml-->
+<view class="points-page">
+  <view class="points-header">
+    <view class="points-amount">{{points}}</view>
+    <text class="points-label">我的积分</text>
+    <button class="exchange-btn" bindtap="onExchange">积分兑换</button>
+  </view>
+
+  <view class="records">
+    <view class="section-title">积分记录</view>
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    <view wx:elif="{{records.length === 0}}" class="empty">暂无积分记录</view>
+    <view wx:else class="record-list">
+      <view wx:for="{{records}}" wx:key="id" class="record-item">
+        <view class="record-info">
+          <text class="record-desc">{{item.description}}</text>
+          <text class="record-time">{{item.time}}</text>
+        </view>
+        <text class="record-points {{item.type}}">
+          {{item.type === 'earn' ? '+' : '-'}}{{item.points}}
+        </text>
+      </view>
+    </view>
+  </view>
+</view>

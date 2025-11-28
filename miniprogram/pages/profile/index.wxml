@@ -1,5 +1,5 @@
 <!--pages/profile/index.wxml-->
-<view class="profile-page">
+<view class="profile-page" bindlongpress="onLongPress">
   <!-- Loading State -->
   <view wx:if="{{pageLoading}}" class="loading-container">
     <view class="loading-skeleton">

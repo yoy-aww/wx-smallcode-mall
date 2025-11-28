@@ -5,7 +5,17 @@
     "pages/cart/index",
     "pages/profile/index",
     "pages/product-detail/index",
-    "pages/checkout/index"
+    "pages/checkout/index",
+    "pages/login/index",
+    "pages/orders/index",
+    "pages/balance/index",
+    "pages/points/index",
+    "pages/cards/index",
+    "pages/coupons/index",
+    "pages/task-center/index",
+    "pages/address/index",
+    "pages/personal-info/index",
+    "pages/account-security/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

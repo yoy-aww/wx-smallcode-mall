@@ -1,0 +1,30 @@
+<!--pages/task-center/index.wxml-->
+<view class="task-center-page">
+  <view class="header">
+    <text class="title">任务中心</text>
+    <text class="subtitle">完成任务获得积分奖励</text>
+  </view>
+
+  <view class="tasks-list">
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+    <view wx:elif="{{tasks.length === 0}}" class="empty">暂无任务</view>
+    <view wx:else>
+      <view 
+        wx:for="{{tasks}}" 
+        wx:key="id" 
+        class="task-item {{item.completed ? 'completed' : ''}}"
+        data-task-id="{{item.id}}"
+        bindtap="onTaskTap"
+      >
+        <view class="task-info">
+          <text class="task-name">{{item.name}}</text>
+          <text class="task-reward">奖励：{{item.reward}}</text>
+        </view>
+        <view class="task-status">
+          <text wx:if="{{item.completed}}" class="completed-text">已完成</text>
+          <text wx:else class="go-text">去完成</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

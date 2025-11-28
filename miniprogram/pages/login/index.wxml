@@ -1,0 +1,55 @@
+<!--pages/login/index.wxml-->
+<view class="login-page">
+  <view class="login-header">
+    <text class="login-title">手机号登录</text>
+    <text class="login-subtitle">登录手机号，订单管理更轻松，优惠信息不错过</text>
+  </view>
+
+  <view class="login-form">
+    <view class="form-item">
+      <input 
+        class="phone-input"
+        type="number"
+        placeholder="请输入手机号"
+        maxlength="11"
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+      />
+    </view>
+
+    <view class="form-item code-item">
+      <input 
+        class="code-input"
+        type="number"
+        placeholder="请输入验证码"
+        maxlength="6"
+        value="{{code}}"
+        bindinput="onCodeInput"
+      />
+      <button 
+        class="send-code-btn {{canSendCode ? '' : 'disabled'}}"
+        bindtap="onSendCode"
+        disabled="{{!canSendCode}}"
+      >
+        {{countdown > 0 ? countdown + 's' : '发送验证码'}}
+      </button>
+    </view>
+
+    <button 
+      class="login-btn"
+      bindtap="onLogin"
+      loading="{{loading}}"
+    >
+      登录
+    </button>
+  </view>
+
+  <view class="login-footer">
+    <text class="agreement-text">
+      登录即表示同意
+      <text class="link">《用户协议》</text>
+      和
+      <text class="link">《隐私政策》</text>
+    </text>
+  </view>
+</view>

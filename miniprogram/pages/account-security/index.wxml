@@ -1,0 +1,18 @@
+<!--pages/account-security/index.wxml-->
+<view class="account-security-page">
+  <view class="security-list">
+    <view 
+      wx:for="{{securityItems}}" 
+      wx:key="id"
+      class="security-item {{item.isAction ? 'action-item' : ''}}"
+      data-item-id="{{item.id}}"
+      bindtap="onItemTap"
+    >
+      <view class="item-content">
+        <text class="title">{{item.title}}</text>
+        <text wx:if="{{item.desc}}" class="desc">{{item.desc}}</text>
+      </view>
+      <text wx:if="{{item.hasArrow}}" class="arrow">></text>
+    </view>
+  </view>
+</view>

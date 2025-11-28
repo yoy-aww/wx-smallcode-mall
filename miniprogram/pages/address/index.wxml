@@ -1,0 +1,31 @@
+<!--pages/address/index.wxml-->
+<view class="address-page">
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <view wx:elif="{{addresses.length === 0}}" class="empty">
+    <text>暂无收货地址</text>
+    <button class="add-btn" bindtap="onAddAddress">添加地址</button>
+  </view>
+  <view wx:else class="address-list">
+    <view wx:for="{{addresses}}" wx:key="id" class="address-item">
+      <view class="address-info">
+        <view class="name-phone">
+          <text class="name">{{item.name}}</text>
+          <text class="phone">{{item.phone}}</text>
+          <text wx:if="{{item.isDefault}}" class="default-tag">默认</text>
+        </view>
+        <text class="address">{{item.address}}</text>
+      </view>
+      <button 
+        class="edit-btn" 
+        data-address-id="{{item.id}}"
+        bindtap="onEditAddress"
+      >
+        编辑
+      </button>
+    </view>
+  </view>
+
+  <view class="bottom-actions" wx:if="{{addresses.length > 0}}">
+    <button class="add-address-btn" bindtap="onAddAddress">新增收货地址</button>
+  </view>
+</view>
