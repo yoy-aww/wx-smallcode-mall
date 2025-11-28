@@ -52,8 +52,11 @@
       <!-- 商品名称 -->
       <text class="product-name">{{item.product.name}}</text>
       
-      <!-- 商品描述 -->
-      <text wx:if="{{item.product.description}}" class="product-description">{{item.product.description}}</text>
+      <!-- 规格选择 -->
+      <view wx:if="{{item.product.specs && item.product.specs.length > 0}}" class="spec-selector" bindtap="onSpecTap">
+        <text class="spec-text">{{getSelectedSpecText()}}</text>
+        <text class="spec-arrow">▼</text>
+      </view>
       
       <!-- 促销标签 -->
       <view wx:if="{{promotionTags.length > 0}}" class="promotion-tags">

@@ -46,7 +46,10 @@ Component({
     stockStatus: 'normal' as 'normal' | 'low' | 'out',
     
     // 促销标签
-    promotionTags: [] as string[]
+    promotionTags: [] as string[],
+    
+    // 规格选择状态
+    showSpecSelector: false
   },
 
   /**
@@ -243,6 +246,60 @@ Component({
         bubbles: true,
         composed: true
       });
+    },
+
+    /**
+     * 规格选择点击
+     */
+    onSpecTap() {
+      const { disabled, item } = this.properties;
+      
+      if (disabled || !item || !item.product.specs || item.product.specs.length === 0) {
+        return;
+      }
+
+      console.log('Spec selector tapped:', item.productId);
+
+      // 添加触觉反馈
+      this.addHapticFeedback('light');
+
+      // 触发规格选择事件
+      this.triggerEvent('specselect', {
+        productId: item.productId,
+        currentSpec: item.selectedSpec || null,
+        availableSpecs: item.product.specs
+      }, {
+        bubbles: true,
+        composed: true
+      });
+    },
+
+    /**
+     * 获取选中规格文本
+     */
+    getSelectedSpecText(): string {
+      const { item } = this.properties;
+      
+      if (!item || !item.selectedSpec) {
+        return '请选择规格';
+      }
+
+      // 组合规格文本，例如："500g袋*2袋"
+      const specParts = [];
+      
+      if (item.selectedSpec.size) {
+        specParts.push(item.selectedSpec.size);
+      }
+      
+      if (item.selectedSpec.package) {
+        specParts.push(item.selectedSpec.package);
+      }
+      
+      if (item.selectedSpec.count && item.selectedSpec.count > 1) {
+        specParts.push(`${item.selectedSpec.count}${item.selectedSpec.unit || '件'}`);
+      }
+
+      return specParts.join('*') || '默认规格';
     },
 
     /**

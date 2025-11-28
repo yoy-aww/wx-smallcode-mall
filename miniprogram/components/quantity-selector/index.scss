@@ -13,23 +13,24 @@
 
   // 尺寸变体
   &.small {
-    height: 56rpx;
+    height: 48rpx;
+    border: 1rpx solid #e5e5e5;
     
     .quantity-btn {
-      width: 56rpx;
-      height: 56rpx;
+      width: 48rpx;
+      height: 48rpx;
       
       .btn-icon {
-        font-size: $font-size-sm;
+        font-size: 24rpx;
       }
     }
     
     .quantity-display {
-      min-width: 60rpx;
+      min-width: 50rpx;
       
       .quantity-text,
       .quantity-input {
-        font-size: $font-size-sm;
+        font-size: 24rpx;
       }
     }
   }
