@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "test": "node miniprogram/components/user-header/test-runner-simple.js",
+    "test:user-header": "node miniprogram/components/user-header/test-runner-simple.js"
   },
   "keywords": [],
   "author": "",
   "license": "",
-  "dependencies": {
-  },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
     "miniprogram-api-typings": "^2.8.3-1"
   }
 }

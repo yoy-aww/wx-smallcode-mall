@@ -1,0 +1,38 @@
+<view class="user-header">
+  <!-- Logged in state -->
+  <view wx:if="{{isLoggedIn && userInfo}}" class="user-header__logged-in">
+    <view class="user-header__avatar-container" bindtap="onAvatarTap">
+      <image 
+        class="user-header__avatar" 
+        src="{{userInfo.avatar || defaultAvatar}}" 
+        mode="aspectFill"
+        binderror="onAvatarError"
+      />
+    </view>
+    
+    <view class="user-header__info">
+      <view class="user-header__nickname">{{userInfo.nickname}}</view>
+      <view class="user-header__membership">
+        <text class="user-header__membership-badge">{{membershipLabel}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Logged out state -->
+  <view wx:else class="user-header__logged-out">
+    <view class="user-header__avatar-container">
+      <image 
+        class="user-header__avatar user-header__avatar--placeholder" 
+        src="{{defaultAvatar}}" 
+        mode="aspectFill"
+      />
+    </view>
+    
+    <view class="user-header__login-prompt">
+      <view class="user-header__login-message">{{loginPromptMessage}}</view>
+      <button class="user-header__login-button" bindtap="onLoginTap">
+        立即登录
+      </button>
+    </view>
+  </view>
+</view>

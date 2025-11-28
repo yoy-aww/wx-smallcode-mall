@@ -34,7 +34,7 @@ export const ACCOUNT_METRIC_LABELS = {
 
 export const LOGIN_PROMPT_MESSAGE = '登录手机号，订单管理更轻松，优惠信息不错过';
 
-export const DEFAULT_AVATAR = '/images/placeholders/default-avatar.png';
+export const DEFAULT_AVATAR = '/images/placeholders/default-avatar.svg';
 
 export const SERVICE_MENU_ITEMS = [
   {

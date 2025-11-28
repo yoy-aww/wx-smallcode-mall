@@ -1,0 +1,133 @@
+@import '../../styles/variables.scss';
+
+.user-header {
+  padding: $padding-lg $padding-md;
+  background: $background-primary;
+  border-bottom: 1rpx solid $border-light;
+
+  &__logged-in,
+  &__logged-out {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__avatar-container {
+    flex-shrink: 0;
+  }
+
+  &__avatar {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: $border-radius-round;
+    border: 2rpx solid $border-light;
+    background: $background-secondary;
+
+    &--placeholder {
+      opacity: 0.6;
+    }
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__nickname {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+    line-height: $line-height-base;
+  }
+
+  &__membership {
+    display: flex;
+    align-items: center;
+  }
+
+  &__membership-badge {
+    display: inline-block;
+    padding: 4rpx 12rpx;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    color: $text-white;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    border-radius: $border-radius-md;
+    line-height: 1.2;
+  }
+
+  &__login-prompt {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__login-message {
+    font-size: $font-size-base;
+    color: $text-secondary;
+    line-height: $line-height-base;
+  }
+
+  &__login-button {
+    align-self: flex-start;
+    padding: $padding-sm $padding-lg;
+    background: $primary-color;
+    color: $text-white;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    border: none;
+    border-radius: $border-radius-lg;
+    line-height: 1.2;
+    transition: background-color $transition-duration-fast $transition-timing-function;
+
+    &::after {
+      border: none;
+    }
+
+    &:active {
+      background: darken($primary-color, 10%);
+    }
+  }
+}
+
+// Responsive adjustments for different screen sizes
+@media (max-width: $breakpoint-sm) {
+  .user-header {
+    padding: $padding-md $padding-sm;
+
+    &__avatar {
+      width: 100rpx;
+      height: 100rpx;
+    }
+
+    &__nickname {
+      font-size: $font-size-base;
+    }
+
+    &__login-message {
+      font-size: $font-size-sm;
+    }
+
+    &__login-button {
+      font-size: $font-size-sm;
+      padding: $padding-xs $padding-md;
+    }
+  }
+}
+
+// Accessibility improvements
+.user-header__avatar-container {
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.user-header__login-button {
+  min-height: 64rpx; // Ensure minimum touch target size
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
