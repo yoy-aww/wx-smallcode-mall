@@ -187,7 +187,7 @@ Component({
           {
             id: 'tea_002',
             name: '普洱茶',
-            image: '/images/imgs/tea_decoration_7.png', // 使用茶文化装饰元素
+            image: '/images/imgs/tea_decoration_7.jpg', // 使用茶文化装饰元素
             price: 88.0,
             originalPrice: 118.0,
             tags: ['陈年'],

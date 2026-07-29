@@ -29,7 +29,7 @@
   width: 80rpx;
   height: 80rpx;
   border: 6rpx solid #f0f0f0;
-  border-top: 6rpx solid #ff6b35;
+  border-top: 6rpx solid $primary-color;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 32rpx;
@@ -67,7 +67,7 @@
 .error-icon {
   font-size: 160rpx;
   margin-bottom: 32rpx;
-  color: #ff6b35;
+  color: $primary-color;
   animation: bounce 2s infinite;
 }
 
@@ -87,21 +87,21 @@
 }
 
 .retry-button {
-  background: #ff6b35;
+  background: $primary-color;
   color: white;
   border: none;
   border-radius: 48rpx;
   padding: 24rpx 48rpx;
   font-size: 32rpx;
   font-weight: 500;
-  box-shadow: 0 8rpx 24rpx rgba(255, 107, 53, 0.3);
+  box-shadow: 0 8rpx 24rpx rgba(139, 69, 19, 0.3);
   transition: all 0.3s ease;
 }
 
 .retry-button:active {
-  background: #e55a2b;
+  background: darken(#8B4513, 10%);
   transform: translateY(2rpx);
-  box-shadow: 0 4rpx 12rpx rgba(255, 107, 53, 0.4);
+  box-shadow: 0 4rpx 12rpx rgba(139, 69, 19, 0.4);
 }
 
 /* 空购物车状态 */
@@ -120,7 +120,7 @@
   font-size: 200rpx;
   margin-bottom: 40rpx;
   opacity: 0.8;
-  color: #ff6b35;
+  color: $primary-color;
   animation: float 3s ease-in-out infinite;
 }
 
@@ -146,14 +146,14 @@
 }
 
 .go-shopping-button {
-  background: #07c160;
+  background: $primary-color;
   color: white;
   border: none;
   border-radius: 48rpx;
   padding: 28rpx 56rpx;
   font-size: 32rpx;
   font-weight: 500;
-  box-shadow: 0 12rpx 32rpx rgba(7, 193, 96, 0.3);
+  box-shadow: 0 12rpx 32rpx rgba(139, 69, 19, 0.3);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -162,9 +162,9 @@
 /* Shimmer effect removed for compatibility */
 
 .go-shopping-button:active {
-  background: #06ad56;
+  background: darken(#8B4513, 10%);
   transform: translateY(2rpx);
-  box-shadow: 0 6rpx 16rpx rgba(7, 193, 96, 0.4);
+  box-shadow: 0 6rpx 16rpx rgba(139, 69, 19, 0.4);
 }
 
 /* Pseudo-element removed for compatibility */
@@ -383,23 +383,23 @@
   }
   
   .edit-button {
-    color: #ff9f0a;
+    color: $secondary-color;
   }
   
   .edit-button:active {
-    background-color: rgba(255, 159, 10, 0.1);
+    background-color: rgba(218, 165, 32, 0.1);
   }
   
   .retry-button,
   .go-shopping-button {
-    background: #ff9f0a;
-    box-shadow: 0 8rpx 24rpx rgba(255, 159, 10, 0.3);
+    background: $accent-color;
+    box-shadow: 0 8rpx 24rpx rgba(205, 133, 63, 0.3);
   }
   
   .retry-button:active,
   .go-shopping-button:active {
-    background: #e8851a;
-    box-shadow: 0 4rpx 12rpx rgba(255, 159, 10, 0.4);
+    background: darken(#CD853F, 10%);
+    box-shadow: 0 4rpx 12rpx rgba(205, 133, 63, 0.4);
   }
 }
 
@@ -575,7 +575,7 @@
 
 .cart-items cart-item:active {
   transform: scale(0.98);
-  background-color: rgba(255, 107, 53, 0.02);
+  background-color: rgba(139, 69, 19, 0.02);
 }
 
 /* 编辑模式切换动画 */
@@ -584,8 +584,12 @@
 }
 
 .cart-page.edit-mode .edit-mode-bar {
-  background: #fff5f2;
-  border-bottom-color: #ffe5dc;
+  background: #faf5f0;
+  border-bottom-color: #e8d5c0;
+  
+  .edit-button {
+    color: $error-color;
+  }
 }
 
 /* 底部操作栏状态动画 */
@@ -594,8 +598,8 @@
 }
 
 .bottom-bar.has-selection {
-  background: #fff8f6;
-  border-top-color: #ffe5dc;
+  background: #faf5f0;
+  border-top-color: #e8d5c0;
 }
 
 /* 加载状态脉冲效果 */
@@ -656,7 +660,7 @@
 }
 
 .status-indicator.loading {
-  background: #ff6b35;
+  background: $primary-color;
 }
 
 .status-indicator.error {
@@ -669,7 +673,7 @@
 .cart-page button:focus,
 .cart-page input:focus,
 .cart-page textarea:focus {
-  outline: 3rpx solid #ff6b35;
+  outline: 3rpx solid $primary-color;
   outline-offset: 2rpx;
 }
 
@@ -721,11 +725,11 @@
 /* ==================== 主题变量 ==================== */
 
 :root {
-  --cart-primary-color: #ff6b35;
-  --cart-secondary-color: #f7931e;
-  --cart-success-color: #00c851;
-  --cart-error-color: #ff4757;
-  --cart-warning-color: #ffa502;
+  --cart-primary-color: #8B4513;
+  --cart-secondary-color: #DAA520;
+  --cart-success-color: #52C41A;
+  --cart-error-color: #FF4D4F;
+  --cart-warning-color: #FAAD14;
   --cart-text-primary: #333333;
   --cart-text-secondary: #666666;
   --cart-text-tertiary: #999999;
@@ -740,11 +744,11 @@
 /* 暗色主题变量 */
 @media (prefers-color-scheme: dark) {
   :root {
-    --cart-primary-color: #ff9f0a;
-    --cart-secondary-color: #ff6b35;
-    --cart-success-color: #30d158;
-    --cart-error-color: #ff453a;
-    --cart-warning-color: #ff9f0a;
+--cart-primary-color: #CD853F;
+  --cart-secondary-color: #DAA520;
+  --cart-success-color: #52C41A;
+  --cart-error-color: #FF4D4F;
+  --cart-warning-color: #FAAD14;
     --cart-text-primary: #ffffff;
     --cart-text-secondary: #aeaeb2;
     --cart-text-tertiary: #8e8e93;
@@ -902,7 +906,7 @@
   left: 0;
   right: 0;
   height: 6rpx;
-  background: linear-gradient(90deg, #ff6b35, #f7931e);
+  background: linear-gradient(90deg, $primary-color, $secondary-color);
   transform: translateY(-100%);
   transition: transform 0.3s ease;
   z-index: 1000;

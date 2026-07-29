@@ -99,14 +99,14 @@ export const DECORATION_IMAGES = {
     `${IMAGE_BASE_PATH}green_plants_1.jpg`,
     `${IMAGE_BASE_PATH}green_plants_3.jpg`,
     `${IMAGE_BASE_PATH}green_plants_6.jpg`,
-    `${IMAGE_BASE_PATH}green_plants_9.png`,
+    `${IMAGE_BASE_PATH}green_plants_9.jpg`,
   ],
 
   // 茶文化装饰元素
   teaDecoration: [
     `${IMAGE_BASE_PATH}tea_decoration_3.jpg`,
-    `${IMAGE_BASE_PATH}tea_decoration_7.png`,
-    `${IMAGE_BASE_PATH}tea_decoration_8.png`,
+    `${IMAGE_BASE_PATH}tea_decoration_7.jpg`,
+    `${IMAGE_BASE_PATH}tea_decoration_8.jpg`,
   ],
 };
 
@@ -163,7 +163,7 @@ export const RECOMMENDED_COMBINATIONS = {
 
   // 茶饮专区
   teaSection: {
-    decoration: DECORATION_IMAGES.teaDecoration[2], // tea_decoration_8.png
+    decoration: DECORATION_IMAGES.teaDecoration[2], // tea_decoration_8.jpg
     background: CATEGORY_IMAGES.tea,
   },
 

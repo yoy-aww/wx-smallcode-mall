@@ -8,9 +8,9 @@ const existingImages = [
   '/images/imgs/herb_ingredients_3.jpg',
   '/images/imgs/herb_ingredients_5.jpeg',
   '/images/imgs/tea_decoration_3.jpg',
-  '/images/imgs/tea_decoration_7.png',
+  '/images/imgs/tea_decoration_7.jpg',
   '/images/imgs/tea_background_5.jpg',
-  '/images/imgs/tea_decoration_8.png',
+  '/images/imgs/tea_decoration_8.jpg',
   '/images/imgs/green_plants_1.jpg',
   '/images/imgs/gift_box_8.jpg',
   '/images/imgs/medicine_collage_2.jpg',
@@ -41,9 +41,9 @@ const usedImages = [
   '/images/imgs/tea_background_7.jpg', // welfare-004
   '/images/imgs/tea_background_9.jpg', // welfare-005
   '/images/imgs/tea_decoration_3.jpg', // tea-001
-  '/images/imgs/tea_decoration_7.png', // tea-002
+  '/images/imgs/tea_decoration_7.jpg', // tea-002
   '/images/imgs/tea_background_5.jpg', // tea-003
-  '/images/imgs/tea_decoration_8.png', // tea-004
+  '/images/imgs/tea_decoration_8.jpg', // tea-004
   '/images/imgs/green_plants_1.jpg', // tea-005
   '/images/imgs/gift_box_8.jpg', // activity-001
   '/images/imgs/medicine_collage_2.jpg', // activity-002

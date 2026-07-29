@@ -13,9 +13,9 @@ const TEST_PRODUCTS = [
   { id: 'welfare-005', image: '/images/imgs/tea_background_9.jpg', categoryId: 'welfare' },
   
   { id: 'tea-001', image: '/images/imgs/tea_decoration_3.jpg', categoryId: 'tea' },
-  { id: 'tea-002', image: '/images/imgs/tea_decoration_7.png', categoryId: 'tea' },
+  { id: 'tea-002', image: '/images/imgs/tea_decoration_7.jpg', categoryId: 'tea' },
   { id: 'tea-003', image: '/images/imgs/tea_background_5.jpg', categoryId: 'tea' },
-  { id: 'tea-004', image: '/images/imgs/tea_decoration_8.png', categoryId: 'tea' },
+  { id: 'tea-004', image: '/images/imgs/tea_decoration_8.jpg', categoryId: 'tea' },
   { id: 'tea-005', image: '/images/imgs/green_plants_1.jpg', categoryId: 'tea' },
   
   { id: 'activity-001', image: '/images/imgs/gift_box_8.jpg', categoryId: 'activity' },

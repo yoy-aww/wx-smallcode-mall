@@ -82,7 +82,7 @@ Page({
       product: {
         id: 'demo-005',
         name: '玫瑰花茶',
-        image: '/images/imgs/tea_decoration_7.png',
+        image: '/images/imgs/tea_decoration_7.jpg',
         originalPrice: 88.00,
         discountedPrice: 66.00,
         categoryId: 'tea',
