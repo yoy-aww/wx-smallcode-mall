@@ -1,9 +1,10 @@
 {
   "usingComponents": {
+    "navigation-bar": "/components/navigation-bar/navigation-bar",
     "cart-item": "../../components/cart-item/index",
     "cart-bottom-bar": "../../components/cart-bottom-bar/index"
   },
-  "navigationBarTitleText": "购物车",
+  "navigationStyle": "custom",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark"
 }

@@ -1,10 +1,23 @@
 /**
  * 图片资源映射文件
  * 根据图片素材使用指南整理的图片路径映射
+ *
+ * 注意：由于微信小程序包大小限制（2MB），所有图片需托管到 CDN 远程加载。
+ * 请将 images/imgs/ 目录下的图片上传到你的图片服务器/CDN，
+ * 然后将 CDN_BASE_URL 替换为实际的访问地址。
+ *
+ * 推荐方案：
+ * 1. 使用阿里云OSS/腾讯云COS等对象存储
+ * 2. 或使用 GitHub + jsDelivr CDN（免费）：
+ *    - 将图片上传到 GitHub 仓库
+ *    - 发布 Release
+ *    - 使用 https://cdn.jsdelivr.net/gh/你的用户名/仓库名@版本号/ 作为 base URL
  */
 
-// 图片基础路径
-const IMAGE_BASE_PATH = '/images/imgs/';
+// CDN 图片基础路径（请替换为实际 CDN 地址）
+// 上传图片后，将下方地址替换为你的 CDN 地址
+// 例: https://cdn.jsdelivr.net/gh/你的用户名/mall-images@v1.0.0/images/imgs/
+const IMAGE_BASE_PATH = 'https://cdn.jsdelivr.net/gh/你的用户名/mall-images@v1.0.0/images/imgs/';
 
 // 品牌相关图片
 export const BRAND_IMAGES = {

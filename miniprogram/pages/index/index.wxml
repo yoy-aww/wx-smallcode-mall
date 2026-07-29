@@ -1,5 +1,5 @@
 <!--index.wxml - 首页模板-->
-<navigation-bar title="中医药材商城" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="中医药材商城" back="{{false}}" color="#FFFFFF" background="#8B4513"></navigation-bar>
 
 <scroll-view class="page-container" scroll-y type="list">
   <!-- 品牌头部区域 -->

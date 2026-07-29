@@ -1,4 +1,7 @@
 /* pages/cart/index.scss */
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+@import '../../styles/mock-images.scss';
 
 .cart-page {
   height: 100vh;
@@ -7,6 +10,7 @@
   background-color: #f8f8f8;
   position: relative;
   overflow: hidden;
+  padding-top: 0;
 }
 
 /* 加载状态 */

@@ -1,4 +1,5 @@
 <!--pages/cart/index.wxml-->
+<navigation-bar title="购物车" back="{{false}}" color="#FFFFFF" background="#8B4513"></navigation-bar>
 <view class="cart-page" role="main" aria-label="购物车页面">
   <!-- 加载状态 -->
   <view wx:if="{{loading}}" class="loading-container" role="status" aria-label="正在加载购物车数据">
