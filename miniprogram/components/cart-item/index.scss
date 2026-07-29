@@ -1,63 +1,35 @@
 /* components/cart-item/index.scss */
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 .cart-item {
   display: flex;
-  align-items: flex-start;
-  padding: 20rpx 24rpx;
-  background-color: #ffffff;
-  border-bottom: 1rpx solid #f0f0f0;
+  align-items: center;
+  padding: 24rpx;
+  background: #fff;
   position: relative;
-  transition: all 0.3s ease;
 
-&.selected {
-      background-color: #ffffff;
-      
-      .select-checkbox {
-        background-color: $primary-color;
-        border-color: $primary-color;
-        
-        .check-icon {
-          color: #ffffff;
-        }
-      }
+  &.selected {
+    .checkbox {
+      background: $primary-color;
+      border-color: $primary-color;
     }
+  }
 
   &.edit-mode {
-    padding-left: 24rpx;
-    
-    .swipe-hint {
-      display: none;
+    .delete-btn {
+      display: flex;
     }
   }
+}
 
-  &.disabled {
-    opacity: 0.6;
-    pointer-events: none;
-  }
+/* 选择框 */
+.select-area {
+  margin-right: 20rpx;
+  flex-shrink: 0;
+  padding: 4rpx;
 
-  &.out {
-    .product-info {
-      opacity: 0.5;
-    }
-    
-    .product-name,
-    .product-description {
-      color: #999999;
-    }
-  }
-
-  // 选择框容器
-  .select-container {
-    margin-right: 20rpx;
-    padding: 4rpx;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 20rpx;
-  }
-
-  .select-checkbox {
+  .checkbox {
     width: 36rpx;
     height: 36rpx;
     border: 2rpx solid #ddd;
@@ -65,398 +37,172 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
-    transition: all 0.2s ease;
-    
-    &.checked {
-      background-color: $primary-color;
-      border-color: $primary-color;
-      transform: scale(1.05);
-    }
-    
-    .check-icon {
+    transition: all 0.2s;
+
+    .check-mark {
       font-size: 20rpx;
+      color: #fff;
       font-weight: bold;
-      color: #ffffff;
     }
   }
+}
 
-  // 商品信息区域
-  .product-info {
-    flex: 1;
-    display: flex;
-    margin-right: 24rpx;
-  }
+/* 商品图片 */
+.product-img {
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-right: 20rpx;
+  background: #f8f8f8;
+  position: relative;
 
-  .product-image-container {
-    width: 140rpx;
-    height: 140rpx;
-    margin-right: 20rpx;
-    position: relative;
-    border-radius: 8rpx;
-    overflow: hidden;
-    background-color: #f8f8f8;
-    flex-shrink: 0;
-  }
-
-  .product-image {
+  image {
     width: 100%;
     height: 100%;
-    border-radius: 8rpx;
-    
-    &.loading {
-      opacity: 0.3;
-    }
   }
 
-  .image-placeholder,
-  .image-error {
+  .stock-mask {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f8f8;
-    color: #999999;
-    font-size: 24rpx;
-  }
-
-  .placeholder-icon,
-  .error-icon {
-    font-size: 48rpx;
-    margin-bottom: 8rpx;
-  }
-
-  .error-text {
-    font-size: 20rpx;
-    color: #007aff;
-  }
-
-  .stock-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12rpx;
-    
-    .stock-overlay-text {
-      color: #ffffff;
-      font-size: 28rpx;
-      font-weight: bold;
+
+    text {
+      color: #fff;
+      font-size: 24rpx;
+      font-weight: 500;
     }
   }
+}
 
-  // 商品详情
-  .product-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    min-height: 140rpx;
-  }
+/* 商品信息 */
+.product-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
 
   .product-name {
     font-size: 28rpx;
+    color: $text-primary;
     font-weight: 400;
-    color: #333333;
     line-height: 1.4;
-    margin-bottom: 10rpx;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    @include text-ellipsis-multiline(2);
   }
 
-  .product-description {
-    font-size: 24rpx;
-    color: #666666;
-    line-height: 1.3;
-    margin-bottom: 12rpx;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  // 规格选择器
-  .spec-selector {
-    display: flex;
+  .spec-tag {
+    display: inline-flex;
     align-items: center;
-    padding: 6rpx 12rpx;
-    background-color: #f8f8f8;
+    background: #f8f8f8;
+    padding: 4rpx 12rpx;
     border-radius: 4rpx;
-    margin-bottom: 10rpx;
-    max-width: 200rpx;
-    
-    .spec-text {
+    align-self: flex-start;
+
+    text {
       font-size: 22rpx;
-      color: #666;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      color: $text-secondary;
     }
-    
+
     .spec-arrow {
-      font-size: 16rpx;
-      color: #999;
-      margin-left: 8rpx;
-      transition: transform 0.2s ease;
+      font-size: 24rpx;
+      color: $text-tertiary;
+      margin-left: 4rpx;
     }
-    
+
     &:active {
-      background-color: #f0f0f0;
-      
-      .spec-arrow {
-        transform: rotate(180deg);
-      }
+      background: #f0f0f0;
     }
   }
 
-  // 促销标签
-  .promotion-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6rpx;
-    margin-bottom: 10rpx;
-  }
-
-  .promotion-tag {
-    padding: 2rpx 6rpx;
-    font-size: 18rpx;
-    border-radius: 3rpx;
-    background-color: $error-color;
-    color: #ffffff;
-    
-    &.return-tag {
-      background-color: $primary-color;
-    }
-    
-    &.stock-tag {
-      background-color: $warning-color;
-    }
-  }
-
-  // 价格信息
-  .price-container {
+  .price-row {
     display: flex;
     align-items: baseline;
     gap: 8rpx;
-    margin-bottom: 10rpx;
-  }
 
-  .discounted-price {
-    font-size: 30rpx;
-    font-weight: 600;
-    color: $error-color;
-  }
-
-  .original-price {
-    font-size: 26rpx;
-    color: #333333;
-    
-    &.crossed-out {
-      text-decoration: line-through;
-      color: #999999;
-      font-size: 22rpx;
-    }
-  }
-
-  // 库存信息
-  .stock-info {
-    .stock-text {
-      font-size: 22rpx;
-      color: #666666;
-      
-      &.low-stock {
-        color: #ffa502;
-      }
-      
-&.out-stock {
+    .price {
+      font-size: 30rpx;
+      font-weight: 600;
       color: $error-color;
     }
+
+    .original-price {
+      font-size: 22rpx;
+      color: $text-tertiary;
+      text-decoration: line-through;
     }
   }
+}
 
-  // 操作区域
-  .actions-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: space-between;
-    min-height: 140rpx;
-    margin-left: 10rpx;
+/* 操作区域 */
+.action-area {
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  align-self: flex-end;
+}
+
+/* 删除按钮 */
+.delete-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: $error-color;
+  margin-bottom: 20rpx;
+
+  text {
+    color: #fff;
+    font-size: 22rpx;
   }
 
-  // 编辑模式操作
-  .edit-actions {
-.delete-btn {
-    width: 64rpx;
-    height: 64rpx;
-    border-radius: 50%;
-    background-color: $error-color;
-    border: none;
+  &:active {
+    background: darken(#FF4D4F, 10%);
+    transform: scale(0.95);
+  }
+}
+
+/* 数量控制器 */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 6rpx;
+  overflow: hidden;
+
+  .qty-btn {
+    width: 54rpx;
+    height: 48rpx;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    &.btn-hover {
-      background-color: darken(#FF4D4F, 10%);
-      transform: scale(0.95);
-    }
-      
-      .delete-icon {
-        font-size: 32rpx;
-      }
+    font-size: 28rpx;
+    color: $text-primary;
+    background: #fafafa;
+
+    &:active {
+      background: #f0f0f0;
     }
   }
 
-  // 数量选择器容器
-  .quantity-container {
-    margin-top: auto;
-    margin-bottom: 0;
-  }
-
-  // 小计金额
-  .subtotal-container {
-    text-align: right;
-    margin-top: 10rpx;
-    
-    .subtotal-label {
-      display: none; // 隐藏小计标签，只显示价格
-    }
-    
-.subtotal-price {
-    font-size: 30rpx;
-    font-weight: 600;
-    color: $error-color;
-  }
-  }
-
-  // 滑动删除提示
-  .swipe-hint {
-    position: absolute;
-    right: 32rpx;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    
-    .hint-text {
-      font-size: 20rpx;
-      color: #999999;
-    }
-  }
-
-  // 悬停效果
-  &:active {
-    background-color: #f8f8f8;
-  }
-
-  // 响应式设计
-  @media (max-width: 750rpx) {
-    padding: 20rpx 24rpx;
-    
-    .product-image-container {
-      width: 140rpx;
-      height: 140rpx;
-    }
-    
-    .product-name {
-      font-size: 30rpx;
-    }
-    
-    .product-description {
-      font-size: 22rpx;
-    }
-  }
-}
-
-// 动画效果
-@keyframes selectBounce {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-@keyframes slideOut {
-  0% { 
-    transform: translateX(0);
-    opacity: 1;
-  }
-  100% { 
-    transform: translateX(300rpx);
-    opacity: 0;
-  }
-}
-
-// 加载动画
-@keyframes pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
-}
-
-.image-placeholder {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-// 深色模式支持
-@media (prefers-color-scheme: dark) {
-  .cart-item {
-    background-color: #1c1c1e;
-    border-bottom-color: #38383a;
-    
-    &.selected {
-      background-color: #2c2c2e;
-      
-      .select-checkbox {
-        background-color: $accent-color;
-        border-color: $accent-color;
-      }
-    }
-    
-    .product-name {
-      color: #ffffff;
-    }
-    
-    .product-description {
-      color: #aeaeb2;
-    }
-    
-    .original-price {
-      color: #ffffff;
-      
-      &.crossed-out {
-        color: #8e8e93;
-      }
-    }
-    
-    .stock-text {
-      color: #aeaeb2;
-    }
-    
-    .subtotal-label {
-      color: #aeaeb2;
-    }
-    
-    .select-checkbox {
-      border-color: #48484a;
-      background-color: #1c1c1e;
-    }
-    
-    .image-placeholder,
-    .image-error {
-      background-color: #2c2c2e;
-      color: #8e8e93;
-    }
+  .qty-value {
+    width: 60rpx;
+    height: 48rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26rpx;
+    color: $text-primary;
+    border-left: 1rpx solid #e0e0e0;
+    border-right: 1rpx solid #e0e0e0;
   }
 }
