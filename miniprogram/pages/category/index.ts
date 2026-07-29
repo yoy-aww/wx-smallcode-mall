@@ -1,6 +1,8 @@
 // pages/category/index.ts
 import { CategoryService } from '../../services/category';
 import { ProductService } from '../../services/product';
+import { CartService } from '../../services/cart';
+import { CartManager, CartEventType } from '../../utils/cart-manager';
 
 Page({
   data: {
@@ -321,9 +323,6 @@ Page({
       // 设置添加状态
       this.addingToCart = true;
       
-      // 导入购物车服务
-      const { CartService } = require('../../services/cart');
-      
       // 添加触觉反馈
       wx.vibrateShort({
         type: 'medium'
@@ -390,8 +389,6 @@ Page({
     console.log('Retrying add to cart:', productId);
     
     try {
-      const { CartService } = require('../../services/cart');
-      
       // 显示重试提示
       wx.showLoading({
         title: '重试中...',
@@ -453,7 +450,6 @@ Page({
    */
   async updateCartBadge() {
     try {
-      const { CartService } = require('../../services/cart');
       const itemCount = await CartService.getCartItemCount();
       
       console.log('Cart item count updated:', itemCount);
@@ -471,8 +467,6 @@ Page({
    */
   async setupCartListeners() {
     try {
-      const { CartManager, CartEventType } = require('../../utils/cart-manager');
-      
       // 监听购物车徽章更新事件
       this.cartBadgeListener = (eventData: any) => {
         console.log('Cart badge updated in category page:', eventData.totalItems);
@@ -500,8 +494,6 @@ Page({
    */
   async cleanupCartListeners() {
     try {
-      const { CartManager, CartEventType } = require('../../utils/cart-manager');
-      
       if (this.cartBadgeListener) {
         CartManager.removeEventListener(CartEventType.BADGE_UPDATED, this.cartBadgeListener);
       }

@@ -1,4 +1,6 @@
 // utils/cart-manager.ts
+import { CartService } from '../services/cart';
+
 /**
  * Global cart state manager for handling cart updates across the app
  */
@@ -161,8 +163,6 @@ export class CartManager {
    */
   static async updateBadge() {
     try {
-      // Use require instead of dynamic import for WeChat miniprogram compatibility
-      const { CartService } = require('../services/cart');
       const totalItems = await CartService.getCartItemCount();
 
       this.emit(CartEventType.BADGE_UPDATED, {
@@ -180,7 +180,6 @@ export class CartManager {
    */
   static async getCurrentItemCount(): Promise<number> {
     try {
-      const { CartService } = require('../services/cart');
       return await CartService.getCartItemCount();
     } catch (error) {
       console.error('Failed to get current cart item count:', error);
@@ -193,7 +192,6 @@ export class CartManager {
    */
   static async isProductInCart(productId: string): Promise<boolean> {
     try {
-      const { CartService } = require('../services/cart');
       return await CartService.isProductInCart(productId);
     } catch (error) {
       console.error('Failed to check if product is in cart:', error);
@@ -206,7 +204,6 @@ export class CartManager {
    */
   static async getProductQuantityInCart(productId: string): Promise<number> {
     try {
-      const { CartService } = require('../services/cart');
       return await CartService.getProductQuantityInCart(productId);
     } catch (error) {
       console.error('Failed to get product quantity in cart:', error);
@@ -339,7 +336,6 @@ export class CartManagerExtended extends CartManager {
     this.maintenanceInterval = setInterval(async () => {
       try {
         console.log('Running periodic cart data maintenance');
-        const { CartService } = require('../services/cart');
         await CartService.performDataMaintenance();
       } catch (error) {
         console.error('Error in periodic maintenance:', error);
@@ -360,7 +356,6 @@ export class CartManagerExtended extends CartManager {
       this.initialize();
 
       // Initialize cart service with persistence
-      const { CartService } = require('../services/cart');
       const initResult = await CartService.initializeCart();
 
       if (initResult.success && initResult.data) {
@@ -389,7 +384,6 @@ export class CartManagerExtended extends CartManager {
     try {
       console.log('Performing immediate cart data maintenance');
 
-      const { CartService } = require('../services/cart');
       const maintenanceResult = await CartService.performDataMaintenance();
 
       if (maintenanceResult.success && maintenanceResult.data) {
@@ -417,8 +411,6 @@ export class CartManagerExtended extends CartManager {
     isHealthy: boolean;
   }> {
     try {
-      const { CartService } = require('../services/cart');
-
       const itemCount = await CartService.getCartItemCount();
       const syncStatusResponse = await CartService.getSyncStatus();
 

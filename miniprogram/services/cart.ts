@@ -5,6 +5,7 @@
  */
 
 import { CART_STORAGE_KEYS, CART_ERROR_MESSAGES } from '../constants/cart';
+import { ProductService } from './product';
 
 /**
  * Cart service response interface
@@ -192,9 +193,6 @@ export class CartService {
           data: [],
         };
       }
-
-      // Import ProductService using require to avoid circular dependency
-      const { ProductService } = require('./product');
 
       const cartItemsWithProducts: CartItemWithProduct[] = [];
 
@@ -464,9 +462,6 @@ export class CartService {
         requestedQuantity: number;
         availableStock: number;
       }> = [];
-
-      // Import ProductService using require
-      const { ProductService } = require('./product');
 
       for (const item of items) {
         const productResponse = await ProductService.getProductById(item.productId);
@@ -851,9 +846,6 @@ export class CartService {
         oldQuantity: number;
         newQuantity: number;
       }> = [];
-
-      // Import ProductService using require
-      const { ProductService } = require('./product');
 
       for (const item of cartItems) {
         const productResponse = await ProductService.getProductById(item.productId);

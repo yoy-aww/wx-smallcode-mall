@@ -343,7 +343,3 @@ export class DevTestRunner {
   }
 }
 
-// Auto-initialize in development
-if (DevTestRunner.isDevelopment()) {
-  DevTestRunner.initDevelopmentTools();
-}

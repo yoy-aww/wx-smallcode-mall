@@ -1,5 +1,6 @@
 // app.ts
 import { initializeCartManager, CartManagerExtended } from './utils/cart-manager';
+import { CartStateSynchronizer } from './utils/cart-state-sync';
 
 App<IAppOption>({
   globalData: {},
@@ -67,7 +68,6 @@ App<IAppOption>({
    */
   async syncCartData() {
     try {
-      const { CartStateSynchronizer } = require('./utils/cart-state-sync');
       await CartStateSynchronizer.syncToStorage();
       console.log('Cart data synced on app hide');
     } catch (error) {

@@ -1,5 +1,8 @@
 // pages/product-detail/index.ts
 
+import { ProductService } from '../../services/product';
+import { CartService } from '../../services/cart';
+
 Page({
   data: {
     product: null as Product | null,
@@ -38,9 +41,6 @@ Page({
         loading: true
       });
 
-      // 导入产品服务
-      const { ProductService } = require('../../services/product');
-      
       // 加载产品详情
       const response = await ProductService.getProductById(productId);
       
@@ -163,9 +163,6 @@ Page({
         addingToCart: true
       });
 
-      // 导入购物车服务
-      const { CartService } = require('../../services/cart');
-      
       // 添加到购物车
       const response = await CartService.addToCart(product.id, quantity);
       

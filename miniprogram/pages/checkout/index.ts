@@ -1,6 +1,7 @@
 // pages/checkout/index.ts
 import { CartService } from '../../services/cart';
 import { CartManager, CartEventType } from '../../utils/cart-manager';
+import { ProductService } from '../../services/product';
 import { CART_ERROR_MESSAGES } from '../../constants/cart';
 
 /**
@@ -314,8 +315,6 @@ Page<CheckoutPageData, WechatMiniprogram.Page.CustomOption>({
       const errors: StockValidationResult['errors'] = [];
 
       // 重新获取最新的商品信息进行库存检查
-      const { ProductService } = require('../../services/product');
-
       for (const item of items) {
         const productResponse = await ProductService.getProductById(item.productId);
         

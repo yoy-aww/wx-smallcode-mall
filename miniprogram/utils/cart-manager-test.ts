@@ -4,6 +4,7 @@
  */
 
 import { CartManager, CartEventType } from './cart-manager';
+import { CartService } from '../services/cart';
 
 /**
  * Test cart manager functionality
@@ -62,9 +63,6 @@ export async function testCartServiceIntegration() {
   console.log('Testing CartService integration...');
 
   try {
-    // Test cart service methods that don't use dynamic imports
-    const { CartService } = require('../services/cart');
-
     // Test getting cart items
     const cartItems = await CartService.getCartItems();
     console.log('✓ Got cart items:', cartItems.length);

@@ -7,8 +7,38 @@ import {
   CartThrottler,
   CartMemoryManager
 } from '../../utils/cart-performance-optimizer';
-import { DevTestRunner } from '../../utils/test-runner';
 // Simplified imports for WeChat Mini Program compatibility
+
+/**
+ * Cart page data interface
+ */
+interface CartPageData extends WechatMiniprogram.Page.DataOption {
+  /** Cart items with product details */
+  cartItems: CartItemWithProduct[];
+  /** Selected item IDs */
+  selectedItems: string[];
+  /** Whether all items are selected */
+  selectAll: boolean;
+  /** Page loading state */
+  loading: boolean;
+  /** Error message */
+  error: string;
+  /** Cart summary information */
+  summary: {
+    /** Total number of selected items */
+    totalItems: number;
+    /** Total price of selected items */
+    totalPrice: number;
+    /** Discount amount */
+    discountAmount: number;
+    /** Final price after discount */
+    finalPrice: number;
+  };
+  /** Whether page is in edit mode */
+  editMode: boolean;
+  /** Whether to show floating bottom bar */
+  showFloatingBar: boolean;
+}
 
 /**
  * 购物车页面
@@ -862,12 +892,4 @@ Page<CartPageData, CartPageMethods>({
     });
   },
 
-  /**
-   * Development test menu (only in development)
-   */
-  onLongPress() {
-    if (DevTestRunner.isDevelopment()) {
-      DevTestRunner.showTestMenu();
-    }
-  }
-});
+  });
