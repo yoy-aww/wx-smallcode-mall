@@ -1,5 +1,5 @@
 <!--index.wxml - 首页模板-->
-<navigation-bar title="中医药材商城" back="{{false}}" color="#FFFFFF" background="#8B4513"></navigation-bar>
+<navigation-bar title="中医药材商城" back="{{false}}" color="#333333" background="#FFFFFF"></navigation-bar>
 
 <scroll-view class="page-container" scroll-y type="list">
   <!-- 品牌头部区域 -->
@@ -40,7 +40,7 @@
       <view class="banner-title">{{mainBanner.title}}</view>
       <view class="banner-subtitle">{{mainBanner.subtitle}}</view>
       <view class="banner-audio-btn" wx:if="{{mainBanner.audioUrl}}">
-        <view class="audio-icon">🔊</view>
+        <image class="audio-icon-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEgNUwxNiA5SDIwQzIwLjU1MjMgOSAyMSA5LjQ0NzcyIDIxIDEwVjE0QzIxIDE0LjU1MjMgMjAuNTUyMyAxNSAyMCAxNUgxNkwxMSAxOVY1WiIgZmlsbD0iIzhCNDUxMyIgZmlsbC1vcGFjaXR5PSIwLjgiLz48cGF0aCBkPSJNMTcgMTJDMjAgMTIgMjAgMTggMTcgMTgiIHN0cm9rZT0iIzhCNDUxMyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==" mode="aspectFit"></image>
         <text class="audio-text">点击播放语音介绍</text>
       </view>
     </view>
@@ -51,7 +51,7 @@
     <view class="search-container">
       <view class="search-bar" bindtap="onSearchFocus">
         <view class="search-icon">
-          <text class="search-icon-text">🔍</text>
+          <image class="search-icon-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTUuNSA5QzE1LjUgMTIuNTg5OSAxMi41ODk5IDE1LjUgOSAxNS41QzUuNDEwMTUgMTUuNSAyLjUgMTIuNTg5OSAyLjUgOUMzLjUgNS40MTAxNSA1LjQxMDE1IDIuNSA5IDIuNUMxMi41ODk5IDIuNSAxNS41IDUuNDEwMTUgMTUuNSA5WiIgc3Ryb2tlPSIjQjVBOTlDIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMjEuNSAyMS41TDE0LjUgMTQuNSIgc3Ryb2tlPSIjQjVBOTlDIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==" mode="aspectFit"></image>
         </view>
         <input 
           class="search-input" 
@@ -66,7 +66,7 @@
           disabled="{{searchDisabled}}"
         />
         <view class="search-clear" wx:if="{{searchKeyword}}" bindtap="onSearchClear">
-          <text class="clear-icon">×</text>
+          <image class="clear-icon-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5IiBmaWxsPSIjQ0NDQ0NDIi8+PHBhdGggZD0iTTkgOUwxNSAxNU05IDE1TDE1IDkiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+" mode="aspectFit"></image>
         </view>
       </view>
       
