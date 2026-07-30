@@ -6,18 +6,17 @@
  * 请将 images/imgs/ 目录下的图片上传到你的图片服务器/CDN，
  * 然后将 CDN_BASE_URL 替换为实际的访问地址。
  *
- * 推荐方案：
- * 1. 使用阿里云OSS/腾讯云COS等对象存储
- * 2. 或使用 GitHub + jsDelivr CDN（免费）：
- *    - 将图片上传到 GitHub 仓库
- *    - 发布 Release
- *    - 使用 https://cdn.jsdelivr.net/gh/你的用户名/仓库名@版本号/ 作为 base URL
+ * 当前方案：七牛云 Kodo（免费，国内 CDN 加速）
+ *   1. 注册七牛云账号（https://www.qiniu.com/）
+ *   2. 创建对象存储空间（Bucket），设为公开
+ *   3. 将 images/imgs/ 目录下的所有图片上传到空间根目录
+ *   4. 将下方 IMAGE_BASE_PATH 替换为你的七牛云外链默认域名
+ *      例: http://tiyycecb8.hn-bkt.clouddn.com/
  */
 
-// CDN 图片基础路径（请替换为实际 CDN 地址）
-// 上传图片后，将下方地址替换为你的 CDN 地址
-// 例: https://cdn.jsdelivr.net/gh/你的用户名/mall-images@v1.0.0/images/imgs/
-const IMAGE_BASE_PATH = 'https://cdn.jsdelivr.net/gh/你的用户名/mall-images@v1.0.0/images/imgs/';
+// CDN 图片基础路径（已替换为你的七牛云外链域名）
+// 注意：图片上传在七牛云 Bucket 的 images/imgs/ 子目录下
+export const IMAGE_BASE_PATH = 'http://tiyycecb8.hn-bkt.clouddn.com/images/imgs/';
 
 // 品牌相关图片
 export const BRAND_IMAGES = {

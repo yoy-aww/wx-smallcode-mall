@@ -1,5 +1,7 @@
 // components/cart-item/demo.ts
 
+import { IMAGE_BASE_PATH } from '../../images/image-mapping';
+
 Page({
   data: {
     // 正常商品项
@@ -10,7 +12,7 @@ Page({
       product: {
         id: 'demo-001',
         name: '黄芪党参茶',
-        image: '/images/imgs/herb_ingredients_0.jpg',
+        image: `${IMAGE_BASE_PATH}herb_ingredients_0.jpg`,
         originalPrice: 89.00,
         discountedPrice: 59.00,
         categoryId: 'welfare',
@@ -28,7 +30,7 @@ Page({
       product: {
         id: 'demo-002',
         name: '枸杞菊花茶',
-        image: '/images/imgs/herb_ingredients_3.jpg',
+        image: `${IMAGE_BASE_PATH}herb_ingredients_3.jpg`,
         originalPrice: 68.00,
         discountedPrice: 45.00,
         categoryId: 'welfare',
@@ -46,7 +48,7 @@ Page({
       product: {
         id: 'demo-003',
         name: '红枣桂圆茶',
-        image: '/images/imgs/herb_ingredients_5.jpeg',
+        image: `${IMAGE_BASE_PATH}herb_ingredients_5.jpeg`,
         originalPrice: 78.00,
         discountedPrice: 52.00,
         categoryId: 'welfare',
@@ -64,7 +66,7 @@ Page({
       product: {
         id: 'demo-004',
         name: '陈皮普洱茶',
-        image: '/images/imgs/tea_decoration_3.jpg',
+        image: `${IMAGE_BASE_PATH}tea_decoration_3.jpg`,
         originalPrice: 128.00,
         discountedPrice: 98.00,
         categoryId: 'tea',
@@ -82,7 +84,7 @@ Page({
       product: {
         id: 'demo-005',
         name: '玫瑰花茶',
-        image: '/images/imgs/tea_decoration_7.jpg',
+        image: `${IMAGE_BASE_PATH}tea_decoration_7.jpg`,
         originalPrice: 88.00,
         discountedPrice: 66.00,
         categoryId: 'tea',

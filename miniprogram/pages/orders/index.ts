@@ -1,4 +1,6 @@
 // pages/orders/index.ts
+import { IMAGE_BASE_PATH } from '../../images/image-mapping';
+
 Page({
   data: {
     currentTab: 'all',
@@ -136,7 +138,7 @@ Page({
         {
           id: `item_${index}_1`,
           name: '优质陈皮',
-          image: '/images/imgs/herb_ingredients_0.jpg',
+          image: `${IMAGE_BASE_PATH}herb_ingredients_0.jpg`,
           price: 29.9,
           quantity: 1
         }

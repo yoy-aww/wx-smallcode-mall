@@ -2,6 +2,9 @@
 // 获取应用实例
 const app = getApp<IAppOption>();
 
+// 导入 CDN 图片映射
+import { BRAND_IMAGES, BANNER_IMAGES, CATEGORY_IMAGES, DECORATION_IMAGES } from '../../images/image-mapping';
+
 // 数据接口定义
 interface BrandInfo {
   logo: string;
@@ -65,16 +68,16 @@ Component({
 
     // 品牌信息
     brandInfo: {
-      logo: '/images/imgs/seal_logo_7.jpg', // 使用传统印章风格Logo
+      logo: BRAND_IMAGES.logo,
       slogan: '道地选材 匠求品质 出品即精品',
-      backgroundImage: '/images/imgs/warm_background_5.jpg', // 使用暖色调背景
+      backgroundImage: BRAND_IMAGES.background,
     } as BrandInfo,
 
     // 主横幅信息
     mainBanner: {
       title: '道地溯源',
       subtitle: '枸益补枸',
-      backgroundImage: '/images/imgs/tcm_herbs_banner_3.jpg', // 使用高质量中药材展示背景
+      backgroundImage: BANNER_IMAGES.main,
       audioUrl: '/audio/intro.wav',
     } as MainBanner,
 
@@ -106,12 +109,12 @@ Component({
         id: 'welfare',
         title: '惠民专区',
         subtitle: '款款都划算',
-        backgroundImage: '/images/imgs/gift_box_5.jpg', // 使用新年主题礼品盒，橙色元素突出
+        backgroundImage: CATEGORY_IMAGES.welfare,
         products: [
           {
             id: 'welfare_001',
             name: '优质陈皮',
-            image: '/images/imgs/herb_ingredients_0.jpg', // 使用中药材装饰元素
+            image: DECORATION_IMAGES.herbs[0],
             price: 29.9,
             originalPrice: 39.9,
             tags: ['特价', '热销'],
@@ -119,7 +122,7 @@ Component({
           {
             id: 'welfare_002',
             name: '精选枸杞',
-            image: '/images/imgs/herb_ingredients_3.jpg', // 使用中药材装饰元素
+            image: DECORATION_IMAGES.herbs[1],
             price: 19.9,
             originalPrice: 29.9,
             tags: ['限时'],
@@ -127,7 +130,7 @@ Component({
           {
             id: 'welfare_003',
             name: '当归片',
-            image: '/images/imgs/herb_ingredients_5.jpeg', // 使用中药材装饰元素
+            image: DECORATION_IMAGES.herbs[2],
             price: 24.9,
             originalPrice: 34.9,
             tags: ['优惠'],
@@ -140,12 +143,12 @@ Component({
         id: 'quality',
         title: '品质自营',
         subtitle: '道地选材 精益求精',
-        backgroundImage: '/images/imgs/product_jars_7.jpg', // 使用精美罐装产品展示
+        backgroundImage: CATEGORY_IMAGES.quality,
         products: [
           {
             id: 'quality_001',
             name: '野生人参',
-            image: '/images/imgs/product_jars_3.jpg', // 使用中药材瓶装包装
+            image: CATEGORY_IMAGES.qualityAlt1,
             price: 299.9,
             originalPrice: 399.9,
             tags: ['精品', '野生'],
@@ -153,7 +156,7 @@ Component({
           {
             id: 'quality_002',
             name: '上等黄芪',
-            image: '/images/imgs/product_jars_4.jpg', // 使用传统药材罐装展示
+            image: CATEGORY_IMAGES.qualityAlt2,
             price: 89.9,
             originalPrice: 119.9,
             tags: ['道地'],
@@ -161,7 +164,7 @@ Component({
           {
             id: 'quality_003',
             name: '优质当归',
-            image: '/images/imgs/product_jars_8.jpg', // 使用罐装产品展示
+            image: CATEGORY_IMAGES.qualityAlt3,
             price: 69.9,
             originalPrice: 89.9,
             tags: ['自营'],
@@ -174,12 +177,12 @@ Component({
         id: 'tea',
         title: '爆款茶饮',
         subtitle: '精选茶品',
-        backgroundImage: '/images/imgs/tea_background_5.jpg', // 使用茶叶背景
+        backgroundImage: CATEGORY_IMAGES.tea,
         products: [
           {
             id: 'tea_001',
             name: '铁观音',
-            image: '/images/imgs/tea_decoration_3.jpg', // 使用茶文化装饰元素
+            image: DECORATION_IMAGES.teaDecoration[0],
             price: 128.0,
             originalPrice: 168.0,
             tags: ['热销', '香醇'],
@@ -187,7 +190,7 @@ Component({
           {
             id: 'tea_002',
             name: '普洱茶',
-            image: '/images/imgs/tea_decoration_7.jpg', // 使用茶文化装饰元素
+            image: DECORATION_IMAGES.teaDecoration[1],
             price: 88.0,
             originalPrice: 118.0,
             tags: ['陈年'],
@@ -200,12 +203,12 @@ Component({
         id: 'activity',
         title: '活动专区',
         subtitle: '限时优惠',
-        backgroundImage: '/images/imgs/gift_box_0.jpg', // 使用中式新年礼品盒设计
+        backgroundImage: CATEGORY_IMAGES.activity,
         products: [
           {
             id: 'activity_001',
             name: '新年礼盒',
-            image: '/images/imgs/gift_box_8.jpg', // 使用节庆主题包装
+            image: CATEGORY_IMAGES.activityAlt1,
             price: 199.0,
             originalPrice: 299.0,
             tags: ['限时', '礼盒'],
@@ -213,7 +216,7 @@ Component({
           {
             id: 'activity_002',
             name: '养生套装',
-            image: '/images/imgs/medicine_collage_2.jpg', // 使用中药材拼贴装饰
+            image: DECORATION_IMAGES.collage[0],
             price: 158.0,
             originalPrice: 228.0,
             tags: ['特惠'],
@@ -631,7 +634,7 @@ Component({
       return {
         title: '中医药材商城 - 道地选材 匠求品质',
         path: '/pages/index/index',
-        imageUrl: '/images/imgs/tcm_herbs_banner_4.jpg', // 使用传统中药材配木质研钵作为分享图
+        imageUrl: BANNER_IMAGES.alt1,
       };
     },
   },
