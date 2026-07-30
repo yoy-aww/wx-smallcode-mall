@@ -184,7 +184,7 @@
 
 .product-tag {
   padding: 8rpx 16rpx;
-  background-color: #8B4513;
+  background-color: #d9a680;
   color: #ffffff;
   font-size: 24rpx;
   border-radius: 20rpx;
@@ -251,9 +251,9 @@
 .quantity-btn {
   width: 60rpx;
   height: 60rpx;
-  border: 2rpx solid #8B4513;
+  border: 2rpx solid #d9a680;
   background-color: #ffffff;
-  color: #8B4513;
+  color: #d9a680;
   font-size: 32rpx;
   font-weight: 600;
   border-radius: 8rpx;
@@ -268,7 +268,7 @@
   }
   
   &:not(.disabled):active {
-    background-color: #8B4513;
+    background-color: #d9a680;
     color: #ffffff;
   }
 }
@@ -312,7 +312,7 @@
   }
   
   &.buy-now {
-    background-color: #8B4513;
+    background-color: #d9a680;
     color: #ffffff;
     
     &.disabled {

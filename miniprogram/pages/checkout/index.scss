@@ -1,7 +1,7 @@
 /* pages/checkout/index.scss */
 .checkout-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #fbf9f7;
   padding-bottom: 120rpx;
 }
 
@@ -17,7 +17,7 @@
     width: 60rpx;
     height: 60rpx;
     border: 4rpx solid #e0e0e0;
-    border-top: 4rpx solid #8B4513;
+    border-top: 4rpx solid #d9a680;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
@@ -56,12 +56,16 @@
   }
   
   .retry-button {
-    background-color: #8B4513;
+    background-color: #d9a680;
     color: white;
     border: none;
     border-radius: 8rpx;
     padding: 20rpx 40rpx;
     font-size: 28rpx;
+    
+    &:active {
+      background-color: #c8926e;
+    }
   }
 }
 
@@ -200,7 +204,7 @@
           
           .product-price {
             font-size: 32rpx;
-            color: #8B4513;
+            color: #d9a680;
             font-weight: 600;
           }
           
@@ -233,7 +237,7 @@
       
       &.selected {
         .delivery-name {
-          color: #8B4513;
+          color: #d9a680;
         }
       }
       
@@ -251,7 +255,7 @@
       
       .delivery-fee {
         font-size: 28rpx;
-        color: #8B4513;
+        color: #d9a680;
         font-weight: 600;
       }
     }
@@ -277,7 +281,7 @@
       
       &.selected {
         .payment-name {
-          color: #8B4513;
+          color: #d9a680;
         }
       }
       
@@ -338,7 +342,7 @@
       
       .coupon-selected {
         font-size: 28rpx;
-        color: #8B4513;
+        color: #d9a680;
         margin-right: 10rpx;
       }
       
@@ -402,7 +406,7 @@
         .price-value.final {
           font-size: 36rpx;
           font-weight: 600;
-          color: #8B4513;
+          color: #d9a680;
         }
       }
       
@@ -419,7 +423,7 @@
   }
   
   .submit-order-button {
-    background-color: #8B4513;
+    background-color: #d9a680;
     color: white;
     border: none;
     border-radius: 50rpx;
@@ -523,7 +527,7 @@
         }
         
         &.confirm {
-          color: #8B4513;
+          color: #d9a680;
           font-weight: 600;
         }
       }

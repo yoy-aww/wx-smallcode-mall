@@ -470,7 +470,7 @@ Page({
     // Ensure proper tab highlighting
     if (typeof wx.setTabBarStyle === 'function') {
       wx.setTabBarStyle({
-        selectedColor: '#8B4513',
+        selectedColor: '#d9a680',
         color: '#666666',
       });
     }
@@ -483,7 +483,7 @@ Page({
     try {
       // Set tab bar style to ensure profile tab is highlighted
       wx.setTabBarStyle({
-        selectedColor: '#8B4513',
+        selectedColor: '#d9a680',
         color: '#666666',
         backgroundColor: '#ffffff',
       });

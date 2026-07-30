@@ -86,7 +86,7 @@
 }
 
 .product-tag {
-  background-color: rgba(139, 69, 19, 0.9);
+  background-color: rgba(217, 166, 128, 0.9);
   color: $text-white;
   font-size: $font-size-xs;
   padding: 4rpx 8rpx;
@@ -200,12 +200,12 @@
   // 按钮悬停效果
   &:hover:not(.disabled) {
     background: linear-gradient(135deg, #a0522d, $primary-color);
-    box-shadow: 0 4rpx 12rpx rgba(139, 69, 19, 0.3);
+    box-shadow: 0 4rpx 12rpx rgba(217, 166, 128, 0.3);
   }
 
   // 按钮点击效果
   &.btn-hover:not(.disabled) {
-    background: linear-gradient(135deg, #654321, #8b4513);
+    background: linear-gradient(135deg, #c8926e, #d9a680);
     transform: scale(0.98);
   }
 
@@ -287,13 +287,13 @@
 /* 中医风格的阴影效果 */
 .product-card {
   box-shadow:
-    0 4rpx 12rpx rgba(139, 69, 19, 0.08),
-    0 0 0 1rpx rgba(139, 69, 19, 0.04);
+    0 4rpx 12rpx rgba(217, 166, 128, 0.08),
+    0 0 0 1rpx rgba(217, 166, 128, 0.04);
 
   &:hover {
     box-shadow:
-      0 8rpx 24rpx rgba(139, 69, 19, 0.12),
-      0 0 0 1rpx rgba(139, 69, 19, 0.08);
+      0 8rpx 24rpx rgba(217, 166, 128, 0.12),
+      0 0 0 1rpx rgba(217, 166, 128, 0.08);
   }
 }
 

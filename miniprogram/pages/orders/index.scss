@@ -22,7 +22,7 @@
   position: relative;
   
   &.active {
-    color: #8b4513;
+    color: #d9a680;
     font-weight: 600;
     
     &::after {
@@ -33,7 +33,7 @@
       transform: translateX(-50%);
       width: 60rpx;
       height: 4rpx;
-      background: #8b4513;
+      background: #d9a680;
       border-radius: 2rpx;
     }
   }
@@ -75,7 +75,7 @@
 
 .order-status {
   font-size: 28rpx;
-  color: #8b4513;
+  color: #d9a680;
   font-weight: 600;
 }
 
@@ -120,7 +120,7 @@
 
 .product-price {
   font-size: 32rpx;
-  color: #8b4513;
+  color: #d9a680;
   font-weight: 600;
 }
 
@@ -155,7 +155,7 @@
   border: none;
   
   &.primary {
-    background: #8b4513;
+    background: #d9a680;
     color: #fff;
   }
   

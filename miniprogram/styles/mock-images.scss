@@ -9,7 +9,7 @@
 .brand-logo-mock {
   width: 200rpx;
   height: 80rpx;
-  background: linear-gradient(135deg, #8B4513 0%, #DAA520 100%);
+  background: linear-gradient(135deg, #d9a680 0%, #DAA520 100%);
   border-radius: 8rpx;
   display: flex;
   align-items: center;
@@ -25,7 +25,7 @@
 
 /* 品牌背景模拟 */
 .brand-bg-mock {
-  background: linear-gradient(135deg, #8B4513 0%, #CD853F 50%, #DAA520 100%);
+  background: linear-gradient(135deg, #d9a680 0%, #CD853F 50%, #DAA520 100%);
   position: relative;
 }
 
@@ -38,7 +38,7 @@
   bottom: 0;
   background-image: 
     radial-gradient(circle at 20% 80%, rgba(218, 165, 32, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 69, 19, 0.3) 0%, transparent 50%);
+    radial-gradient(circle at 80% 20%, rgba(217, 166, 128, 0.3) 0%, transparent 50%);
 }
 
 /* ==================== 主横幅模拟 ==================== */
@@ -133,7 +133,7 @@
 
 /* 品质自营背景 */
 .category-quality-bg-mock {
-  background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
+  background: linear-gradient(135deg, #d9a680 0%, #A0522D 50%, #D2691E 100%);
   position: relative;
 }
 

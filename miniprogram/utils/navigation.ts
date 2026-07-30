@@ -180,7 +180,7 @@ export class NavigationManager {
     try {
       // Set tab bar colors to ensure proper highlighting
       wx.setTabBarStyle({
-        selectedColor: '#8B4513',
+        selectedColor: '#d9a680',
         color: '#666666',
         backgroundColor: '#ffffff'
       });

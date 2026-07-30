@@ -1,6 +1,6 @@
 <!-- pages/cart/index.wxml -->
 <!-- 导航栏 -->
-<navigation-bar title="{{editMode ? '编辑购物车' : '购物车'}}" back="{{false}}" color="#FFFFFF" background="#8B4513"></navigation-bar>
+<navigation-bar title="{{editMode ? '编辑购物车' : '购物车'}}" back="{{false}}" color="#3f322b" background="#FFFFFF"></navigation-bar>
 
 <view class="cart-page">
   <!-- 加载状态 -->
@@ -19,8 +19,7 @@
   <!-- 空购物车 -->
   <view wx:elif="{{cartItems.length === 0}}" class="empty-state">
     <view class="empty-icon">
-      <image src="/images/empty-cart.png" mode="aspectFit" wx:if="{{false}}"></image>
-      <view class="empty-icon-placeholder">🛒</view>
+      <image class="empty-icon-svg" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDY0IDY0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjI4IiBmaWxsPSIjRTVEREQ1Ii8+PHBhdGggZD0iTTE4IDI0SDQ2TDQ0IDQ0SDIwTDE4IDI0WiIgc3Ryb2tlPSIjZDlhNjgwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMjQgMjRWMjJDMjQgMTcuNTgxNyAyNy41ODE3IDE0IDMyIDE0QzM2LjQxODMgMTQgNDAgMTcuNTgxNyA0MCAyMlYyNCIgc3Ryb2tlPSIjZDlhNjgwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjI0IiBjeT0iNDgiIHI9IjMiIGZpbGw9IiNkOWE2ODAiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQ4IiByPSIzIiBmaWxsPSIjZDlhNjgwIi8+PC9zdmc+" mode="aspectFit"></image>
     </view>
     <text class="empty-title">购物车还是空的</text>
     <text class="empty-desc">快去挑选心仪的中药材吧</text>

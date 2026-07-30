@@ -1,12 +1,12 @@
 <!--pages/product-detail/index.wxml-->
 <view class="product-detail-page">
   <!-- 自定义导航栏 -->
-  <navigation-bar 
-    title="{{product ? product.name : '商品详情'}}" 
-    background="#8B4513" 
-    color="#FFFFFF"
-    back="{{true}}"
-    bindback="onBack"
+<navigation-bar 
+  title="{{product ? product.name : '商品详情'}}" 
+  background="#FFFFFF" 
+  color="#3f322b"
+  back="{{true}}"
+  bindback="onBack"
   />
   
   <!-- 加载状态 -->

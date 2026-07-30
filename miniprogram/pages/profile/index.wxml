@@ -1,5 +1,5 @@
 <!--pages/profile/index.wxml-->
-<navigation-bar title="我的" back="{{false}}" color="#FFFFFF" background="#8B4513"></navigation-bar>
+<navigation-bar title="我的" back="{{false}}" color="#3f322b" background="#FFFFFF"></navigation-bar>
 <view class="profile-page" bindlongpress="onLongPress">
   <!-- Loading State -->
   <view wx:if="{{pageLoading}}" class="loading-container">

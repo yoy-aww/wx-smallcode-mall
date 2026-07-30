@@ -1,10 +1,10 @@
 <!--pages/category/index.wxml-->
 <view class="category-page">
-  <!-- 自定义导航栏 -->
+  <!-- 自定义导航栏 - 设计稿：浅色导航栏 -->
   <navigation-bar 
     title="商品分类" 
-    background="#8B4513" 
-    color="#FFFFFF"
+    background="#FFFFFF" 
+    color="#3f322b"
     back="{{false}}"
   />
   
@@ -99,7 +99,7 @@
           
           <!-- 空状态 -->
           <view wx:else class="product-empty">
-            <view class="empty-icon">🛍️</view>
+            <image class="empty-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDY0IDY0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjI4IiBmaWxsPSIjRTVEREQ1Ii8+PHBhdGggZD0iTTIwIDI0TDQ0IDI0TTQ0IDI0TDQwIDQ0SDI0TDIwIDI0WiIgc3Ryb2tlPSIjZDlhNjgwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMjYgMjRMMjYgMjBDMjYgMTYuNjg2MyAyOC42ODYzIDE0IDMyIDE0QzM1LjMxMzcgMTQgMzggMTYuNjg2MyAzOCAyMFYyNCIgc3Ryb2tlPSIjZDlhNjgwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==" mode="aspectFit"></image>
             <text class="empty-title">暂无商品</text>
             <text class="empty-subtitle">该分类下暂时没有商品</text>
             <text class="empty-hint">试试其他分类吧</text>
