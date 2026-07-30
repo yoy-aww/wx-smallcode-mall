@@ -1,6 +1,0 @@
-{
-  "usingComponents": {
-    "cart-item": "./index"
-  },
-  "navigationBarTitleText": "购物车商品项组件演示"
-}
