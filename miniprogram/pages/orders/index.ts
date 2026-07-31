@@ -138,7 +138,7 @@ Page({
         {
           id: `item_${index}_1`,
           name: '优质陈皮',
-          image: `${IMAGE_BASE_PATH}herb_ingredients_0.jpg`,
+          image: getImageUrl('herb_ingredients_0.jpg'),
           price: 29.9,
           quantity: 1
         }

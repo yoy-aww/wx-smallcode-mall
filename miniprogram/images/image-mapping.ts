@@ -1,192 +1,179 @@
 /**
  * 图片资源映射文件
- * 根据图片素材使用指南整理的图片路径映射
+ * =============================================
+ * 分层架构：按变动频率区分图片来源
  *
- * 注意：由于微信小程序包大小限制（2MB），所有图片需托管到 CDN 远程加载。
- * 请将 images/imgs/ 目录下的图片上传到你的图片服务器/CDN，
- * 然后将 CDN_BASE_URL 替换为实际的访问地址。
+ *  ┌─ 静态图片（硬编码常量） ──────────────────────┐
+ *  │  Logo / 图标 / 装饰 / 纹理 / 分类背景         │
+ *  │  → 几乎不变，直接编译进代码                   │
+ *  └──────────────────────────────────────────────┘
  *
- * 当前方案：七牛云 Kodo（免费，国内 CDN 加速）
- *   1. 注册七牛云账号（https://www.qiniu.com/）
- *   2. 创建对象存储空间（Bucket），设为公开
- *   3. 将 images/imgs/ 目录下的所有图片上传到空间根目录
- *   4. 将下方 IMAGE_BASE_PATH 替换为你的七牛云外链默认域名
- *      例: http://tiyycecb8.hn-bkt.clouddn.com/
+ *  ┌─ 动态图片（接口返回） ────────────────────────┐
+ *  │  Banner / 活动图  → banner-service.ts        │
+ *  │  产品图            → 随 product API 返回       │
+ *  │  → 频繁变动，走接口，无需发版                  │
+ *  └──────────────────────────────────────────────┘
+ *
+ * 注意：微信小程序包大小限制（2MB），图片需托管到 CDN。
+ * 当前 CDN: 七牛云 Kodo
+ * 上传: images/imgs/ 目录到七牛云 Bucket 根目录
  */
 
-// CDN 图片基础路径（已替换为你的七牛云外链域名）
-// 注意：图片上传在七牛云 Bucket 的 images/imgs/ 子目录下
+// ==================== CDN 基础路径 ====================
+
 export const IMAGE_BASE_PATH = 'http://tiyycecb8.hn-bkt.clouddn.com/images/imgs/';
+
+/**
+ * 运行时拼接完整 URL
+ * 所有图片都通过此函数获取，换域名只需改 IMAGE_BASE_PATH
+ */
+export function getImageUrl(filename: string): string {
+  return `${IMAGE_BASE_PATH}${filename}`;
+}
+
+// ==================== 第一层：静态图片（硬编码常量） ====================
+// 这些图片几乎不变，直接编译进代码，无需走接口
 
 // 品牌相关图片
 export const BRAND_IMAGES = {
-  // Logo相关 - 使用传统印章风格
-  logo: `${IMAGE_BASE_PATH}seal_logo_7.jpg`,
-  logoAlt1: `${IMAGE_BASE_PATH}seal_logo_5.jpg`,
-  logoAlt2: `${IMAGE_BASE_PATH}seal_logo_8.jpg`,
-
-  // 品牌背景 - 暖色调背景
-  background: `${IMAGE_BASE_PATH}warm_background_5.jpg`,
-  backgroundAlt1: `${IMAGE_BASE_PATH}warm_background_1.jpg`,
-  backgroundAlt2: `${IMAGE_BASE_PATH}warm_background_7.jpg`,
-};
-
-// 主横幅图片
-export const BANNER_IMAGES = {
-  // 主横幅背景 - 高质量中药材展示
-  main: `${IMAGE_BASE_PATH}tcm_herbs_banner_3.jpg`,
-  alt1: `${IMAGE_BASE_PATH}tcm_herbs_banner_4.jpg`, // 传统中药材配木质研钵
-  alt2: `${IMAGE_BASE_PATH}tcm_herbs_banner_1.jpg`, // 木碗盛装中药材
+  logo: getImageUrl('seal_logo_7.jpg'),
+  logoAlt1: getImageUrl('seal_logo_5.jpg'),
+  logoAlt2: getImageUrl('seal_logo_8.jpg'),
+  background: getImageUrl('warm_background_5.jpg'),
+  backgroundAlt1: getImageUrl('warm_background_1.jpg'),
+  backgroundAlt2: getImageUrl('warm_background_7.jpg'),
 };
 
 // 功能图标
 export const ICON_IMAGES = {
-  // 电商功能图标
-  member: `${IMAGE_BASE_PATH}ecommerce_icons_9.png`,
-  checkin: `${IMAGE_BASE_PATH}ecommerce_icons_2.jpg`,
-  general: `${IMAGE_BASE_PATH}ecommerce_icons_3.jpg`,
+  member: getImageUrl('ecommerce_icons_9.png'),
+  checkin: getImageUrl('ecommerce_icons_2.jpg'),
+  general: getImageUrl('ecommerce_icons_3.jpg'),
 };
 
-// 分类背景图片
+// 分类背景图片（这些是每个分类的固定背景图，偶尔才改）
 export const CATEGORY_IMAGES = {
-  // 惠民专区 - 促销礼品素材
-  welfare: `${IMAGE_BASE_PATH}gift_box_5.jpg`, // 新年主题礼品盒，橙色元素突出
-  welfareAlt1: `${IMAGE_BASE_PATH}gift_box_0.jpg`, // 中式新年礼品盒设计
-  welfareAlt2: `${IMAGE_BASE_PATH}gift_box_8.jpg`, // 节庆主题包装
-
-  // 品质自营 - 产品展示图片
-  quality: `${IMAGE_BASE_PATH}product_jars_7.jpg`, // 精美罐装产品展示
-  qualityAlt1: `${IMAGE_BASE_PATH}product_jars_3.jpg`, // 中药材瓶装包装
-  qualityAlt2: `${IMAGE_BASE_PATH}product_jars_4.jpg`, // 传统药材罐装展示
-  qualityAlt3: `${IMAGE_BASE_PATH}product_jars_8.jpg`,
-
-  // 茶饮专区 - 茶饮专区素材
-  tea: `${IMAGE_BASE_PATH}tea_background_5.jpg`, // 茶叶背景
-  teaAlt1: `${IMAGE_BASE_PATH}tea_background_7.jpg`,
-  teaAlt2: `${IMAGE_BASE_PATH}tea_background_9.jpg`,
-
-  // 活动专区 - 促销礼品素材
-  activity: `${IMAGE_BASE_PATH}gift_box_0.jpg`, // 中式新年礼品盒设计
-  activityAlt1: `${IMAGE_BASE_PATH}gift_box_8.jpg`, // 节庆主题包装
+  welfare: getImageUrl('gift_box_5.jpg'),
+  welfareAlt1: getImageUrl('gift_box_0.jpg'),
+  welfareAlt2: getImageUrl('gift_box_8.jpg'),
+  quality: getImageUrl('product_jars_7.jpg'),
+  qualityAlt1: getImageUrl('product_jars_3.jpg'),
+  qualityAlt2: getImageUrl('product_jars_4.jpg'),
+  qualityAlt3: getImageUrl('product_jars_8.jpg'),
+  tea: getImageUrl('tea_background_5.jpg'),
+  teaAlt1: getImageUrl('tea_background_7.jpg'),
+  teaAlt2: getImageUrl('tea_background_9.jpg'),
+  activity: getImageUrl('gift_box_0.jpg'),
+  activityAlt1: getImageUrl('gift_box_8.jpg'),
 };
 
 // 装饰元素图片
 export const DECORATION_IMAGES = {
-  // 中药材装饰元素
   herbs: [
-    `${IMAGE_BASE_PATH}herb_ingredients_0.jpg`,
-    `${IMAGE_BASE_PATH}herb_ingredients_3.jpg`,
-    `${IMAGE_BASE_PATH}herb_ingredients_5.jpeg`,
+    getImageUrl('herb_ingredients_0.jpg'),
+    getImageUrl('herb_ingredients_3.jpg'),
+    getImageUrl('herb_ingredients_5.jpeg'),
   ],
-
-  // 粉末状药材装饰
   powder: [
-    `${IMAGE_BASE_PATH}powder_elements_3.png`,
-    `${IMAGE_BASE_PATH}powder_elements_6.jpg`,
-    `${IMAGE_BASE_PATH}powder_elements_8.jpg`,
+    getImageUrl('powder_elements_3.png'),
+    getImageUrl('powder_elements_6.jpg'),
+    getImageUrl('powder_elements_8.jpg'),
   ],
-
-  // 中药材拼贴装饰
   collage: [
-    `${IMAGE_BASE_PATH}medicine_collage_2.jpg`,
-    `${IMAGE_BASE_PATH}medicine_collage_7.jpg`,
-    `${IMAGE_BASE_PATH}medicine_collage_9.jpg`,
+    getImageUrl('medicine_collage_2.jpg'),
+    getImageUrl('medicine_collage_7.jpg'),
+    getImageUrl('medicine_collage_9.jpg'),
   ],
-
-  // 绿色植物装饰
   plants: [
-    `${IMAGE_BASE_PATH}green_plants_1.jpg`,
-    `${IMAGE_BASE_PATH}green_plants_3.jpg`,
-    `${IMAGE_BASE_PATH}green_plants_6.jpg`,
-    `${IMAGE_BASE_PATH}green_plants_9.jpg`,
+    getImageUrl('green_plants_1.jpg'),
+    getImageUrl('green_plants_3.jpg'),
+    getImageUrl('green_plants_6.jpg'),
+    getImageUrl('green_plants_9.jpg'),
   ],
-
-  // 茶文化装饰元素
   teaDecoration: [
-    `${IMAGE_BASE_PATH}tea_decoration_3.jpg`,
-    `${IMAGE_BASE_PATH}tea_decoration_7.jpg`,
-    `${IMAGE_BASE_PATH}tea_decoration_8.jpg`,
+    getImageUrl('tea_decoration_3.jpg'),
+    getImageUrl('tea_decoration_7.jpg'),
+    getImageUrl('tea_decoration_8.jpg'),
   ],
 };
 
 // 背景纹理图片
 export const TEXTURE_IMAGES = {
-  // 木质纹理背景
   wood: [
-    `${IMAGE_BASE_PATH}wood_texture_2.jpg`,
-    `${IMAGE_BASE_PATH}wood_texture_4.jpg`,
-    `${IMAGE_BASE_PATH}wood_texture_6.jpg`,
+    getImageUrl('wood_texture_2.jpg'),
+    getImageUrl('wood_texture_4.jpg'),
+    getImageUrl('wood_texture_6.jpg'),
   ],
-
-  // 牛皮纸纹理背景
   paper: [
-    `${IMAGE_BASE_PATH}paper_texture_2.jpg`,
-    `${IMAGE_BASE_PATH}paper_texture_5.jpg`,
-    `${IMAGE_BASE_PATH}paper_texture_7.jpg`,
+    getImageUrl('paper_texture_2.jpg'),
+    getImageUrl('paper_texture_5.jpg'),
+    getImageUrl('paper_texture_7.jpg'),
   ],
-
-  // 传统边框装饰
   border: [
-    `${IMAGE_BASE_PATH}traditional_border_0.jpg`,
-    `${IMAGE_BASE_PATH}traditional_border_1.jpg`,
-    `${IMAGE_BASE_PATH}traditional_border_7.jpg`,
+    getImageUrl('traditional_border_0.jpg'),
+    getImageUrl('traditional_border_1.jpg'),
+    getImageUrl('traditional_border_7.jpg'),
   ],
 };
 
-// 分享图片
-export const SHARE_IMAGES = {
-  default: `${IMAGE_BASE_PATH}tcm_herbs_banner_4.jpg`, // 传统中药材配木质研钵
-  alt1: `${IMAGE_BASE_PATH}tcm_herbs_banner_3.jpg`, // 高质量中药材展示
-  alt2: `${IMAGE_BASE_PATH}product_jars_7.jpg`, // 精美罐装产品展示
+// ==================== 第二层：Banner 主横幅图片（静态版本） ====================
+// 这些图在开发阶段使用，上线后由 banner-service.ts 从接口获取
+// 保留此常量作为开发回退，避免接口不可用时页面空白
+export const BANNER_IMAGES = {
+  main: getImageUrl('tcm_herbs_banner_3.jpg'),
+  alt1: getImageUrl('tcm_herbs_banner_4.jpg'),
+  alt2: getImageUrl('tcm_herbs_banner_1.jpg'),
 };
 
-// 推荐使用组合（根据素材指南）
+// ==================== 分享图片 ====================
+
+export const SHARE_IMAGES = {
+  default: getImageUrl('tcm_herbs_banner_4.jpg'),
+  alt1: getImageUrl('tcm_herbs_banner_3.jpg'),
+  alt2: getImageUrl('product_jars_7.jpg'),
+};
+
+// ==================== 推荐使用组合（素材指南） ====================
+
 export const RECOMMENDED_COMBINATIONS = {
-  // 首页主横幅
   mainBanner: {
     background: BANNER_IMAGES.main,
-    overlay: 'rgba(0, 0, 0, 0.3)', // 文字叠加透明度
+    overlay: 'rgba(0, 0, 0, 0.3)',
   },
-
-  // 产品展示区
   productDisplay: {
     foreground: CATEGORY_IMAGES.quality,
-    background: TEXTURE_IMAGES.wood[2], // wood_texture_6.jpg
+    background: TEXTURE_IMAGES.wood[2],
   },
-
-  // 促销专区
   promotion: {
     background: CATEGORY_IMAGES.welfare,
-    theme: 'orange', // 橙色主题配色
+    theme: 'orange',
   },
-
-  // 茶饮专区
   teaSection: {
-    decoration: DECORATION_IMAGES.teaDecoration[2], // tea_decoration_8.jpg
+    decoration: DECORATION_IMAGES.teaDecoration[2],
     background: CATEGORY_IMAGES.tea,
   },
-
-  // 整体背景
   pageBackground: {
-    primary: BRAND_IMAGES.background, // warm_background_5.jpg
-    texture: TEXTURE_IMAGES.paper[0], // paper_texture_2.jpg
+    primary: BRAND_IMAGES.background,
+    texture: TEXTURE_IMAGES.paper[0],
   },
 };
 
-// 图片质量评分（根据素材指南）
-export const IMAGE_QUALITY_SCORES = {
-  [CATEGORY_IMAGES.welfare]: 0.95, // gift_box_5.jpg
-  [CATEGORY_IMAGES.quality]: 0.92, // product_jars_7.jpg
-  [BANNER_IMAGES.main]: 0.92, // tcm_herbs_banner_3.jpg
-  [CATEGORY_IMAGES.welfareAlt1]: 0.94, // gift_box_0.jpg
-  [CATEGORY_IMAGES.activityAlt1]: 0.94, // gift_box_8.jpg
-  [CATEGORY_IMAGES.qualityAlt1]: 0.91, // product_jars_3.jpg
-  [BANNER_IMAGES.alt1]: 0.87, // tcm_herbs_banner_4.jpg
-  [CATEGORY_IMAGES.qualityAlt2]: 0.87, // product_jars_4.jpg
-  [BANNER_IMAGES.alt2]: 0.86, // tcm_herbs_banner_1.jpg
+// ==================== 图片质量评分 ====================
+
+export const IMAGE_QUALITY_SCORES: Record<string, number> = {
+  [CATEGORY_IMAGES.welfare]: 0.95,
+  [CATEGORY_IMAGES.quality]: 0.92,
+  [BANNER_IMAGES.main]: 0.92,
+  [CATEGORY_IMAGES.welfareAlt1]: 0.94,
+  [CATEGORY_IMAGES.activityAlt1]: 0.94,
+  [CATEGORY_IMAGES.qualityAlt1]: 0.91,
+  [BANNER_IMAGES.alt1]: 0.87,
+  [CATEGORY_IMAGES.qualityAlt2]: 0.87,
+  [BANNER_IMAGES.alt2]: 0.86,
 };
 
-// 导出默认图片配置
+// ==================== 默认图片配置 ====================
+
 export const DEFAULT_IMAGES = {
   brandLogo: BRAND_IMAGES.logo,
   brandBackground: BRAND_IMAGES.background,

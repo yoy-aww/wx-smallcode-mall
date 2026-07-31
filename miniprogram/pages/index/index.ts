@@ -4,6 +4,8 @@ const app = getApp<IAppOption>();
 
 // 导入 CDN 图片映射
 import { BRAND_IMAGES, BANNER_IMAGES, CATEGORY_IMAGES, DECORATION_IMAGES } from '../../images/image-mapping';
+// 导入 Banner 服务（Banner 图片随活动变动，走接口）
+import { BannerService, Banner } from '../../services/banner-service';
 
 // 数据接口定义
 interface BrandInfo {
@@ -73,13 +75,17 @@ Component({
       backgroundImage: BRAND_IMAGES.background,
     } as BrandInfo,
 
-    // 主横幅信息
+    // 主横幅信息（静态回退，上线后由 BannerService 动态获取）
     mainBanner: {
       title: '道地溯源',
       subtitle: '枸益补枸',
       backgroundImage: BANNER_IMAGES.main,
       audioUrl: '/audio/intro.wav',
     } as MainBanner,
+
+    // 轮播列表（由 BannerService 获取，支持多图轮播）
+    banners: [] as Banner[],
+    bannersLoading: false,
 
     // 搜索配置
     searchConfig: {
@@ -241,9 +247,48 @@ Component({
     },
 
     // 初始化页面数据
-    initPageData() {
-      // 这里可以调用API获取动态数据
-      // 暂时使用静态数据
+    async initPageData() {
+      console.log('[首页] 开始加载动态数据...');
+
+      // 加载 Banner（高频变动，走接口）
+      await this.loadBanners();
+
+      // 将来扩展：加载公告、加载推荐商品等
+      // await this.loadAnnouncements();
+      // await this.loadRecommendProducts();
+    },
+
+    /**
+     * 加载 Banner 轮播数据
+     * Banner 图片频繁变动（活动/促销），走 BannerService
+     * 接口失败时自动降级为静态回退数据
+     */
+    async loadBanners() {
+      this.setData({ bannersLoading: true });
+      try {
+        const banners = await BannerService.getBanners();
+        if (banners && banners.length > 0) {
+          // 取第一个 Banner 作为主横幅展示
+          const first = banners[0];
+          this.setData({
+            banners,
+            mainBanner: {
+              title: first.title || '道地溯源',
+              subtitle: first.subtitle || '枸益补枸',
+              backgroundImage: first.image,
+              audioUrl: first.audioUrl,
+            },
+            bannersLoading: false,
+          });
+          console.log(`[首页] 加载了 ${banners.length} 个 Banner`);
+        } else {
+          this.setData({ bannersLoading: false });
+        }
+      } catch (error) {
+        console.error('[首页] 加载 Banner 失败，使用静态回退:', error);
+        this.setData({ bannersLoading: false });
+        // 保持 data 中 mainBanner 的静态回退值不变
+      }
     },
 
     // ==================== 搜索功能相关方法 ====================

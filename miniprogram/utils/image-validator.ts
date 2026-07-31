@@ -1,150 +1,156 @@
 /**
  * 图片路径验证工具
- * 用于验证产品图片路径是否存在
+ * 用于验证图片路径是否存在，按图片类型分层验证
+ *
+ * 分层说明：
+ *  - 静态图片（硬编码常量）：可离线验证，编译时就知道是否存在
+ *  - 产品图片                   ：随 API 返回，运行时验证
+ *  - Banner / 活动图           ：随 API 返回，运行时验证
  */
 
-import { IMAGE_BASE_PATH } from '../images/image-mapping';
+import { getImageUrl } from '../images/image-mapping';
 
-/**
- * 实际存在的图片文件列表
- * 基于 mall/miniprogram/images/imgs/ 目录的实际文件
- */
-const EXISTING_IMAGES = [
-  `${IMAGE_BASE_PATH}01_smartphone.png`,
-  `${IMAGE_BASE_PATH}02_laptop.jpeg`,
-  `${IMAGE_BASE_PATH}03_camera.jpg`,
-  `${IMAGE_BASE_PATH}04_coffee.jpg`,
-  `${IMAGE_BASE_PATH}05_skincare.jpg`,
-  `${IMAGE_BASE_PATH}06_watch.jpg`,
-  `${IMAGE_BASE_PATH}07_shoes.jpg`,
-  `${IMAGE_BASE_PATH}08_tshirt.jpeg`,
-  `${IMAGE_BASE_PATH}09_handbag.jpg`,
-  `${IMAGE_BASE_PATH}10_backpack.jpg`,
-  `${IMAGE_BASE_PATH}11_thermos.jpg`,
-  `${IMAGE_BASE_PATH}12_water_bottle.jpg`,
-  `${IMAGE_BASE_PATH}13_earbuds.jpg`,
-  `${IMAGE_BASE_PATH}14_jeans.jpeg`,
-  `${IMAGE_BASE_PATH}15_lamp.jpg`,
-  `${IMAGE_BASE_PATH}ecommerce_icons_2.jpg`,
-  `${IMAGE_BASE_PATH}ecommerce_icons_3.jpg`,
-  `${IMAGE_BASE_PATH}ecommerce_icons_9.png`,
-  `${IMAGE_BASE_PATH}gift_box_0.jpg`,
-  `${IMAGE_BASE_PATH}gift_box_5.jpg`,
-  `${IMAGE_BASE_PATH}gift_box_8.jpg`,
-  `${IMAGE_BASE_PATH}green_plants_1.jpg`,
-  `${IMAGE_BASE_PATH}green_plants_3.jpg`,
-  `${IMAGE_BASE_PATH}green_plants_6.jpg`,
-  `${IMAGE_BASE_PATH}green_plants_9.jpg`,
-  `${IMAGE_BASE_PATH}herb_ingredients_0.jpg`,
-  `${IMAGE_BASE_PATH}herb_ingredients_3.jpg`,
-  `${IMAGE_BASE_PATH}herb_ingredients_5.jpeg`,
-  `${IMAGE_BASE_PATH}medicine_collage_2.jpg`,
-  `${IMAGE_BASE_PATH}medicine_collage_7.jpg`,
-  `${IMAGE_BASE_PATH}medicine_collage_9.jpg`,
-  `${IMAGE_BASE_PATH}paper_texture_2.jpg`,
-  `${IMAGE_BASE_PATH}paper_texture_5.jpg`,
-  `${IMAGE_BASE_PATH}paper_texture_7.jpg`,
-  `${IMAGE_BASE_PATH}powder_elements_3.png`,
-  `${IMAGE_BASE_PATH}powder_elements_6.jpg`,
-  `${IMAGE_BASE_PATH}powder_elements_8.jpg`,
-  `${IMAGE_BASE_PATH}product_jars_3.jpg`,
-  `${IMAGE_BASE_PATH}product_jars_4.jpg`,
-  `${IMAGE_BASE_PATH}product_jars_7.jpg`,
-  `${IMAGE_BASE_PATH}product_jars_8.jpg`,
-  `${IMAGE_BASE_PATH}seal_logo_5.jpg`,
-  `${IMAGE_BASE_PATH}seal_logo_7.jpg`,
-  `${IMAGE_BASE_PATH}seal_logo_8.jpg`,
-  `${IMAGE_BASE_PATH}tcm_herbs_banner_1.jpg`,
-  `${IMAGE_BASE_PATH}tcm_herbs_banner_3.jpg`,
-  `${IMAGE_BASE_PATH}tcm_herbs_banner_4.jpg`,
-  `${IMAGE_BASE_PATH}tea_background_5.jpg`,
-  `${IMAGE_BASE_PATH}tea_background_7.jpg`,
-  `${IMAGE_BASE_PATH}tea_background_9.jpg`,
-  `${IMAGE_BASE_PATH}tea_decoration_3.jpg`,
-  `${IMAGE_BASE_PATH}tea_decoration_7.jpg`,
-  `${IMAGE_BASE_PATH}tea_decoration_8.jpg`,
-  `${IMAGE_BASE_PATH}traditional_border_0.jpg`,
-  `${IMAGE_BASE_PATH}traditional_border_1.jpg`,
-  `${IMAGE_BASE_PATH}traditional_border_7.jpg`,
-  `${IMAGE_BASE_PATH}warm_background_1.jpg`,
-  `${IMAGE_BASE_PATH}warm_background_5.jpg`,
-  `${IMAGE_BASE_PATH}warm_background_7.jpg`,
-  `${IMAGE_BASE_PATH}wood_texture_2.jpg`,
-  `${IMAGE_BASE_PATH}wood_texture_4.jpg`,
-  `${IMAGE_BASE_PATH}wood_texture_6.jpg`
+// ==================== 静态图片映射 ====================
+// 这些是 images/imgs/ 目录中实际存在的文件
+// 新增图片时只需在此添加文件名
+
+const EXISTING_IMAGE_FILES = [
+  '01_smartphone.png',
+  '02_laptop.jpeg',
+  '03_camera.jpg',
+  '04_coffee.jpg',
+  '05_skincare.jpg',
+  '06_watch.jpg',
+  '07_shoes.jpg',
+  '08_tshirt.jpeg',
+  '09_handbag.jpg',
+  '10_backpack.jpg',
+  '11_thermos.jpg',
+  '12_water_bottle.jpg',
+  '13_earbuds.jpg',
+  '14_jeans.jpeg',
+  '15_lamp.jpg',
+  'ecommerce_icons_2.jpg',
+  'ecommerce_icons_3.jpg',
+  'ecommerce_icons_9.png',
+  'gift_box_0.jpg',
+  'gift_box_5.jpg',
+  'gift_box_8.jpg',
+  'green_plants_1.jpg',
+  'green_plants_3.jpg',
+  'green_plants_6.jpg',
+  'green_plants_9.jpg',
+  'herb_ingredients_0.jpg',
+  'herb_ingredients_3.jpg',
+  'herb_ingredients_5.jpeg',
+  'medicine_collage_2.jpg',
+  'medicine_collage_7.jpg',
+  'medicine_collage_9.jpg',
+  'paper_texture_2.jpg',
+  'paper_texture_5.jpg',
+  'paper_texture_7.jpg',
+  'powder_elements_3.png',
+  'powder_elements_6.jpg',
+  'powder_elements_8.jpg',
+  'product_jars_3.jpg',
+  'product_jars_4.jpg',
+  'product_jars_7.jpg',
+  'product_jars_8.jpg',
+  'seal_logo_5.jpg',
+  'seal_logo_7.jpg',
+  'seal_logo_8.jpg',
+  'tcm_herbs_banner_1.jpg',
+  'tcm_herbs_banner_3.jpg',
+  'tcm_herbs_banner_4.jpg',
+  'tea_background_5.jpg',
+  'tea_background_7.jpg',
+  'tea_background_9.jpg',
+  'tea_decoration_3.jpg',
+  'tea_decoration_7.jpg',
+  'tea_decoration_8.jpg',
+  'traditional_border_0.jpg',
+  'traditional_border_1.jpg',
+  'traditional_border_7.jpg',
+  'warm_background_1.jpg',
+  'warm_background_5.jpg',
+  'warm_background_7.jpg',
+  'wood_texture_2.jpg',
+  'wood_texture_4.jpg',
+  'wood_texture_6.jpg',
 ];
 
+// 缓存完整 URL → 布尔值，避免重复解析
+const existingImageSet = new Set(
+  EXISTING_IMAGE_FILES.map(f => getImageUrl(f))
+);
+
 /**
- * 验证图片路径是否存在
- * @param imagePath 图片路径
- * @returns 是否存在
+ * 验证图片路径是否存在（静态图片）
+ * 只验证本地已知的静态图片，动态图片（API 返回的）不做验证
  */
 export function validateImagePath(imagePath: string): boolean {
-  return EXISTING_IMAGES.includes(imagePath);
+  return existingImageSet.has(imagePath);
 }
 
 /**
- * 获取所有可用的图片路径
- * @returns 可用图片路径数组
+ * 获取所有可用的静态图片路径
  */
 export function getAvailableImages(): string[] {
-  return [...EXISTING_IMAGES];
+  return [...existingImageSet];
 }
 
 /**
- * 根据分类获取推荐的图片
- * @param category 产品分类
- * @returns 推荐的图片路径数组
+ * 根据分类获取推荐的静态图片
  */
 export function getRecommendedImagesForCategory(category: string): string[] {
+  const allImages = getAvailableImages();
+
   switch (category) {
     case 'welfare':
     case 'herbs':
-      return EXISTING_IMAGES.filter(path => 
-        path.includes('herb_ingredients') || 
+      return allImages.filter(path =>
+        path.includes('herb_ingredients') ||
         path.includes('medicine_collage') ||
         path.includes('product_jars')
       );
-    
+
     case 'tea':
-      return EXISTING_IMAGES.filter(path => 
-        path.includes('tea_decoration') || 
+      return allImages.filter(path =>
+        path.includes('tea_decoration') ||
         path.includes('tea_background') ||
         path.includes('green_plants')
       );
-    
+
     case 'activity':
-      return EXISTING_IMAGES.filter(path => 
-        path.includes('gift_box') || 
+      return allImages.filter(path =>
+        path.includes('gift_box') ||
         path.includes('medicine_collage')
       );
-    
+
     case 'health':
     case 'supplements':
-      return EXISTING_IMAGES.filter(path => 
-        path.includes('product_jars') || 
+      return allImages.filter(path =>
+        path.includes('product_jars') ||
         path.includes('powder_elements') ||
         path.includes('warm_background') ||
         path.includes('green_plants')
       );
-    
+
     default:
-      return EXISTING_IMAGES;
+      return allImages;
   }
 }
 
 /**
  * 获取默认占位符图片
- * @returns 默认图片路径
  */
 export function getDefaultPlaceholderImage(): string {
-  return `${IMAGE_BASE_PATH}warm_background_5.jpg`;
+  return getImageUrl('warm_background_5.jpg');
 }
 
 /**
  * 验证产品数据中的所有图片路径
  * @param products 产品数组
- * @returns 验证结果
  */
 export function validateProductImages(products: any[]): {
   valid: boolean;
@@ -153,7 +159,7 @@ export function validateProductImages(products: any[]): {
 } {
   const invalidPaths: string[] = [];
   const validPaths: string[] = [];
-  
+
   products.forEach(product => {
     if (product.image) {
       if (validateImagePath(product.image)) {
@@ -163,32 +169,31 @@ export function validateProductImages(products: any[]): {
       }
     }
   });
-  
+
   return {
     valid: invalidPaths.length === 0,
     invalidPaths,
-    validPaths
+    validPaths,
   };
 }
 
 /**
  * 修复无效的图片路径
  * @param products 产品数组
- * @returns 修复后的产品数组
  */
 export function fixInvalidImagePaths(products: any[]): any[] {
   return products.map(product => {
     if (product.image && !validateImagePath(product.image)) {
       const recommendedImages = getRecommendedImagesForCategory(product.categoryId);
-      const fallbackImage = recommendedImages.length > 0 
-        ? recommendedImages[0] 
+      const fallbackImage = recommendedImages.length > 0
+        ? recommendedImages[0]
         : getDefaultPlaceholderImage();
-      
+
       console.warn(`Invalid image path for product ${product.id}: ${product.image}, using fallback: ${fallbackImage}`);
-      
+
       return {
         ...product,
-        image: fallbackImage
+        image: fallbackImage,
       };
     }
     return product;

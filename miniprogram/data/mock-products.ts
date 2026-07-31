@@ -3,7 +3,7 @@
  * 包含所有分类的产品信息，使用 CDN 图片资源
  */
 
-import { IMAGE_BASE_PATH } from '../images/image-mapping';
+import { getImageUrl } from '../images/image-mapping';
 
 // 产品模拟数据
 export const MOCK_PRODUCTS: { [key: string]: Product } = {
@@ -11,7 +11,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'welfare_1': {
     id: 'welfare_1',
     name: '惠民降压茶',
-    image: `${IMAGE_BASE_PATH}tea_background_5.jpg`,
+    image: getImageUrl('tea_background_5.jpg'),
     originalPrice: 89.00,
     discountedPrice: 59.00,
     categoryId: 'welfare',
@@ -22,7 +22,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'welfare_2': {
     id: 'welfare_2',
     name: '惠民养胃粉',
-    image: `${IMAGE_BASE_PATH}powder_elements_3.png`,
+    image: getImageUrl('powder_elements_3.png'),
     originalPrice: 128.00,
     discountedPrice: 88.00,
     categoryId: 'welfare',
@@ -33,7 +33,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'welfare_3': {
     id: 'welfare_3',
     name: '惠民安神茶',
-    image: `${IMAGE_BASE_PATH}tea_decoration_3.jpg`,
+    image: getImageUrl('tea_decoration_3.jpg'),
     originalPrice: 68.00,
     discountedPrice: 45.00,
     categoryId: 'welfare',
@@ -46,7 +46,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'tea_1': {
     id: 'tea_1',
     name: '网红柠檬蜂蜜茶',
-    image: `${IMAGE_BASE_PATH}tea_background_7.jpg`,
+    image: getImageUrl('tea_background_7.jpg'),
     originalPrice: 58.00,
     discountedPrice: 39.00,
     categoryId: 'tea',
@@ -57,7 +57,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'tea_2': {
     id: 'tea_2',
     name: '玫瑰花茶礼盒',
-    image: `${IMAGE_BASE_PATH}gift_box_5.jpg`,
+    image: getImageUrl('gift_box_5.jpg'),
     originalPrice: 168.00,
     discountedPrice: 128.00,
     categoryId: 'tea',
@@ -68,7 +68,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'tea_3': {
     id: 'tea_3',
     name: '薄荷清凉茶',
-    image: `${IMAGE_BASE_PATH}green_plants_3.jpg`,
+    image: getImageUrl('green_plants_3.jpg'),
     originalPrice: 45.00,
     categoryId: 'tea',
     description: '天然薄荷叶，清热解暑，夏日必备饮品',
@@ -80,7 +80,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'activity_1': {
     id: 'activity_1',
     name: '限时秒杀养生套装',
-    image: `${IMAGE_BASE_PATH}gift_box_0.jpg`,
+    image: getImageUrl('gift_box_0.jpg'),
     originalPrice: 299.00,
     discountedPrice: 199.00,
     categoryId: 'activity',
@@ -91,7 +91,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'activity_2': {
     id: 'activity_2',
     name: '买二送一枸杞',
-    image: `${IMAGE_BASE_PATH}herb_ingredients_0.jpg`,
+    image: getImageUrl('herb_ingredients_0.jpg'),
     originalPrice: 88.00,
     discountedPrice: 66.00,
     categoryId: 'activity',
@@ -102,7 +102,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'activity_3': {
     id: 'activity_3',
     name: '新用户专享礼包',
-    image: `${IMAGE_BASE_PATH}gift_box_8.jpg`,
+    image: getImageUrl('gift_box_8.jpg'),
     originalPrice: 158.00,
     discountedPrice: 98.00,
     categoryId: 'activity',
@@ -115,7 +115,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'herbs_1': {
     id: 'herbs_1',
     name: '野生人参片',
-    image: `${IMAGE_BASE_PATH}herb_ingredients_3.jpg`,
+    image: getImageUrl('herb_ingredients_3.jpg'),
     originalPrice: 588.00,
     discountedPrice: 488.00,
     categoryId: 'herbs',
@@ -126,7 +126,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'herbs_2': {
     id: 'herbs_2',
     name: '优质当归片',
-    image: `${IMAGE_BASE_PATH}medicine_collage_2.jpg`,
+    image: getImageUrl('medicine_collage_2.jpg'),
     originalPrice: 128.00,
     categoryId: 'herbs',
     description: '甘肃岷县当归，补血调经，妇科圣药，品质上乘',
@@ -136,7 +136,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'herbs_3': {
     id: 'herbs_3',
     name: '精选黄芪',
-    image: `${IMAGE_BASE_PATH}herb_ingredients_5.jpeg`,
+    image: getImageUrl('herb_ingredients_5.jpeg'),
     originalPrice: 98.00,
     discountedPrice: 78.00,
     categoryId: 'herbs',
@@ -147,7 +147,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'herbs_4': {
     id: 'herbs_4',
     name: '川贝母',
-    image: `${IMAGE_BASE_PATH}medicine_collage_7.jpg`,
+    image: getImageUrl('medicine_collage_7.jpg'),
     originalPrice: 268.00,
     discountedPrice: 228.00,
     categoryId: 'herbs',
@@ -160,7 +160,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'health_1': {
     id: 'health_1',
     name: '灵芝孢子粉胶囊',
-    image: `${IMAGE_BASE_PATH}product_jars_7.jpg`,
+    image: getImageUrl('product_jars_7.jpg'),
     originalPrice: 368.00,
     discountedPrice: 298.00,
     categoryId: 'health',
@@ -171,7 +171,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'health_2': {
     id: 'health_2',
     name: '蜂胶软胶囊',
-    image: `${IMAGE_BASE_PATH}product_jars_3.jpg`,
+    image: getImageUrl('product_jars_3.jpg'),
     originalPrice: 188.00,
     discountedPrice: 158.00,
     categoryId: 'health',
@@ -182,7 +182,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'health_3': {
     id: 'health_3',
     name: '虫草花胶囊',
-    image: `${IMAGE_BASE_PATH}product_jars_4.jpg`,
+    image: getImageUrl('product_jars_4.jpg'),
     originalPrice: 288.00,
     categoryId: 'health',
     description: '人工培育虫草花，滋补强身，补肺益肾，现代养生佳品',
@@ -194,7 +194,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'supplements_1': {
     id: 'supplements_1',
     name: '复合维生素片',
-    image: `${IMAGE_BASE_PATH}product_jars_8.jpg`,
+    image: getImageUrl('product_jars_8.jpg'),
     originalPrice: 128.00,
     discountedPrice: 98.00,
     categoryId: 'supplements',
@@ -205,7 +205,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'supplements_2': {
     id: 'supplements_2',
     name: '钙铁锌硒片',
-    image: `${IMAGE_BASE_PATH}powder_elements_6.jpg`,
+    image: getImageUrl('powder_elements_6.jpg'),
     originalPrice: 88.00,
     discountedPrice: 68.00,
     categoryId: 'supplements',
@@ -216,7 +216,7 @@ export const MOCK_PRODUCTS: { [key: string]: Product } = {
   'supplements_3': {
     id: 'supplements_3',
     name: '深海鱼油胶囊',
-    image: `${IMAGE_BASE_PATH}powder_elements_8.jpg`,
+    image: getImageUrl('powder_elements_8.jpg'),
     originalPrice: 198.00,
     discountedPrice: 168.00,
     categoryId: 'supplements',

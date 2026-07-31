@@ -2,6 +2,10 @@
  * Services index - exports all service classes and interfaces
  */
 
+// Banner Service（高频变动图片，走接口）
+export { BannerService } from './banner-service';
+export type { Banner } from './banner-service';
+
 // User Service
 export { UserService, IUserService } from './user-service';
 export type { 

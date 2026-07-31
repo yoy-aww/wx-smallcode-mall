@@ -3,42 +3,42 @@
  */
 
 import { validateProductImages } from './image-validator';
-import { IMAGE_BASE_PATH } from '../images/image-mapping';
+import { getImageUrl } from '../images/image-mapping';
 
 // 模拟产品数据用于测试
 const TEST_PRODUCTS = [
-  { id: 'welfare-001', image: `${IMAGE_BASE_PATH}herb_ingredients_0.jpg`, categoryId: 'welfare' },
-  { id: 'welfare-002', image: `${IMAGE_BASE_PATH}herb_ingredients_3.jpg`, categoryId: 'welfare' },
-  { id: 'welfare-003', image: `${IMAGE_BASE_PATH}herb_ingredients_5.jpeg`, categoryId: 'welfare' },
-  { id: 'welfare-004', image: `${IMAGE_BASE_PATH}tea_background_7.jpg`, categoryId: 'welfare' },
-  { id: 'welfare-005', image: `${IMAGE_BASE_PATH}tea_background_9.jpg`, categoryId: 'welfare' },
+  { id: 'welfare-001', image: getImageUrl('herb_ingredients_0.jpg'), categoryId: 'welfare' },
+  { id: 'welfare-002', image: getImageUrl('herb_ingredients_3.jpg'), categoryId: 'welfare' },
+  { id: 'welfare-003', image: getImageUrl('herb_ingredients_5.jpeg'), categoryId: 'welfare' },
+  { id: 'welfare-004', image: getImageUrl('tea_background_7.jpg'), categoryId: 'welfare' },
+  { id: 'welfare-005', image: getImageUrl('tea_background_9.jpg'), categoryId: 'welfare' },
   
-  { id: 'tea-001', image: `${IMAGE_BASE_PATH}tea_decoration_3.jpg`, categoryId: 'tea' },
-  { id: 'tea-002', image: `${IMAGE_BASE_PATH}tea_decoration_7.jpg`, categoryId: 'tea' },
-  { id: 'tea-003', image: `${IMAGE_BASE_PATH}tea_background_5.jpg`, categoryId: 'tea' },
-  { id: 'tea-004', image: `${IMAGE_BASE_PATH}tea_decoration_8.jpg`, categoryId: 'tea' },
-  { id: 'tea-005', image: `${IMAGE_BASE_PATH}green_plants_1.jpg`, categoryId: 'tea' },
+  { id: 'tea-001', image: getImageUrl('tea_decoration_3.jpg'), categoryId: 'tea' },
+  { id: 'tea-002', image: getImageUrl('tea_decoration_7.jpg'), categoryId: 'tea' },
+  { id: 'tea-003', image: getImageUrl('tea_background_5.jpg'), categoryId: 'tea' },
+  { id: 'tea-004', image: getImageUrl('tea_decoration_8.jpg'), categoryId: 'tea' },
+  { id: 'tea-005', image: getImageUrl('green_plants_1.jpg'), categoryId: 'tea' },
   
-  { id: 'activity-001', image: `${IMAGE_BASE_PATH}gift_box_8.jpg`, categoryId: 'activity' },
-  { id: 'activity-002', image: `${IMAGE_BASE_PATH}medicine_collage_2.jpg`, categoryId: 'activity' },
-  { id: 'activity-003', image: `${IMAGE_BASE_PATH}gift_box_0.jpg`, categoryId: 'activity' },
-  { id: 'activity-004', image: `${IMAGE_BASE_PATH}gift_box_5.jpg`, categoryId: 'activity' },
+  { id: 'activity-001', image: getImageUrl('gift_box_8.jpg'), categoryId: 'activity' },
+  { id: 'activity-002', image: getImageUrl('medicine_collage_2.jpg'), categoryId: 'activity' },
+  { id: 'activity-003', image: getImageUrl('gift_box_0.jpg'), categoryId: 'activity' },
+  { id: 'activity-004', image: getImageUrl('gift_box_5.jpg'), categoryId: 'activity' },
   
-  { id: 'herbs-001', image: `${IMAGE_BASE_PATH}product_jars_3.jpg`, categoryId: 'herbs' },
-  { id: 'herbs-002', image: `${IMAGE_BASE_PATH}product_jars_4.jpg`, categoryId: 'herbs' },
-  { id: 'herbs-003', image: `${IMAGE_BASE_PATH}product_jars_8.jpg`, categoryId: 'herbs' },
-  { id: 'herbs-004', image: `${IMAGE_BASE_PATH}medicine_collage_9.jpg`, categoryId: 'herbs' },
-  { id: 'herbs-005', image: `${IMAGE_BASE_PATH}warm_background_1.jpg`, categoryId: 'herbs' },
+  { id: 'herbs-001', image: getImageUrl('product_jars_3.jpg'), categoryId: 'herbs' },
+  { id: 'herbs-002', image: getImageUrl('product_jars_4.jpg'), categoryId: 'herbs' },
+  { id: 'herbs-003', image: getImageUrl('product_jars_8.jpg'), categoryId: 'herbs' },
+  { id: 'herbs-004', image: getImageUrl('medicine_collage_9.jpg'), categoryId: 'herbs' },
+  { id: 'herbs-005', image: getImageUrl('warm_background_1.jpg'), categoryId: 'herbs' },
   
-  { id: 'health-001', image: `${IMAGE_BASE_PATH}product_jars_7.jpg`, categoryId: 'health' },
-  { id: 'health-002', image: `${IMAGE_BASE_PATH}medicine_collage_7.jpg`, categoryId: 'health' },
-  { id: 'health-003', image: `${IMAGE_BASE_PATH}warm_background_5.jpg`, categoryId: 'health' },
-  { id: 'health-004', image: `${IMAGE_BASE_PATH}warm_background_7.jpg`, categoryId: 'health' },
+  { id: 'health-001', image: getImageUrl('product_jars_7.jpg'), categoryId: 'health' },
+  { id: 'health-002', image: getImageUrl('medicine_collage_7.jpg'), categoryId: 'health' },
+  { id: 'health-003', image: getImageUrl('warm_background_5.jpg'), categoryId: 'health' },
+  { id: 'health-004', image: getImageUrl('warm_background_7.jpg'), categoryId: 'health' },
   
-  { id: 'supplements-001', image: `${IMAGE_BASE_PATH}powder_elements_3.png`, categoryId: 'supplements' },
-  { id: 'supplements-002', image: `${IMAGE_BASE_PATH}powder_elements_6.jpg`, categoryId: 'supplements' },
-  { id: 'supplements-003', image: `${IMAGE_BASE_PATH}green_plants_3.jpg`, categoryId: 'supplements' },
-  { id: 'supplements-004', image: `${IMAGE_BASE_PATH}green_plants_6.jpg`, categoryId: 'supplements' }
+  { id: 'supplements-001', image: getImageUrl('powder_elements_3.png'), categoryId: 'supplements' },
+  { id: 'supplements-002', image: getImageUrl('powder_elements_6.jpg'), categoryId: 'supplements' },
+  { id: 'supplements-003', image: getImageUrl('green_plants_3.jpg'), categoryId: 'supplements' },
+  { id: 'supplements-004', image: getImageUrl('green_plants_6.jpg'), categoryId: 'supplements' }
 ];
 
 /**
