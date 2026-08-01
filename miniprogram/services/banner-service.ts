@@ -64,23 +64,8 @@ export class BannerService {
         audioUrl: b.audioUrl,
       }));
     } catch (e) {
-      console.warn('[BannerService] API 不可用，使用 mock:', (e as Error).message);
-      return this._getMockBanners();
+      console.error('[BannerService] API 请求失败:', (e as Error).message);
+      return [];
     }
-  }
-
-  private static _getMockBanners(): Banner[] {
-    return [
-      {
-        id: 'banner_main',
-        title: '道地溯源',
-        subtitle: '枸益补枸',
-        image: 'https://tiyycecb8.hn-bkt.clouddn.com/images/imgs/tcm_herbs_banner_3.jpg',
-        link: '',
-        sortOrder: 1,
-        enabled: true,
-        audioUrl: '/audio/intro.wav',
-      },
-    ];
   }
 }
