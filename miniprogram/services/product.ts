@@ -1,211 +1,159 @@
-// services/product.ts
 /**
- * Product service for managing product operations
- * Mock implementation for checkout integration
+ * Product service — 从后端 API 获取商品数据
  */
 
-import { MOCK_PRODUCTS, CATEGORY_PRODUCTS, ALL_PRODUCTS, POPULAR_PRODUCTS } from '../data/mock-products';
+function request(url: string): Promise<{ data: any; statusCode: number }> {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res as { data: any; statusCode: number });
+        } else {
+          reject(new Error(`HTTP ${res.statusCode}: ${url}`));
+        }
+      },
+      fail: (err) => reject(err),
+    });
+  });
+}
 
-/**
- * Product service response interface
- */
+/** POST 请求封装 */
+function requestPost(url: string, body: any): Promise<{ data: any; statusCode: number }> {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      method: 'POST',
+      header: { 'Content-Type': 'application/json' },
+      data: body,
+      success: (res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res as { data: any; statusCode: number });
+        } else {
+          reject(new Error(`HTTP ${res.statusCode}: ${url}`));
+        }
+      },
+      fail: (err) => reject(err),
+    });
+  });
+}
+
 interface ProductServiceResponse<T = any> {
   success: boolean;
   data?: T;
   error?: string;
 }
 
-/**
- * Product service class
- */
+const API_BASE_URL = 'http://43.153.148.187:3000';
+
+// 本地缓存全部商品（减少重复请求）
+let _cachedAllProducts: Product[] = [];
+
 export class ProductService {
-  /**
-   * Get product by ID
-   */
+
+  /** 获取全部商品（带本地缓存） */
+  static async getAllProducts(): Promise<ProductServiceResponse<Product[]>> {
+    try {
+      const { data } = await request(`${API_BASE_URL}/api/products`);
+      const list = Array.isArray(data?.data) ? data.data : [];
+      _cachedAllProducts = list;
+      return { success: true, data: list };
+    } catch (e) {
+      console.error('[ProductService] getAllProducts 失败:', (e as Error).message);
+      return { success: false, error: (e as Error).message || '加载商品失败' };
+    }
+  }
+
+  /** 获取商品详情 */
   static async getProductById(productId: string): Promise<ProductServiceResponse<Product>> {
     try {
-      console.log('Getting product by ID:', productId);
-
-      const product = MOCK_PRODUCTS[productId];
-
-      if (!product) {
-        return {
-          success: false,
-          error: '商品不存在',
-        };
+      // 优先从缓存命中
+      if (_cachedAllProducts.length > 0) {
+        const hit = _cachedAllProducts.find(p => p.id === productId);
+        if (hit) return { success: true, data: hit };
       }
-
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      return {
-        success: true,
-        data: product,
-      };
-    } catch (error) {
-      console.error('Failed to get product by ID:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '获取商品信息失败',
-      };
+      const { data } = await request(`${API_BASE_URL}/api/products/${productId}`);
+      return { success: true, data: data?.data || data };
+    } catch (e) {
+      console.error('[ProductService] getProductById 失败:', (e as Error).message);
+      return { success: false, error: (e as Error).message || '获取商品失败' };
     }
   }
 
-  /**
-   * Get multiple products by IDs
-   */
+  /** 获取分类下的商品 */
+  static async getProductsByCategory(categoryId: string): Promise<ProductServiceResponse<Product[]>> {
+    try {
+      await this.getAllProducts();
+      const filtered = _cachedAllProducts.filter(p => p.categoryId === categoryId);
+      return { success: true, data: filtered };
+    } catch (e) {
+      return { success: false, error: (e as Error).message || '获取分类商品失败' };
+    }
+  }
+
+  /** 搜索商品（关键词搜索） */
+  static async searchProducts(query: string): Promise<ProductServiceResponse<Product[]>> {
+    try {
+      await this.getAllProducts();
+      const q = (query || '').trim();
+      const results = _cachedAllProducts.filter(p => {
+        if (!q) return true;
+        return (
+          p.name?.includes(q) ||
+          (p.description || '').includes(q) ||
+          (p.tags || []).some((t: any) => String(t).includes(q))
+        );
+      });
+      return { success: true, data: results };
+    } catch (e) {
+      return { success: false, error: (e as Error).message || '搜索商品失败' };
+    }
+  }
+
+  /** 获取多个商品 */
   static async getProductsByIds(productIds: string[]): Promise<ProductServiceResponse<Product[]>> {
     try {
-      console.log('Getting products by IDs:', productIds);
-
-      const products: Product[] = [];
-
-      for (const productId of productIds) {
-        const productResponse = await this.getProductById(productId);
-
-        if (productResponse.success && productResponse.data) {
-          products.push(productResponse.data);
-        }
-      }
-
-      return {
-        success: true,
-        data: products,
-      };
-    } catch (error) {
-      console.error('Failed to get products by IDs:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '获取商品信息失败',
-      };
+      await this.getAllProducts();
+      const products = productIds
+        .map(id => _cachedAllProducts.find(p => p.id === id))
+        .filter((p): p is Product => !!p);
+      return { success: true, data: products };
+    } catch (e) {
+      return { success: false, error: (e as Error).message || '获取商品失败' };
     }
   }
 
-  /**
-   * Check product stock
-   */
+  /** 检查库存 */
   static async checkProductStock(
     productId: string,
     quantity: number
-  ): Promise<
-    ProductServiceResponse<{
-      available: boolean;
-      currentStock: number;
-      requestedQuantity: number;
-    }>
-  > {
+  ): Promise<ProductServiceResponse<{ available: boolean; currentStock: number; requestedQuantity: number }>> {
     try {
-      console.log('Checking product stock:', productId, quantity);
-
-      const productResponse = await this.getProductById(productId);
-
-      if (!productResponse.success || !productResponse.data) {
-        return {
-          success: false,
-          error: productResponse.error || '商品不存在',
-        };
+      const res = await this.getProductById(productId);
+      if (!res.success || !res.data) {
+        return { success: false, error: res.error || '商品不存在' };
       }
-
-      const product = productResponse.data;
-      const available = quantity <= product.stock;
-
+      const available = quantity <= res.data.stock;
       return {
         success: true,
-        data: {
-          available,
-          currentStock: product.stock,
-          requestedQuantity: quantity,
-        },
+        data: { available, currentStock: res.data.stock, requestedQuantity: quantity },
       };
-    } catch (error) {
-      console.error('Failed to check product stock:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '检查库存失败',
-      };
+    } catch (e) {
+      return { success: false, error: (e as Error).message || '检查库存失败' };
     }
   }
 
-  /**
-   * Update product stock (for order processing)
-   */
+  /** 更新库存（POST） */
   static async updateProductStock(
     productId: string,
     quantity: number
   ): Promise<ProductServiceResponse<boolean>> {
     try {
-      console.log('Updating product stock:', productId, quantity);
-
-      // In real implementation, this would update the database
-      // For now, just simulate success
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      return {
-        success: true,
-        data: true,
-      };
-    } catch (error) {
-      console.error('Failed to update product stock:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '更新库存失败',
-      };
-    }
-  }
-
-  /**
-   * Search products
-   */
-  static async searchProducts(query: string): Promise<ProductServiceResponse<Product[]>> {
-    try {
-      console.log('Searching products:', query);
-
-      // Simple search filter using imported products
-      const results = POPULAR_PRODUCTS.filter(
-        product =>
-          product.name.includes(query) ||
-          product.description?.includes(query) ||
-          product.tags?.some(tag => tag.includes(query))
-      );
-
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      return {
-        success: true,
-        data: results,
-      };
-    } catch (error) {
-      console.error('Failed to search products:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '搜索商品失败',
-      };
-    }
-  }
-
-  /**
-   * Get products by category
-   */
-  static async getProductsByCategory(
-    categoryId: string
-  ): Promise<ProductServiceResponse<Product[]>> {
-    try {
-      console.log('Getting products by category:', categoryId);
-
-      const products = CATEGORY_PRODUCTS[categoryId] || [];
-
-      await new Promise(resolve => setTimeout(resolve, 150));
-
-      return {
-        success: true,
-        data: products,
-      };
-    } catch (error) {
-      console.error('Failed to get products by category:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '获取分类商品失败',
-      };
+      await requestPost(`${API_BASE_URL}/api/products/${productId}`, { stock: quantity });
+      return { success: true, data: true };
+    } catch (e) {
+      return { success: false, error: (e as Error).message || '更新库存失败' };
     }
   }
 }

@@ -1,153 +1,75 @@
 /**
- * Category data service for loading and managing category data
+ * Category service — 从后端 API 获取分类
  */
 
 /**
- * Mock category data based on the design requirements
- * In a real application, this would come from an API
+ * 请求封装：callback 模式包裹为 Promise
  */
-const MOCK_CATEGORIES: Category[] = [
-  {
-    id: 'welfare',
-    name: '惠民专区',
-    icon: '',
-    productCount: 15,
-    sortOrder: 1
-  },
-  {
-    id: 'tea',
-    name: '爆款茶饮',
-    icon: '',
-    productCount: 8,
-    sortOrder: 2
-  },
-  {
-    id: 'activity',
-    name: '活动专区',
-    icon: '',
-    productCount: 12,
-    sortOrder: 3
-  },
-  {
-    id: 'herbs',
-    name: '中药材',
-    icon: '',
-    productCount: 25,
-    sortOrder: 4
-  },
-  {
-    id: 'health',
-    name: '保健品',
-    icon: '',
-    productCount: 18,
-    sortOrder: 5
-  },
-  {
-    id: 'supplements',
-    name: '营养补充',
-    icon: '',
-    productCount: 10,
-    sortOrder: 6
-  }
-];
+function request(url: string): Promise<{ data: any; statusCode: number }> {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res as { data: any; statusCode: number });
+        } else {
+          reject(new Error(`HTTP ${res.statusCode}: ${url}`));
+        }
+      },
+      fail: (err) => reject(err),
+    });
+  });
+}
 
-/**
- * Service response interface for category operations
- */
 interface CategoryServiceResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
 }
 
-/**
- * Category service class for handling category-related operations
- */
+const API_BASE_URL = 'http://43.153.148.187:3000';
+
 export class CategoryService {
-  /**
-   * Load all categories
-   * Simulates network request with delay
-   */
+
   static async loadCategories(): Promise<CategoryServiceResponse<Category[]>> {
     try {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Sort categories by sortOrder
-      const sortedCategories = [...MOCK_CATEGORIES].sort((a, b) => a.sortOrder - b.sortOrder);
-      
-      return {
-        success: true,
-        data: sortedCategories
-      };
-    } catch (error) {
-      console.error('Failed to load categories:', error);
-      return {
-        success: false,
-        error: '加载分类失败，请重试'
-      };
+      const { data } = await request(`${API_BASE_URL}/api/categories`);
+      const list = Array.isArray(data?.data) ? data.data : [];
+      const sorted = [...list].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+      return { success: true, data: sorted };
+    } catch (e) {
+      console.error('[CategoryService] loadCategories 失败:', (e as Error).message);
+      return { success: false, error: (e as Error).message || '加载分类失败' };
     }
   }
 
-  /**
-   * Get category by ID
-   */
   static async getCategoryById(categoryId: string): Promise<CategoryServiceResponse<Category>> {
     try {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      const category = MOCK_CATEGORIES.find(cat => cat.id === categoryId);
-      
-      if (!category) {
-        return {
-          success: false,
-          error: '分类不存在'
-        };
+      const categories = await this.loadCategories();
+      if (!categories.success || !categories.data) {
+        return { success: false, error: '获取分类失败' };
       }
-      
-      return {
-        success: true,
-        data: category
-      };
-    } catch (error) {
-      console.error('Failed to get category:', error);
-      return {
-        success: false,
-        error: '获取分类信息失败'
-      };
+      const cat = categories.data.find(c => c.id === categoryId);
+      if (!cat) {
+        return { success: false, error: '分类不存在' };
+      }
+      return { success: true, data: cat };
+    } catch (e) {
+      console.error('[CategoryService] getCategoryById 失败:', (e as Error).message);
+      return { success: false, error: '获取分类信息失败' };
     }
   }
 
-  /**
-   * Refresh categories (for pull-to-refresh functionality)
-   */
   static async refreshCategories(): Promise<CategoryServiceResponse<Category[]>> {
-    try {
-      // Simulate longer network delay for refresh
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      
-      // In a real app, this would fetch fresh data from the server
-      const sortedCategories = [...MOCK_CATEGORIES].sort((a, b) => a.sortOrder - b.sortOrder);
-      
-      return {
-        success: true,
-        data: sortedCategories
-      };
-    } catch (error) {
-      console.error('Failed to refresh categories:', error);
-      return {
-        success: false,
-        error: '刷新分类失败，请重试'
-      };
-    }
+    return this.loadCategories();
   }
 
-  /**
-   * Get default category (first category in the list)
-   */
-  static getDefaultCategory(): Category | null {
-    const sortedCategories = [...MOCK_CATEGORIES].sort((a, b) => a.sortOrder - b.sortOrder);
-    return sortedCategories.length > 0 ? sortedCategories[0] : null;
+  static async getDefaultCategory(): Promise<Category | null> {
+    const res = await this.loadCategories();
+    if (!res.success || !res.data || res.data.length === 0) {
+      return null;
+    }
+    return res.data[0];
   }
 }
