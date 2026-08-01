@@ -1523,3 +1523,24 @@ page {
 .category-grid {
   animation-delay: 0.5s;
 }
+
+/* ==================== 全部商品展示区域 ==================== */
+
+.all-products-section { margin-top: 28rpx; padding: 0 20rpx; }
+.all-products-header { display: flex; align-items: center; justify-content: space-between; padding: 20rpx 10rpx 16rpx; }
+.section-title { font-size: 32rpx; font-weight: bold; color: #3a2820; }
+.section-count { font-size: 24rpx; color: #8b4513; background: #fdf0e6; padding: 6rpx 18rpx; border-radius: 20rpx; }
+.product-group { margin-bottom: 24rpx; }
+.group-header { display: flex; align-items: center; justify-content: space-between; padding: 12rpx 16rpx; background: linear-gradient(135deg, #f5efe5 0%, #fdf0e6 100%); border-radius: 12rpx; margin-bottom: 12rpx; }
+.group-title { font-size: 28rpx; font-weight: bold; color: #5a3a22; }
+.group-count { font-size: 22rpx; color: #8b4513; }
+.group-products { display: flex; flex-direction: column; gap: 12rpx; }
+.group-product { display: flex; align-items: center; background: #fffdf8; border-radius: 12rpx; padding: 12rpx; box-shadow: 0 2rpx 8rpx rgba(139,69,19,0.06); }
+.group-product-img { width: 120rpx; height: 120rpx; border-radius: 8rpx; flex-shrink: 0; background: #f5efe5; }
+.group-product-info { flex: 1; margin-left: 16rpx; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.group-product-name { font-size: 28rpx; color: #3a2820; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.group-product-tags { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 6rpx; }
+.group-tag { font-size: 20rpx; color: #8b4513; background: #fdf0e6; padding: 2rpx 10rpx; border-radius: 8rpx; }
+.group-product-price { display: flex; align-items: baseline; gap: 8rpx; margin-top: 6rpx; }
+.price-current { font-size: 30rpx; font-weight: bold; color: #d4380d; }
+.price-original { font-size: 22rpx; color: #999; text-decoration: line-through; }

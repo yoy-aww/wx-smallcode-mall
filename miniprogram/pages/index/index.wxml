@@ -278,6 +278,52 @@
     </view>
   </view>
 
+  <!-- ==================== 全部商品展示区域 ==================== -->
+  <view class="all-products-section">
+    <view class="all-products-header">
+      <view class="section-title">全部商品</view>
+      <view class="section-count">共 {{allProductsCount}} 款</view>
+    </view>
+
+    <!-- 按分类动态渲染，每个分类一组 -->
+    <block wx:for="{{allProductsGroups}}" wx:key="categoryId">
+      <view class="product-group" wx:if="{{item.products.length > 0}}">
+        <view class="group-header" data-catid="{{item.categoryId}}" bindtap="onCategoryTap">
+          <view class="group-title">{{item.categoryName}}</view>
+          <view class="group-count">{{item.products.length}} 款</view>
+        </view>
+        <view class="group-products">
+          <view
+            class="group-product"
+            wx:for="{{item.products}}"
+            wx:for-item="prod"
+            wx:key="id"
+            data-id="{{prod.id}}"
+            bindtap="onProductTap"
+          >
+            <image
+              class="group-product-img"
+              src="{{prod.image}}"
+              mode="aspectFill"
+              lazy-load="{{true}}"
+              binderror="onImageError"
+            ></image>
+            <view class="group-product-info">
+              <view class="group-product-name">{{prod.name}}</view>
+              <view class="group-product-tags" wx:if="{{prod.tags && prod.tags.length > 0}}">
+                <text class="group-tag" wx:for="{{prod.tags}}" wx:for-item="t" wx:key="*this">{{t}}</text>
+              </view>
+              <view class="group-product-price">
+                <text class="price-current">¥{{prod.discountedPrice || prod.originalPrice}}</text>
+                <text class="price-original" wx:if="{{prod.discountedPrice}}">¥{{prod.originalPrice}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
   <!-- 底部安全区域 -->
   <view class="safe-area-bottom"></view>
 </scroll-view>

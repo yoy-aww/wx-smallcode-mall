@@ -44,13 +44,11 @@ export interface Banner {
 // ==================== 环境开关 ====================
 
 /**
- * 开发模式：true = 使用本地 mock 数据
- * 上线后改为 false，自动走接口请求
+ * 开发模式：false = 走后端 API；true = 本地 mock
  */
-const IS_DEV_MODE = true;
+const IS_DEV_MODE = false;
 
-/** 后端 API 基础地址（上线后填写） */
-// const API_BASE_URL = 'https://api.yourdomain.com';
+const API_BASE_URL = 'http://43.153.148.187:3000';
 
 // ==================== Mock 数据 ====================
 
@@ -115,18 +113,22 @@ export class BannerService {
    */
   private static async getApiBanners(): Promise<Banner[]> {
     try {
-      // const res = await wx.request({
-      //   url: `${API_BASE_URL}/api/banners`,
-      //   method: 'GET',
-      // });
-      // return res.data.data;
-
-      // 尚未对接后端，暂用 mock
-      console.warn('[BannerService] API not configured, using mock data');
-      return this.getMockBanners();
+      const res = await wx.request({
+        url: `${API_BASE_URL}/api/banners`,
+        method: 'GET',
+      });
+      return (res.data.data || []).map(b => ({
+        id: b.id,
+        image: b.image,
+        link: b.link,
+        title: b.title,
+        subtitle: b.subtitle,
+        sortOrder: b.sortOrder,
+        enabled: b.enabled,
+        audioUrl: b.audioUrl,
+      }));
     } catch (error) {
       console.error('[BannerService] Failed to fetch banners:', error);
-      // 接口失败时返回 mock 作为降级
       return this.getMockBanners();
     }
   }

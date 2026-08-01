@@ -4,8 +4,10 @@ const app = getApp<IAppOption>();
 
 // 导入 CDN 图片映射
 import { BRAND_IMAGES, BANNER_IMAGES, CATEGORY_IMAGES, DECORATION_IMAGES } from '../../images/image-mapping';
-// 导入 Banner 服务（Banner 图片随活动变动，走接口）
+// 导入 Banner 服务
 import { BannerService, Banner } from '../../services/banner-service';
+// 导入商品服务（动态获取全部分类和全部商品）
+import { ProductApi } from '../../services/product-api';
 
 // 数据接口定义
 interface BrandInfo {
@@ -38,8 +40,10 @@ interface ProductItem {
   name: string;
   image: string;
   price: number;
-  originalPrice?: number;
+  originalPrice: number;
+  discountedPrice?: number;
   tags?: string[];
+  categoryId?: string;
 }
 
 interface CategoryItem {
@@ -83,9 +87,15 @@ Component({
       audioUrl: '/audio/intro.wav',
     } as MainBanner,
 
-    // 轮播列表（由 BannerService 获取，支持多图轮播）
+    // 轮播列表
     banners: [] as Banner[],
     bannersLoading: false,
+
+    // 全部分类（动态加载，用于分组展示全部商品）
+    allCategories: [] as CategoryItem[],
+    // 按分类分组的商品列表（6 个分类，共 19 个商品）
+    allProductsGroups: [] as { categoryId: string; categoryName: string; products: ProductItem[] }[],
+    allProductsCount: 0,
 
     // 搜索配置
     searchConfig: {
@@ -249,13 +259,10 @@ Component({
     // 初始化页面数据
     async initPageData() {
       console.log('[首页] 开始加载动态数据...');
-
       // 加载 Banner（高频变动，走接口）
       await this.loadBanners();
-
-      // 将来扩展：加载公告、加载推荐商品等
-      // await this.loadAnnouncements();
-      // await this.loadRecommendProducts();
+      // 加载全部商品（按分类分组展示）
+      await this.loadAllProducts();
     },
 
     /**
@@ -288,6 +295,37 @@ Component({
         console.error('[首页] 加载 Banner 失败，使用静态回退:', error);
         this.setData({ bannersLoading: false });
         // 保持 data 中 mainBanner 的静态回退值不变
+      }
+    },
+
+    /**
+     * 加载全部分类 + 全部商品（按分类分组）
+     * 展示 6 个分类下共 19 个商品，动态渲染，不遗漏
+     */
+    async loadAllProducts() {
+      try {
+        const [categories, productsMap] = await Promise.all([
+          ProductApi.getCategories(),
+          ProductApi.getProductsByCategory(),
+        ]);
+
+        const groups = categories.map(cat => ({
+          categoryId: cat.id,
+          categoryName: cat.name,
+          products: productsMap.get(cat.id) || [],
+        }));
+
+        const totalCount = groups.reduce((sum, g) => sum + g.products.length, 0);
+
+        this.setData({
+          allCategories: categories,
+          allProductsGroups: groups,
+          allProductsCount: totalCount,
+        });
+
+        console.log(`[首页] 加载了 ${categories.length} 个分类，共 ${totalCount} 个商品`);
+      } catch (error) {
+        console.error('[首页] 加载商品失败:', error);
       }
     },
 
@@ -575,16 +613,25 @@ Component({
 
     // 分类卡片点击
     onCategoryTap(e: any) {
-      const { id, path } = e.currentTarget.dataset;
-
+      const { id, path, catid } = e.currentTarget.dataset;
+      const categoryId = catid || id;
       if (path) {
+        wx.navigateTo({ url: path });
+      } else if (categoryId) {
         wx.navigateTo({
-          url: path,
+          url: `/pages/category/category?type=${categoryId}`,
         });
       } else {
-        wx.showToast({
-          title: `${id}功能开发中`,
-          icon: 'none',
+        wx.showToast({ title: '功能开发中', icon: 'none' });
+      }
+    },
+
+    // 商品项点击
+    onProductTap(e: any) {
+      const { id } = e.currentTarget.dataset;
+      if (id) {
+        wx.navigateTo({
+          url: `/pages/product-detail/product-detail?id=${id}`,
         });
       }
     },
