@@ -308,7 +308,6 @@ Component({
           ProductApi.getCategories(),
           ProductApi.getProductsByCategory(),
         ]);
-
         const groups = categories.map(cat => ({
           categoryId: cat.id,
           categoryName: cat.name,
