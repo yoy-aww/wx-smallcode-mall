@@ -27,18 +27,33 @@ export interface Banner {
 
 const API_BASE_URL = 'http://43.153.148.187:3000';
 
+/** 请求封装：callback 模式包裹为 Promise，与 product-api 保持一致 */
+function request(url: string): Promise<{ data: any; statusCode: number }> {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res as { data: any; statusCode: number });
+        } else {
+          reject(new Error(`HTTP ${res.statusCode}: ${url}`));
+        }
+      },
+      fail: (err) => reject(err),
+    });
+  });
+}
+
 export class BannerService {
   /**
    * 获取所有启用的 Banner
    */
   static async getBanners(): Promise<Banner[]> {
     try {
-      const res = await wx.request({
-        url: `${API_BASE_URL}/api/banners`,
-        method: 'GET',
-      });
-      const list = res && res.data && res.data.data;
-      return (Array.isArray(list) ? list : []).map(b => ({
+      const { data } = await request(`${API_BASE_URL}/api/banners`);
+      const list = Array.isArray(data?.data) ? data.data : [];
+      return list.map((b: any) => ({
         id: b.id,
         image: b.image,
         link: b.link,
@@ -49,7 +64,7 @@ export class BannerService {
         audioUrl: b.audioUrl,
       }));
     } catch (e) {
-      console.warn('[BannerService] API 不可用，使用 mock:', e);
+      console.warn('[BannerService] API 不可用，使用 mock:', (e as Error).message);
       return this._getMockBanners();
     }
   }

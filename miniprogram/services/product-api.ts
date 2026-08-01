@@ -1,6 +1,10 @@
 /**
  * 商品服务
  * 数据来源：后端 API
+ *
+ * 注意：微信小程序 wx.request 的 Promise 返回值在基础库版本差异下不稳定，
+ * 白名单拦截时可能返回 {errMsg, data:undefined} 而非标准的 {data:{...}}。
+ * 因此使用 callback 模式手动包裹为 Promise，确保成功/失败路径清晰分离。
  */
 
 // ==================== 类型定义 ====================
@@ -29,7 +33,34 @@ export interface CategoryItem {
 
 const API_BASE_URL = 'http://43.153.148.187:3000';
 
+/**
+ * 请求封装：使用 wx.request callback 模式包裹为 Promise
+ * - success: resolve({ data, statusCode })
+ * - fail / 非 2xx: reject(error)
+ */
+function request(url: string): Promise<{ data: any; statusCode: number }> {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res as { data: any; statusCode: number });
+        } else {
+          reject(new Error(`HTTP ${res.statusCode}: ${url}`));
+        }
+      },
+      fail: (err) => {
+        reject(err);
+      },
+    });
+  });
+}
+
 export class ProductApi {
+
+  // ============ 公共方法 ============
+
   /** 获取全部分类（按 sortOrder 排序） */
   static async getCategories(): Promise<CategoryItem[]> {
     return this._apiCategories();
@@ -45,13 +76,13 @@ export class ProductApi {
     return this._apiProducts();
   }
 
-  // ---- API 接口 ----
+  // ============ 私有 API 方法 ============
 
   private static async _apiProducts(): Promise<ProductItem[]> {
     try {
-      const res = await wx.request({ url: `${API_BASE_URL}/api/products`, method: 'GET' });
-      const list = res && res.data && res.data.data;
-      return (Array.isArray(list) ? list : []).map(p => ({
+      const { data } = await request(`${API_BASE_URL}/api/products`);
+      const list = Array.isArray(data?.data) ? data.data : [];
+      return list.map((p: any) => ({
         id: p.id,
         name: p.name,
         image: p.image,
@@ -63,23 +94,23 @@ export class ProductApi {
         tags: p.tags,
       }));
     } catch (e) {
-      console.warn('[ProductApi] _apiProducts 请求失败，使用空列表:', e);
+      console.warn('[ProductApi] _apiProducts 请求失败，返回空列表:', (e as Error).message);
       return [];
     }
   }
 
   private static async _apiCategories(): Promise<CategoryItem[]> {
     try {
-      const res = await wx.request({ url: `${API_BASE_URL}/api/categories`, method: 'GET' });
-      const list = res && res.data && res.data.data;
-      return (Array.isArray(list) ? list : []).map(c => ({
+      const { data } = await request(`${API_BASE_URL}/api/categories`);
+      const list = Array.isArray(data?.data) ? data.data : [];
+      return list.map((c: any) => ({
         id: c.id,
         name: c.name,
         icon: c.icon,
         sortOrder: c.sortOrder,
       }));
     } catch (e) {
-      console.warn('[ProductApi] _apiCategories 请求失败，使用空列表:', e);
+      console.warn('[ProductApi] _apiCategories 请求失败，返回空列表:', (e as Error).message);
       return [];
     }
   }
